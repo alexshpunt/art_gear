@@ -4,10 +4,16 @@
 
 AGWindow::AGWindow()
 {
-	m_rect = AGRect( 0, 0, 800, 600 );
+	m_rect = AGRect( 0, 0, 1200, 768 );
 	m_title = L"ArtGear - Default Window";
 	createWindow(); 
 }
+
+AGWindow::AGWindow(HWND hwnd)
+{
+	m_hwnd = hwnd; 
+}
+
 
 AGWindow::AGWindow(const wstring& title, float x, float y, float width, float height)
 {
@@ -16,7 +22,7 @@ AGWindow::AGWindow(const wstring& title, float x, float y, float width, float he
 	createWindow(); 
 }
 
-AGWindow::AGWindow(const wstring& title, const AGPoint& point, float width, float height)
+AGWindow::AGWindow(const wstring& title, const AGPoint2& point, float width, float height)
 {
 	m_title = title;
 	m_rect = AGRect( point, width, height );
@@ -30,7 +36,7 @@ AGWindow::AGWindow(const wstring& title, float x, float y, const AGSize& size)
 	createWindow(); 
 }
 
-AGWindow::AGWindow(const wstring& title, const AGPoint& point, const AGSize& size)
+AGWindow::AGWindow(const wstring& title, const AGPoint2& point, const AGSize& size)
 {
 	m_title = title;
 	m_rect = AGRect( point, size );
@@ -89,13 +95,19 @@ void AGWindow::close()
 	CloseWindow( m_hwnd );
 }
 
-void AGWindow::setPos(const AGPoint& pos)
+void AGWindow::setPos(const AGPoint2& pos)
 {
 	m_rect.setPoint( pos );
-	MoveWindow( m_hwnd, pos.getX(), pos.getY(), m_rect.getWidth(), m_rect.getHeight(), TRUE );
+	MoveWindow( m_hwnd, pos.x, pos.y, m_rect.getWidth(), m_rect.getHeight(), TRUE );
 }
 
-const AGPoint& AGWindow::getPos() const
+void AGWindow::setPos(float x, float y)
+{
+	AGPoint2 pos( x, y );
+	setPos( pos );
+}
+
+const AGPoint2& AGWindow::getPos() const
 {
 	return m_rect.getPoint();
 }
@@ -106,9 +118,25 @@ void AGWindow::setSize(const AGSize& size)
 	MoveWindow( m_hwnd, m_rect.getLeft(), m_rect.getTop(), size.getWidth(), size.getHeight(), TRUE );
 }
 
+void AGWindow::setSize(float w, float h)
+{
+	AGSize size( w, h );
+	setSize( size );
+}
+
 const AGSize& AGWindow::getSize() const
 {
 	return m_rect.getSize();
+}
+
+float AGWindow::getWidth() const
+{
+	return m_rect.getSize().getWidth();
+}
+
+float AGWindow::getHeight() const
+{
+	return m_rect.getSize().getHeight(); 
 }
 
 void AGWindow::setRect(const AGRect& rect)

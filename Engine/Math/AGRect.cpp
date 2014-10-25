@@ -23,14 +23,14 @@ AGRect::AGRect(float x, float y, const AGSize& size)
 	setSize( size );
 }
 
-AGRect::AGRect(const AGPoint& point, float w, float h)
+AGRect::AGRect(const AGPoint2& point, float w, float h)
 {
 	setPoint( point );
-	setRight( point.getX() + w );
-	setBottom( point.getY() + h );
+	setRight( point.x + w );
+	setBottom( point.y + h );
 }
 
-AGRect::AGRect(const AGPoint& point, const AGSize& size)
+AGRect::AGRect(const AGPoint2& point, const AGSize& size)
 {
 	setPoint( point );
 	setSize( size );
@@ -48,50 +48,50 @@ AGRect::~AGRect()
 
 void AGRect::setLeft(float left)
 {
-	m_point.setX( left );
+	m_point.x = left;
 }
 
 float AGRect::getLeft() const
 {
-	return m_point.getX(); 
+	return m_point.x; 
 }
 
 void AGRect::setTop(float top)
 {
-	m_point.setY( top );
+	m_point.y = top;
 }
 
 float AGRect::getTop() const
 {
-	return m_point.getY(); 
+	return m_point.y; 
 }
 
 void AGRect::setRight(float right)
 {
-	setWidth( right - m_point.getX() );
+	setWidth( right - m_point.x );
 }
 
 float AGRect::getRight() const
 {
-	return m_point.getX() + m_size.getWidth();
+	return m_point.x + m_size.getWidth();
 }
 
 void AGRect::setBottom(float bottom)
 {
-	setHeight( m_point.getY() + bottom );
+	setHeight( m_point.y + bottom );
 }
 
 float AGRect::getBottom() const
 {
-	return m_point.getY() + m_size.getHeight();
+	return m_point.y + m_size.getHeight();
 }
 
-void AGRect::setPoint(const AGPoint& point)
+void AGRect::setPoint(const AGPoint2& point)
 {
 	m_point = point;
 }
 
-const AGPoint& AGRect::getPoint() const
+const AGPoint2& AGRect::getPoint() const
 {
 	return m_point; 
 }
@@ -161,7 +161,7 @@ AGRect AGRect::operator+(const AGSize& var)
 	return rect; 
 }
 
-AGRect AGRect::operator+(const AGPoint& var)
+AGRect AGRect::operator+(const AGPoint2& var)
 {
 	AGRect rect( *this );
 	rect.m_point += var; 
@@ -181,7 +181,7 @@ AGRect& AGRect::operator+=(const AGSize& var)
 	return *this; 
 }
 
-AGRect& AGRect::operator+=(const AGPoint& var)
+AGRect& AGRect::operator+=(const AGPoint2& var)
 {
 	m_point += var;
 	return *this; 
@@ -202,7 +202,7 @@ AGRect AGRect::operator-(const AGSize& var)
 	return rect; 
 }
 
-AGRect AGRect::operator-(const AGPoint& var)
+AGRect AGRect::operator-(const AGPoint2& var)
 {
 	AGRect rect( *this );
 	rect.m_point -= var; 
@@ -223,7 +223,7 @@ AGRect& AGRect::operator-=(const AGSize& var)
 	return *this; 
 }
 
-AGRect& AGRect::operator-=(const AGPoint& var)
+AGRect& AGRect::operator-=(const AGPoint2& var)
 {
 	m_point -= var;
 	return *this; 

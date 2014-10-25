@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <vector>
 
+#include "Patterns/Singleton.h"
+#include "Graphics/AGGraphics.h"
 #include "Interfaces/AGAbstractSystem.h" 
 
 using namespace std;
@@ -16,13 +18,17 @@ class AGEngine
 		AGEngine();
 		~AGEngine();
 
+		void initialize(); 
 		int run();
+		void processEvents(); 
+
+		AGGraphics& getGraphicsSystem();
 
 	private:
 		void update(); 
 		void shutdown();
 
-		AGAbstractSystems m_systems; 
+		AGGraphics m_graphics; 
 };
 
 #endif 

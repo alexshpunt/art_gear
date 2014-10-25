@@ -12,10 +12,11 @@ class AGWindow
 {
 	public:
 		AGWindow();
+		AGWindow( HWND hwnd );
 		AGWindow( const wstring& title, float x, float y, float width, float height );
-		AGWindow( const wstring& title, const AGPoint& point, float width, float height );
+		AGWindow( const wstring& title, const AGPoint2& point, float width, float height );
 		AGWindow( const wstring& title, float x, float y, const AGSize& size );
-		AGWindow( const wstring& title, const AGPoint& point, const AGSize& size );
+		AGWindow( const wstring& title, const AGPoint2& point, const AGSize& size );
 		AGWindow( const wstring& title, const AGRect& rect );
 		~AGWindow();
 
@@ -28,12 +29,16 @@ class AGWindow
 		void hide(); 
 		void close(); 
 
-		void setPos( const AGPoint& pos );
-		const AGPoint& getPos() const;
+		void setPos( const AGPoint2& pos );
+		void setPos( float x, float y );
+		const AGPoint2& getPos() const;
 
 		void setSize( const AGSize& size );
+		void setSize( float w, float h );
 		const AGSize& getSize() const;
-		
+		float getWidth() const;
+		float getHeight() const; 
+
 		void setRect( const AGRect& rect );
 		const AGRect& getRect() const; 
 

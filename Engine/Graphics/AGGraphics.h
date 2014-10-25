@@ -13,12 +13,16 @@ class AGGraphics : public AGAbstractSystem
 		AGGraphics();
 		~AGGraphics();
 
+		void setAGWindow( AGWindow* window );
+
 		void update();
 		void shutdown();
 
 		void setMode( Modes mode );
 		Modes getMode() const; 
 
+		//Временно
+		AGWindow* getMainWindow() const; 
 	private:
 		AGAbstractSubsystem* m_subSystem; 
 		Modes m_mode; 

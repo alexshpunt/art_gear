@@ -2,7 +2,7 @@
 #define AG_RECT_H
 
 #include "AGSize.h"
-#include "AGPoint.h"
+#include "AGPoint2.h"
 
 class AGRect 
 {
@@ -10,8 +10,8 @@ class AGRect
 		AGRect(); 
 		AGRect( float x, float y, float w, float h );
 		AGRect( float x, float y, const AGSize& size ); 
-		AGRect( const AGPoint& point, float w, float h );
-		AGRect( const AGPoint& point, const AGSize& size );
+		AGRect( const AGPoint2& point, float w, float h );
+		AGRect( const AGPoint2& point, const AGSize& size );
 		AGRect( const AGRect& copy );
 		~AGRect();
 
@@ -27,8 +27,8 @@ class AGRect
 		void setBottom( float bottom );
 		float getBottom() const; 
 
-		void setPoint( const AGPoint& point );
-		const AGPoint& getPoint() const; 
+		void setPoint( const AGPoint2& point );
+		const AGPoint2& getPoint() const; 
 
 		void setWidth( float width );
 		float getWidth() const;
@@ -46,18 +46,18 @@ class AGRect
 
 		AGRect operator+( const AGSize& var );
 		AGRect operator+( const AGRect& var );
-		AGRect operator+( const AGPoint& var );
+		AGRect operator+( const AGPoint2& var );
 		
 		AGRect& operator+=( const AGSize& var );
 		AGRect& operator+=( const AGRect& var );
-		AGRect& operator+=( const AGPoint& var );
+		AGRect& operator+=( const AGPoint2& var );
 
 		AGRect operator-( const AGRect& var );
 		AGRect operator-( const AGSize& var );
-		AGRect operator-( const AGPoint& var );
+		AGRect operator-( const AGPoint2& var );
 		AGRect& operator-=( const AGRect& var );
 		AGRect& operator-=( const AGSize& var );
-		AGRect& operator-=( const AGPoint& var );
+		AGRect& operator-=( const AGPoint2& var );
 
 		AGRect operator*( float var );
 		AGRect& operator*=( float var );
@@ -65,7 +65,7 @@ class AGRect
 		AGRect operator/( float var );
 		AGRect& operator/=( float var );
 	private:
-		AGPoint m_point;
+		AGPoint2 m_point;
 		AGSize m_size; 
 };
 

@@ -7,19 +7,21 @@
 
 AGEngine::AGEngine()
 {
-#ifdef _DEBUG
-	AGLogger::getInstance().initialize();
-	AGLogger::getInstance().setMode( AGLogger::Terminal );
-#endif 
-	AGGraphics* graphics = new AGGraphics;
-	graphics->setMode( AGGraphics::DirectX10 ); 
-	m_systems.push_back( graphics );
 
-	AGSucces() << "AGEngine was created";
 }
 
 AGEngine::~AGEngine()
 {
+
+}
+
+void AGEngine::initialize()
+{
+#ifdef _DEBUG
+	AGLogger::getInstance().initialize();
+	AGLogger::getInstance().setMode( AGLogger::Terminal );
+#endif 
+	m_graphics.setMode( AGGraphics::DirectX10 ); 
 }
 
 int AGEngine::run()
@@ -41,16 +43,33 @@ int AGEngine::run()
 	return 0;
 }
 
+void AGEngine::processEvents()
+{
+	MSG msg = {}; 
+	if( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
+	{
+		TranslateMessage( &msg );
+		DispatchMessage( &msg );
+	}
+	{
+		update(); 
+	}
+}
+
 void AGEngine::update()
 {
-	for( int i = 0; i < m_systems.size(); i++ )
-	{
-		m_systems[ i ]->update(); 
-	}
+	m_graphics.update();
 }
 
 void AGEngine::shutdown()
 {
 	AGSucces() << "AGEngine was succesfully shutdowned";
 }
+
+AGGraphics& AGEngine::getGraphicsSystem()
+{
+	return m_graphics; 
+}
+
+
 

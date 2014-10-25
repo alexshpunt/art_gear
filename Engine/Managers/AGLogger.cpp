@@ -80,7 +80,7 @@ AGLogger& AGLogger::operator<<(bool var)
 	m_skipLine = true;
 
 	if( m_mode | Terminal )
-		cout << var; 
+		cout << ( var ? "true" : "false" ); 
 	return *this; 
 }
 
@@ -136,10 +136,10 @@ AGLogger& AGLogger::operator<<(const AGSize& var)
 	return *this; 
 }
 
-AGLogger& AGLogger::operator<<(const AGPoint& var)
+AGLogger& AGLogger::operator<<(const AGPoint2& var)
 {
 	m_skipLine = true;
-	cout << "AGPoint( x : " << var.getX() << " ; y : " << var.getY() << " ) ";
+	cout << "AGPoint( x : " << var.x << " ; y : " << var.y << " ) ";
 	return *this; 
 }
 

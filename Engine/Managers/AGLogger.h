@@ -42,7 +42,7 @@ class AGLogger
 		AGLogger& operator<<( wchar_t* var );
 		AGLogger& operator<<( const wstring& var );
 		AGLogger& operator<<( const AGSize& var );
-		AGLogger& operator<<( const AGPoint& var );
+		AGLogger& operator<<( const AGPoint2& var );
 		AGLogger& operator<<( const AGRect& var );
 
 	private:
