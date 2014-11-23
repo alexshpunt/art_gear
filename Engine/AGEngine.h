@@ -2,33 +2,26 @@
 #define AG_ENGINE_H
 
 #include <windows.h>
-#include <vector>
 
 #include "Patterns/Singleton.h"
 #include "Graphics/AGGraphics.h"
-#include "Interfaces/AGAbstractSystem.h" 
 
-using namespace std;
-
-typedef vector< AGAbstractSystem* > AGAbstractSystems; 
+class AGScene; 
 
 class AGEngine 
 {
+	DECLARE_SINGLETON_INIT( AGEngine )
 	public:
-		AGEngine();
-		~AGEngine();
-
-		void initialize(); 
 		int run();
-		void processEvents(); 
+		void update(); 
 
-		AGGraphics& getGraphicsSystem();
+		void setScene( AGScene* scene );
+		AGScene* getScene() const; 
 
 	private:
-		void update(); 
-		void shutdown();
-
-		AGGraphics m_graphics; 
+		void init(); 
+		AGScene* m_scene; 
+		
 };
 
 #endif 

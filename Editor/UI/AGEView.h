@@ -9,7 +9,7 @@
 
 class AGEViewTop;
 class AGEViewBottom; 
-class AGDX10Scene;
+class AGDXScene;
 class ID3D10Device;
 
 class AGEView : public QWidget 
@@ -21,15 +21,14 @@ class AGEView : public QWidget
 
 		void update();
 
-		void setScene( AGDX10Scene* scene );
-		ID3D10Device* getDevice() const; 
+		AGEWindow* getViewport();
 
 	private:
-		QVBoxLayout* m_layout; 
+		QVBoxLayout m_layout; 
 		AGEViewTop* m_top;
 		AGEViewBottom* m_bottom; 
 
-		AGEWindow* m_window; 
+		AGEWindow m_window; 
 };
 
 #endif 

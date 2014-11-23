@@ -3,6 +3,12 @@
 #include <windows.h>
 #include <Managers/AGLogger.h>
 
+void AGInputManager::update()
+{
+	m_mouseDeltaPos = AGPoint2( 0.0f, 0.0f );
+	m_wheelDelta = 0.0f; 
+}
+
 void AGInputManager::setKeyPressed(int key, bool flag)
 {
 	m_keyPressed[ key ] = flag;
@@ -127,9 +133,7 @@ const AGPoint2& AGInputManager::getMousePos() const
 
 AGPoint2 AGInputManager::getMouseDeltaPos()
 {
-	AGPoint2 delta = m_mouseDeltaPos; 
-	m_mouseDeltaPos = AGPoint2( 0.0f, 0.0f );
-	return delta;
+	return m_mouseDeltaPos;
 }
 
 void AGInputManager::init()
@@ -143,9 +147,8 @@ void AGInputManager::setWheelDelta(float wheelDelta)
 }
 
 float AGInputManager::getWheelDelta()
-{
-	float wheelDelta = m_wheelDelta; 
-	m_wheelDelta = 0.0f; 
-	return wheelDelta; 
+{	
+	return m_wheelDelta; 
 }
+
 

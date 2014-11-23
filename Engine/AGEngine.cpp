@@ -5,23 +5,16 @@
 #include "Graphics/AGGraphics.h"
 #include "Math/AGSize.h"
 
-AGEngine::AGEngine()
-{
+#include "Objects/AGScene.h"
 
-}
-
-AGEngine::~AGEngine()
-{
-
-}
-
-void AGEngine::initialize()
+void AGEngine::init()
 {
 #ifdef _DEBUG
 	AGLogger::getInstance().initialize();
-	AGLogger::getInstance().setMode( AGLogger::Terminal );
+	AGLogger::getInstance().setMode( AGLogger::Console );
 #endif 
-	m_graphics.setMode( AGGraphics::DirectX10 ); 
+	AGGraphics::getInstance().setMode( AGGraphics::DirectX ); 
+	m_scene = nullptr;
 }
 
 int AGEngine::run()
@@ -39,37 +32,26 @@ int AGEngine::run()
 			update(); 
 		}
 	}
-	shutdown(); 
 	return 0;
-}
-
-void AGEngine::processEvents()
-{
-	MSG msg = {}; 
-	if( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
-	{
-		TranslateMessage( &msg );
-		DispatchMessage( &msg );
-	}
-	{
-		update(); 
-	}
 }
 
 void AGEngine::update()
 {
-	m_graphics.update();
+	if( m_scene )
+	{
+		m_scene->update(); 
+	}
+	AGGraphics::getInstance().update();
 }
 
-void AGEngine::shutdown()
+void AGEngine::setScene(AGScene* scene)
 {
-	AGSucces() << "AGEngine was succesfully shutdowned";
+	m_scene = scene; 
 }
 
-AGGraphics& AGEngine::getGraphicsSystem()
+AGScene* AGEngine::getScene() const
 {
-	return m_graphics; 
+	return m_scene; 
 }
-
 
 

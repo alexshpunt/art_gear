@@ -1,50 +1,50 @@
 #include "AGEditor.h"
 
-#include <QLayout>
-#include <QDebug>
-#include <QPushButton>
 #include <QElapsedTimer>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
 
 #include "Managers/AGInputManager.h"
 #include "Managers/AGTimeManager.h"
 #include "Managers/AGLogger.h"
-#include "Graphics/Subsystems/DirectX10/Objects/AGDX10Camera.h"
-#include "Graphics/Subsystems/DirectX10/Objects/AGDX10Scene.h"
-#include "Graphics/Subsystems/DirectX10/Objects/AGDX10Mesh.h"
+#include "AGEngine.h"
+#include "Graphics/AGGraphics.h"
+#include "Graphics/Objects/AGDXMesh.h"
+#include "Graphics/Objects/AGDXCamera.h"
+#include "Graphics/Components/AGRenderer.h"
+#include "Objects/AGScene.h"
+#include "Objects/AGObject.h"
 
 AGEditor::AGEditor()
 {
-	AGLogger::getInstance().setMode( AGLogger::Console );
-	AGLogger::getInstance().initialize(); 
-
 	setAttribute( Qt::WA_NativeWindow );
 	ui.setupUi(this);
+
 	m_view = new AGEView; 
+	m_toolBar = new AGEToolBar;
+	m_mainHLayout = new QHBoxLayout; 
+	m_mainVLayout = new QVBoxLayout; 
+	m_splillter = new QSplitter; 
 
-	m_mainVLayout.addWidget( &m_toolBar );
-	m_mainVLayout.setSpacing( 1 );
-	m_mainVLayout.setMargin( 1 );
+	m_mainVLayout->addWidget( m_toolBar );
+	m_mainVLayout->setSpacing( 1 );
+	m_mainVLayout->setMargin( 1 );
 
-	m_mainHLayout.addWidget( m_view );
-	m_mainHLayout.setSpacing( 1 );
-	m_mainHLayout.setMargin( 1 );
+	m_splillter->addWidget( m_view );
 
-	m_mainVLayout.addLayout( &m_mainHLayout );
+	m_mainVLayout->addWidget( m_splillter );
 
-	ui.centralWidget->setLayout( &m_mainVLayout );
+	ui.centralWidget->setLayout( m_mainVLayout );
 	m_run = false; 
 
-	m_scene = new AGDX10Scene;
-	m_mesh = new AGDX10Mesh;
-	m_camera = new AGDX10Camera; 
+	AGGraphics::getInstance().setBackgroundColor( 0.22f, 0.22f, 0.22f );
+	AGGraphics::getInstance().addSurface( m_view->getViewport() );
 
-	m_mesh->loadFrom( "data/meshes/irish.agmsh", m_view->getDevice() );
-	m_scene->addCamera( m_camera );
-	m_scene->addMesh( m_mesh );
+	m_scene = nullptr;
+	newAction(); 	
 
-	m_view->setScene( m_scene );
+	m_object = m_scene->createObject( "Irish" );
+	m_object->getRenderer()->loadMeshFrom( "data/meshes/irish.agmsh", m_view->getViewport()->getDevice() );
+	//m_object->setPivot( 2.0f, 2.0f, 2.0f );
+	//m_object->setPos( 10.0f, 0.0f, 0.0f );
 }
 
 AGEditor::~AGEditor()
@@ -63,9 +63,21 @@ int AGEditor::run( QApplication& app )
 		app.processEvents();
 		double dt = timer.restart() / 1000.0; 
 		AGTimeManager::getInstance().setDeltaTime( dt );
+		AGEngine::getInstance().update(); 
 		m_view->update();
+		AGInput().update();
 	}
 	return 0;
+}
+
+void AGEditor::newAction()
+{
+	if( m_scene )
+	{
+		delete m_scene; 
+	}
+	m_scene = new AGScene( "Default" );
+	AGEngine::getInstance().setScene( m_scene );
 }
 
 void AGEditor::closeEvent(QCloseEvent *e)

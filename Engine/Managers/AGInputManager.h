@@ -17,6 +17,8 @@ class AGInputManager
 {
 	DECLARE_SINGLETON_INIT( AGInputManager )
 	public:
+		void update(); 
+
 		void setKeyPressed( int key, bool flag );
 		bool isKeyPressed( int key ); 
 		bool isKeyDown( int key );
