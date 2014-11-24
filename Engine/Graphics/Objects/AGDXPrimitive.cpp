@@ -61,9 +61,3 @@ AGDXPrimitive::~AGDXPrimitive()
 {
 
 }
-
-AGDXIntersectedTriangle AGDXPrimitive::getIntersectedTriangle(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
-{
-	AGDXIntersectedTriangle triangle;
-	return triangle; 
-}

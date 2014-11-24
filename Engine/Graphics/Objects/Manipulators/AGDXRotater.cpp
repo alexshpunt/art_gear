@@ -1,6 +1,7 @@
 #include "AGDXRotater.h"
 
 #include "AGDXCircle.h"
+#include "Graphics/Managers/AGDXDebugDraw.h"
 #include "Graphics/Objects/AGDXLine.h"
 #include "Graphics/Objects/AGDXCamera.h"
 #include "Objects/AGObject.h"
@@ -18,8 +19,6 @@ AGDXRotater::AGDXRotater(ID3D10Device* device)
 
 	m_object = nullptr; 
 	m_selectedObject = nullptr;
-
-	m_tangentLine = new AGDXLine( device, 0.2f, D3DXVECTOR4( 0.0f, 0.0f, 0.0f, 1.0f ) );
 }
 
 AGDXRotater::~AGDXRotater()
@@ -111,6 +110,41 @@ void AGDXRotater::mouseClickEvent(const string& btn, AGDXSurface* surface)
 		closestPrimitive->setSelected( true );
 	}
 	m_selectedObject = closestPrimitive;
+
+	if( m_selectedObject )
+	{
+		m_v1 = m_selectedObject->getWorldPos();
+		m_v2 = ( reinterpret_cast< AGDXCircle* >( m_selectedObject ) )->getTangent(); 
+
+		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+
+		D3DXVECTOR3 pos = m_selectedObject->getWorldPos();
+
+		D3DXMATRIX world;
+		D3DXMatrixIdentity( &world );
+		D3DXMATRIX transl;
+		D3DXMatrixIdentity( &transl );
+		D3DXMATRIX rot;
+		D3DXMatrixIdentity( &rot );
+
+		D3DXMatrixTranslation( &transl, pos.x, pos.y, pos.z );
+
+		float pi4 = D3DXToRadian( 90.0f );
+
+		D3DXMatrixRotationYawPitchRoll( &rot,
+			axis.x * pi4 + axis.y * pi4 + axis.z * pi4,
+			axis.x * pi4,
+			axis.z * pi4  );
+
+		world *= rot * transl; 
+
+		D3DXVec3TransformCoord( &m_v1, &m_v1, &world );
+		D3DXVec3TransformCoord( &m_v2, &m_v2, &world );
+
+		m_tangent = m_v2 - m_v1; 
+
+		D3DXVec3Normalize( &m_tangent, &m_tangent );
+	}
 }
 
 void AGDXRotater::mouseMoveEvent(AGDXSurface* surface)
@@ -172,41 +206,19 @@ void AGDXRotater::mouseMoveEvent(AGDXSurface* surface)
 
 		D3DXVec3Normalize( &vec, &vec );
 
-		//AGDXIntersectedTriangle triangle = m_selectedObject->getIntersectedTriangle( rayOrigin, rayDir );
-
-		/*D3DXVECTOR3 tangent = maxCoords - minCoords; 
-
-		m_tangentLine->setAngle( m_selectedObject->getAngle() );
-		m_tangentLine->setPos( triangle.v1 );*/
-
-		float dist = m_selectedObject->intersect( rayOrigin, rayDir );
-		AGDebug() << dist; 
-
-		//AGDebug() << "Triangle v1: " << triangle.v1.x << " " << triangle.v1.y << " " << triangle.v1.z; 
-		/*AGDebug() << "Triangle v2: " << triangle.v2.x << " " << triangle.v2.y << " " << triangle.v2.z; 
-		AGDebug() << "Triangle v3: " << triangle.v3.x << " " << triangle.v3.y << " " << triangle.v3.z; 
-		AGDebug() << "Min coords: " << minCoords.x << " " << minCoords.y << " " << minCoords.z; 
-		AGDebug() << "Max coords: " << maxCoords.x << " " << maxCoords.y << " " << maxCoords.z; */
-
-		D3DXVECTOR3 axis;
+		D3DXVECTOR3 axis = m_selectedObject->getAxis();
 
 		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
 
-		/*for( int i = 0; i < 3; i++ )
-		{
-			D3DXVECTOR3 worldPos = gizmos[ i ]->getWorldPos(); 
-			D3DXVECTOR3 lookDir = worldPos - cameraEye; 
-
-			float len = D3DXVec3Length( &lookDir );
-			gizmos[ i ]->translateWorldPos( D3DXVECTOR3( vec2.x * axis.x, vec2.y * axis.y, vec2.z * axis.z ) * len );
-		}
-
-		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getWorldPos();*/
+		//m_tangent = D3DXVECTOR3( m_tangent.x * axis.x, m_tangent.y * axis.y, m_tangent.z * axis.z );
 
 		if( m_object )
 		{
-			float cosA = D3DXVec3Dot( &vec, &axis );
-			//m_object->rotate( vec2.x * axis.x, vec2.y * axis.y, vec2.z * axis.z );
+			AGDebug() << m_tangent.x << " " << m_tangent.y << " " << m_tangent.z;
+
+			float angle = m_tangent.y * vec2.y + m_tangent.x * vec2.x + m_tangent.z * vec2.z;
+
+			m_object->rotate( angle * axis.x, angle * axis.y, angle * axis.z );
 		}
 
 		return;
@@ -272,12 +284,7 @@ void AGDXRotater::mouseMoveEvent(AGDXSurface* surface)
 			if( minDist < 0 || minDist > dist )
 			{
 				minDist = dist;
-				closestPrimitive = gizmo;
-
-				AGDXIntersectedTriangle triangle = gizmo->getIntersectedTriangle( rayObjOrigin, rayObjDir );
-
-				D3DXVECTOR3 tanget = triangle.v1 - triangle.v2; 
-
+				closestPrimitive = gizmo;	
 			}
 		}
 	}	
@@ -297,6 +304,6 @@ void AGDXRotater::draw(AGDXSurface* surface)
 	m_yCircle->draw( surface );
 	m_zCircle->draw( surface );
 
-	m_tangentLine->draw( surface );
+	AGDXDebugDraw::getInstance().drawLine( surface, m_v1, m_v2, D3DXVECTOR4( 0.0f, 0.0f, 0.0f, 1.0f ) );
 }
 

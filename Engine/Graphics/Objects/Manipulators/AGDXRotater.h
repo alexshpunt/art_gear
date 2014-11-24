@@ -38,7 +38,12 @@ class AGDXRotater
 		AGDXGizmo* m_selectedObject; 
 
 		AGObject* m_object; 
-		AGDXLine* m_tangentLine; 
+
+		D3DXVECTOR3 m_v1;
+		D3DXVECTOR3 m_v2; 
+		D3DXVECTOR3 m_v3; 
+
+		D3DXVECTOR3 m_tangent; 
 };
 
 

@@ -31,7 +31,6 @@ class AGDXPrimitive : public AGDXMovable
 		virtual void draw( AGDXSurface* surface ) = 0;
 		//Если возвращаемое значение < 0, значит, что луч не коснулся сетки примитива, иначе это дистанция 
 		virtual float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir ) = 0;
-		virtual AGDXIntersectedTriangle getIntersectedTriangle( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
 	protected:
 		ID3D10InputLayout* m_inputLayout; 

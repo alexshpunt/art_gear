@@ -3,6 +3,7 @@
 #include <d3dx10.h>
 #include <d3d10.h>
 
+#include "Managers/AGDXDebugDraw.h"
 #include "Objects/AGDXMesh.h"
 #include "Objects/AGDXCamera.h"
 #include "Objects/Manipulators/AGDXTranslManip.h"
@@ -171,6 +172,7 @@ void AGGraphics::addSurface(AGDXSurface* surface)
 	{
 		m_rotater = new AGDXRotater( surface->getDevice() );
 	}
+	AGDXDebugDraw::getInstance().initialize( surface->getDevice() );
 }
 
 void AGGraphics::removeSurface(AGDXSurface* surface)
