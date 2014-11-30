@@ -12,6 +12,7 @@ class AGObject;
 class AGDXSurface; 
 class AGDXDragger; 
 class AGDXRotater; 
+class AGDXScaler; 
 class AGDXArrow; 
 class AGDXCamera; 
 class AGDXLight; 
@@ -68,6 +69,7 @@ class AGGraphics
 
 		AGDXDragger* m_dragger;
 		AGDXRotater* m_rotater; 
+		AGDXScaler*  m_scaler;
 };
 
 #endif 

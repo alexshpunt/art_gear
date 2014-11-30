@@ -15,6 +15,11 @@
 
 AGEditor::AGEditor()
 {
+#ifdef _DEBUG
+	AGLogger::getInstance().initialize();
+	AGLogger::getInstance().setMode( AGLogger::Console );
+#endif 
+
 	setAttribute( Qt::WA_NativeWindow );
 	ui.setupUi(this);
 

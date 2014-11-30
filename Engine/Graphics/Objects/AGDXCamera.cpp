@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "Managers/AGStateManager.h"
 #include "Managers/AGLogger.h"
 #include "Managers/AGTimeManager.h"
 #include "Managers/AGInputManager.h"
@@ -204,6 +205,7 @@ void AGDXCamera::update()
 		vec *= -wheelDelta * m_speed * ( shift ? 10 : 1 ); 
 		m_eye += vec;
 		m_at += vec; 
+		AGStateManager::getInstance().setRotating( false );
 	}
 
 	if( mmb )
@@ -234,6 +236,7 @@ void AGDXCamera::update()
 			D3DXVec3TransformCoord( &v, &v, &m_rotMatrix ); 
 
 			m_eye = m_at - v; 
+			AGStateManager::getInstance().setRotating( true );
 		}
 		else 
 		{
@@ -253,6 +256,7 @@ void AGDXCamera::update()
 			m_at += up * dPos.y * m_sensY;
 			m_eye -= right * dPos.x * m_sensX; 
 			m_eye += up * dPos.y * m_sensY;
+			AGStateManager::getInstance().setRotating( false );
 		}
 	}
 	else if( rmb )
@@ -277,6 +281,8 @@ void AGDXCamera::update()
 		D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
 
 		m_at = m_eye + v; 
+
+		AGStateManager::getInstance().setRotating( true );
 	}
 	if( horSpeed != 0 || vertSpeed != 0 )
 	{
@@ -294,6 +300,7 @@ void AGDXCamera::update()
 		m_eye += rightVec;
 		m_at += vec; 
 		m_at += rightVec;
+		AGStateManager::getInstance().setRotating( false );
 	}
 	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
 }

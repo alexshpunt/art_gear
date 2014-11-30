@@ -41,7 +41,6 @@ AGDXSurface::AGDXSurface( float width, float height, HWND hwnd )
 		AGError() << "Cannot create device or swap chain, error: " << DXGetErrorDescriptionA( hr );
 		return; 
 	}
-	AGSucces() << "Device and swap chain was created";
 
 	ID3D10Texture2D* backBuffer; 
 	hr = m_swapChain->GetBuffer( 0, __uuidof( backBuffer ), ( LPVOID* )&backBuffer );
@@ -51,7 +50,6 @@ AGDXSurface::AGDXSurface( float width, float height, HWND hwnd )
 		AGError() << "Cannot get buffer from swap chain for back buffer, error: " << DXGetErrorDescription( hr );
 		return; 
 	}
-	AGSucces() << "Back buffer was created";
 
 	D3D10_TEXTURE2D_DESC descDepth; 
 	descDepth.Width = width;
@@ -94,7 +92,6 @@ AGDXSurface::AGDXSurface( float width, float height, HWND hwnd )
 		AGError() << "Cannot create render target view, error code, error: " << DXGetErrorDescription( hr );
 		return; 
 	}
-	AGSucces() << "Render target view was created";
 
 	m_device->OMSetRenderTargets( 1, &m_renderTargetView, m_depthStencilView );
 
@@ -106,7 +103,6 @@ AGDXSurface::AGDXSurface( float width, float height, HWND hwnd )
 	viewport.MaxDepth = 1.0f;
 	viewport.MinDepth = 0.0f; 
 	m_device->RSSetViewports( 1, &viewport ); 
-	AGSucces() << "DX10SubSystem was initialized";
 
 	m_size = AGSize( width, height );
 }
@@ -159,7 +155,6 @@ void AGDXSurface::resizeSurface(float width, float height )
 		AGError() << "Cannot get buffer from swap chain for back buffer, error: " << DXGetErrorDescription( hr );
 		return; 
 	}
-	AGSucces() << "Back buffer was created";
 
 	hr = m_device->CreateRenderTargetView( backBuffer, NULL, &m_renderTargetView );
 	backBuffer->Release(); 

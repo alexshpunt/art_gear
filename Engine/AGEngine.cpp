@@ -13,7 +13,6 @@ void AGEngine::init()
 	AGLogger::getInstance().initialize();
 	AGLogger::getInstance().setMode( AGLogger::Console );
 #endif 
-	AGGraphics::getInstance().setMode( AGGraphics::DirectX ); 
 	m_scene = nullptr;
 }
 

@@ -9,6 +9,7 @@
 
 #include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
+#include "Managers/AGStateManager.h"
 #include "Graphics/AGGraphics.h"
 #include "Graphics/Objects/AGDXBoundingBox.h"
 #include "Graphics/Objects/AGDXCamera.h"
@@ -93,7 +94,37 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 			ScreenToClient( (HWND)winId(), &point );
 			mousePos.x = point.x;
 			mousePos.y = point.y; 
-			AGInput().setMousePos( mousePos );
+			
+			
+			if( AGStateManager::getInstance().isRotating() )
+			{
+				AGInput().setMousePos( mousePos, true );
+				if( mousePos.x < 10 )
+				{
+					mousePos.x = m_size.getWidth() - 10;
+				}
+				else if( mousePos.x > m_size.getWidth() - 10 )
+				{
+					mousePos.x = 10; 
+				}
+				if( mousePos.y < 10 )
+				{
+					mousePos.y = m_size.getHeight() - 10; 
+				}
+				else if( mousePos.y > m_size.getHeight() - 10 )
+				{
+					mousePos.y = 10; 
+				}
+				point.x = mousePos.x;
+				point.y = mousePos.y;
+				ClientToScreen( (HWND)winId(), &point );
+				SetCursorPos( point.x, point.y );
+				AGInput().setMousePos( mousePos );
+			}
+			else 
+			{
+				AGInput().setMousePos( mousePos );
+			}
 			AGGraphics::getInstance().mouseMoveEvent(); 
 		break;
 	}

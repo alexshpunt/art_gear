@@ -33,8 +33,9 @@ class AGInputManager
 		bool isButtonDown( const string& button );
 		bool isButtonUp( const string& button );
 
-		void setMousePos( AGPoint2 pos );
+		void setMousePos( AGPoint2 pos, bool lockDelta = false );
 		const AGPoint2& getMousePos() const;
+
 		AGPoint2 getMouseDeltaPos();
 
 		void setWheelDelta( float wheelDelta );
@@ -43,6 +44,7 @@ class AGInputManager
 		void init(); 
 		int fromNameToCode( string name );
 
+		bool m_lockDelta; 
 		AGPoint2 m_mousePos;
 		AGPoint2 m_mouseDeltaPos; 
 

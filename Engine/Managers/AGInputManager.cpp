@@ -120,10 +120,15 @@ int AGInputManager::fromNameToCode( string key )
 	return (int)&key[0]; 
 }
 
-void AGInputManager::setMousePos( AGPoint2 pos )
+void AGInputManager::setMousePos( AGPoint2 pos, bool lockDelta )
 {
-	m_mouseDeltaPos = pos - m_mousePos;
+	if( !m_lockDelta )
+	{
+		m_mouseDeltaPos = pos - m_mousePos;
+		m_lockDelta = false;
+	}
 	m_mousePos = pos; 
+	m_lockDelta = lockDelta;
 }
 
 const AGPoint2& AGInputManager::getMousePos() const
@@ -139,6 +144,7 @@ AGPoint2 AGInputManager::getMouseDeltaPos()
 void AGInputManager::init()
 {
 	m_wheelDelta = 0.0f; 
+	m_lockDelta = false;
 }
 
 void AGInputManager::setWheelDelta(float wheelDelta)
