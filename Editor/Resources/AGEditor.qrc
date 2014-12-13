@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="AGEditor">
+    <file>ToolBar/scale.png</file>
+    <file>ToolBar/scale_activ.png</file>
     <file>ToolBar/mirror.png</file>
     <file>ToolBar/mirror_activ.png</file>
     <file>ToolBar/move.png</file>

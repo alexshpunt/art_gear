@@ -46,6 +46,8 @@ class AGDXCamera
 		void setUp( D3DXVECTOR3 up );
 		D3DXVECTOR3 getUp() const;
 
+		D3DXVECTOR3 getDir(); 
+
 		void setEye( D3DXVECTOR3 forward );
 		D3DXVECTOR3 getEye() const; 
 

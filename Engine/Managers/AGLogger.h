@@ -7,29 +7,24 @@
 #include "Patterns/Singleton.h"
 #include "Math/AGMath.h"
 
-#define AGDebug() AGLogger::getInstance().skipLineIfNeeded().setLevel( AGLogger::Debug ) 
-#define AGSucces() AGLogger::getInstance().skipLineIfNeeded().setLevel( AGLogger::Succes ) 
-#define AGWarning() AGLogger::getInstance().skipLineIfNeeded().setLevel( AGLogger::Warning ) 
-#define AGError() AGLogger::getInstance().skipLineIfNeeded().setLevel( AGLogger::Error ) 
+#define AGDebug() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Debug ) 
+#define AGSucces() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Succes ) 
+#define AGWarning() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Warning ) 
+#define AGError() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Error ) 
 
 using namespace std;
 
 class AGLogger 
 {
-	DECLARE_SINGLETON( AGLogger )
+	DECLARE_SINGLETON_INIT( AGLogger )
 	public:
 		enum Modes { Console = 1, File = 2, Terminal = 4 };
 		enum Levels { Debug, Warning, Error, Succes };
 
-		void initialize(); 
-
 		void setMode( int mode );
 		int getMode() const; 
 
-		AGLogger& setLevel( Levels level );
-		Levels getLevel() const; 
-
-		AGLogger& skipLineIfNeeded(); 
+		AGLogger& getLoggerAtLevel( Levels level );
 
 		AGLogger& operator<<( int var );
 		AGLogger& operator<<( float var ); 
@@ -37,6 +32,7 @@ class AGLogger
 		AGLogger& operator<<( char var );
 		AGLogger& operator<<( bool var );
 		AGLogger& operator<<( char* var );
+		AGLogger& operator<<( const char* var );
 		AGLogger& operator<<( const string& var );
 		AGLogger& operator<<( wchar_t var );
 		AGLogger& operator<<( wchar_t* var );
@@ -46,6 +42,8 @@ class AGLogger
 		AGLogger& operator<<( const AGRect& var );
 
 	private:
+		void init(); 
+
 		HANDLE m_stdHandle; 
 		bool m_skipLine; 
 		int m_mode; 

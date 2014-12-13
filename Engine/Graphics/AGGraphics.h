@@ -7,6 +7,8 @@
 #include <map>
 #include "Math/AGMath.h"
 #include "Patterns/Singleton.h"
+#include "Managers/AGStateManager.h"
+#include "Managers/AGInputManager.h"
 
 class AGObject; 
 class AGDXSurface; 
@@ -52,12 +54,13 @@ class AGGraphics
 		AGDXCamera* getTopCamera() const; 
 		vector< AGDXCamera* > getCameras() const; 
 
-		void mouseClickEvent( const string& btn ); 
+		void mouseClickEvent( MouseButton btn ); 
 		void mouseMoveEvent(); 
 
 	private:
 		void init();
 
+		AGStateManager::ToolBarState m_toolBarState; 
 		Modes m_mode; 
 		AGPoint3 m_backgroundColor; 
 		list< AGDXSurface* > m_surfaces; 

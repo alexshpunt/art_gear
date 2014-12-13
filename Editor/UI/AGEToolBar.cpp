@@ -1,7 +1,7 @@
 #include "AGEToolBar.h"
 
-#include <QDebug>
-#include <QPixmap>
+#include "Managers/AGLogger.h"
+#include "Managers/AGStateManager.h"
 
 #define INIT_BUTTON( name, textName ) m_##name##Icon = QIcon( QString( ":/AGEditor/ToolBar/") + QString( textName ) + QString( ".png" ) ); \
 				      m_##name##IconChecked = QIcon( QString( ":/AGEditor/ToolBar/") + QString( textName ) + QString( "_activ.png" ) ); \
@@ -25,17 +25,26 @@ AGEToolBar::AGEToolBar()
 	INIT_BUTTON( btnMirror, "mirror" );
 	INIT_BUTTON( btnMove, "move" );
 	INIT_BUTTON( btnRotate, "rotate" );
+	INIT_BUTTON( btnScale, "scale" );
 	INIT_BUTTON( btnX, "X" );
 	INIT_BUTTON( btnY, "Y" );
 	INIT_BUTTON( btnZ, "Z" );
 	INIT_BUTTON( btnXZ, "XZ" );
 
-	m_layout.addSpacerItem( m_spacer );
-
 	setFrameStyle( QFrame::Panel | QFrame::Plain );
 	setLineWidth( 1 );
 	setStyleSheet( "color: black; background: rgb( 68, 68, 68 );" );
 	setMaximumHeight( 35 );
+
+	m_comboBox = new QComboBox( this );
+	m_comboBox->addItem( "Local" );
+	m_comboBox->addItem( "World" );
+
+	connect( m_comboBox, SIGNAL( activated( const QString& ) ), this, SLOT( coordSystemStateActivated( const QString& ) ) );
+
+	m_layout.addWidget( m_comboBox );
+
+	m_layout.addSpacerItem( m_spacer );
 }
 
 AGEToolBar::~AGEToolBar()
@@ -69,10 +78,12 @@ void AGEToolBar::btnMoveToggled(bool checked)
 			m_prevBtn->setChecked( false );
 		}
 		m_prevBtn = &m_btnMove;
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Dragger );
 	}
 	else
 	{
 		m_btnMove.setIcon( m_btnMoveIcon );
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Axis );
 	}
 }
 
@@ -86,10 +97,31 @@ void AGEToolBar::btnRotateToggled(bool checked)
 			m_prevBtn->setChecked( false );
 		}
 		m_prevBtn = &m_btnRotate;
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Rotater );
 	}
 	else
 	{
 		m_btnRotate.setIcon( m_btnRotateIcon );
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Axis );
+	}
+}
+
+void AGEToolBar::btnScaleToggled(bool checked)
+{
+	if( checked )
+	{
+		m_btnScale.setIcon( m_btnScaleIconChecked );	
+		if( m_prevBtn )
+		{
+			m_prevBtn->setChecked( false );
+		}
+		m_prevBtn = &m_btnScale;
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Scaler );
+	}
+	else
+	{
+		m_btnScale.setIcon( m_btnScaleIcon );
+		AGStateManager::getInstance().setToolBarState( AGStateManager::ToolBarState::Axis );
 	}
 }
 
@@ -163,6 +195,21 @@ void AGEToolBar::btnXZToggled(bool checked)
 	else
 	{
 		m_btnXZ.setIcon( m_btnXZIcon );
+		
 	}
 }
+
+void AGEToolBar::coordSystemStateActivated(const QString& state)
+{
+	if( state == "Local" )
+	{
+		AGStateManager::getInstance().setCoordystem( AGStateManager::Local );
+	}
+	else if( state == "World" )
+	{
+		AGStateManager::getInstance().setCoordystem( AGStateManager::World );
+	}
+}
+
+
 

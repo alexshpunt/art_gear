@@ -121,7 +121,7 @@ void AGSubMesh::draw( AGDXSurface* surface )
 	ID3D10Device* device = surface->getDevice();
 	device->IASetVertexBuffers( 0, 1, &m_vertexBuffer, &stride, &offset );
 	device->IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
-	m_material->setWorldMatrix( m_mesh->getWorld() );
+	m_material->setWorldMatrix( m_mesh->getLocalMatrix() );
 	m_material->setViewMatrix( camera->getViewMatrix() );
 	m_material->setProjMatrix( camera->getProjMatrix() );
 	m_material->apply( device ); 
@@ -242,9 +242,7 @@ void AGDXMesh::draw( AGDXSurface* surface )
 		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 		subMesh->draw( surface ); 
 	}
-//	if( m_isSelected )
-		m_boundingBox->setWorld( getWorld() );
-		m_boundingBox->draw( surface );
+	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 }	
 
 AGDXBoundingBox* AGDXMesh::getBoundingBox() const

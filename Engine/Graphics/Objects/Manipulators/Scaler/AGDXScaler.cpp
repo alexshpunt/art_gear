@@ -7,6 +7,7 @@
 #include "Graphics/Interfaces/AGSurface.h"
 #include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
+#include "Managers/AGStateManager.h"
 #include "Managers/AGLogger.h"
 #include "Math/AGMath.h"
 
@@ -21,8 +22,8 @@ AGDXScaler::AGDXScaler(ID3D10Device* device)
 	m_yzPlane = new AGDXIntersectTriangle( device, AGDXIntersectTriangle::YZ_AXIS );
 	m_xyzPlane = new AGDXIntersectTriangle( device, AGDXIntersectTriangle::XYZ_AXIS );
 
-	m_object = nullptr; 
 	m_selectedObject = nullptr;
+	m_object = nullptr;
 }
 
 AGDXScaler::~AGDXScaler()
@@ -37,48 +38,13 @@ AGDXScaler::~AGDXScaler()
 	delete m_xyzPlane; 
 }
 
-void AGDXScaler::setObject(AGObject* object)
+void AGDXScaler::mouseClickEvent( MouseButton btn, AGDXSurface* surface)
 {
-	m_object = object; 
-}
-
-AGObject* AGDXScaler::getObject() const
-{
-	return m_object;
-}
-
-void AGDXScaler::mouseClickEvent(const string& btn, AGDXSurface* surface)
-{
-	if( btn != "LMB" )
+	if( btn != MouseButton::LMB )
 		return; 
 
-	AGPoint2 mousePos = AGInput().getMousePos(); 
-	AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
-	AGDXCamera* camera = surface->getCamera(); 
-	if( !camera )
-	{
-		return; 
-	}
-	D3DXMATRIX matProj = camera->getProjMatrix(); 
-
-	D3DXVECTOR3 v; 
-	v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
-	v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
-	v.z = 1.0f; 
-
-	D3DXMATRIX mat; 
-	D3DXMATRIX matView = camera->getViewMatrix(); 
-	D3DXVECTOR3 rayOrigin, rayDir; 
-
-	D3DXMatrixInverse( &mat, NULL, &matView );
-
-	rayDir.x = v.x * mat._11 + v.y * mat._21 + v.z * mat._31; 
-	rayDir.y = v.x * mat._12 + v.y * mat._22 + v.z * mat._32; 
-	rayDir.z = v.x * mat._13 + v.y * mat._23 + v.z * mat._33; 
-
-	rayOrigin.x = mat._41;
-	rayOrigin.y = mat._42;
-	rayOrigin.z = mat._43; 
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+	calculateRays( surface );
 
 	AGDXGizmo* gizmos[] = 
 	{
@@ -95,17 +61,9 @@ void AGDXScaler::mouseClickEvent(const string& btn, AGDXSurface* surface)
 
 		AGDXGizmo* gizmo = gizmos[ i ];
 
-		D3DXMATRIX matWorld = gizmo->getWorld();
-		D3DXMatrixInverse( &matInverce, NULL, &matWorld );
+		calculateObjRays( system == AGStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
-		D3DXVECTOR3 rayObjOrigin, rayObjDir; 
-
-		D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
-		D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
-
-		D3DXVec3Normalize( &rayObjDir, &rayObjDir );
-
-		float dist = gizmo->intersect( rayObjOrigin, rayObjDir );
+		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -135,6 +93,12 @@ void AGDXScaler::mouseClickEvent(const string& btn, AGDXSurface* surface)
 			m_yArrow->setSelected( true );
 			m_zArrow->setSelected( true );
 		}
+		else if( closestPrimitive == m_xyzPlane )
+		{
+			m_xArrow->setSelected( true );
+			m_yArrow->setSelected( true );
+			m_zArrow->setSelected( true );
+		}
 	}
 	m_selectedObject = closestPrimitive;
 }
@@ -146,138 +110,85 @@ void AGDXScaler::mouseMoveEvent(AGDXSurface* surface)
 		m_xArrow, m_yArrow, m_zArrow,
 		m_xyzPlane, m_xyPlane, m_xzPlane, m_yzPlane
 	};
+
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+	calculateRays( surface );
+
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		AGPoint2 mousePos = AGInput().getMousePos(); 
-		AGPoint2 point2 = mousePos + AGInput().getMouseDeltaPos();
-		AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
-		AGDXCamera* camera = surface->getCamera();
-		if( !camera )
-		{
-			return; 
-		}
-		D3DXMATRIX matProj = camera->getProjMatrix(); 
-
-		D3DXVECTOR3 v; 
-		v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
-		v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
-		v.z = 1.0f; 
-
-		D3DXVECTOR3 v1; 
-		v1.x =  ( ( ( 2.0f * point2.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
-		v1.y = -( ( ( 2.0f * point2.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
-		v1.z = 1.0f; 
-
-		D3DXMATRIX mat; 
-		D3DXMATRIX matView = camera->getViewMatrix(); 
-		D3DXVECTOR3 rayOrigin, rayDir; 
-		D3DXVECTOR3 rayOrigin1, rayDir1;
-
-		D3DXMatrixInverse( &mat, NULL, &matView );
-
-		rayDir.x = v.x * mat._11 + v.y * mat._21 + v.z * mat._31; 
-		rayDir.y = v.x * mat._12 + v.y * mat._22 + v.z * mat._32; 
-		rayDir.z = v.x * mat._13 + v.y * mat._23 + v.z * mat._33; 
-
-		rayOrigin.x = mat._41;
-		rayOrigin.y = mat._42;
-		rayOrigin.z = mat._43; 
-
-		rayDir1.x = v1.x * mat._11 + v1.y * mat._21 + v1.z * mat._31; 
-		rayDir1.y = v1.x * mat._12 + v1.y * mat._22 + v1.z * mat._32; 
-		rayDir1.z = v1.x * mat._13 + v1.y * mat._23 + v1.z * mat._33; 
-
-		rayOrigin1.x = mat._41;
-		rayOrigin1.y = mat._42;
-		rayOrigin1.z = mat._43; 
-
-		D3DXVECTOR3 point3d1 = rayOrigin + rayDir;
-		D3DXVECTOR3 point3d2 = rayOrigin1 + rayDir1;
-
-		D3DXVECTOR3 vec = point3d2 - point3d1;
-		D3DXVECTOR3 vec2 = vec;
-
-		D3DXVec3Normalize( &vec, &vec );
+		calculateObjRays( system == AGStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
 
 		D3DXVECTOR3 axis = m_selectedObject->getAxis();
 
 		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
 
-		for( int i = 0; i < 7; i++ )
-		{
-			D3DXVECTOR3 worldPos = gizmos[ i ]->getWorldPos(); 
-			D3DXVECTOR3 lookDir = worldPos - cameraEye; 
+		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getWorldPos();
 
-			float len = D3DXVec3Length( &lookDir );
-			gizmos[ i ]->translateWorldPos( D3DXVECTOR3( vec2.x * axis.x, vec2.y * axis.y, vec2.z * axis.z ) * len );
+		D3DXVECTOR3 axisX( axis.x, 0.0f, 0.0f );
+		D3DXVECTOR3 axisY( 0.0f, axis.y, 0.0f );
+		D3DXVECTOR3 axisZ( 0.0f, 0.0f, axis.z );
+
+		D3DXMATRIX rotMatrix = m_selectedObject->getWorldRotMatrix(); 
+
+		D3DXVec3TransformCoord( &axisX, &axisX, &rotMatrix );
+		D3DXVec3TransformCoord( &axisY, &axisY, &rotMatrix );
+		D3DXVec3TransformCoord( &axisZ, &axisZ, &rotMatrix );
+
+		float cosX = D3DXVec3Dot( &axisX, &m_rayDelta );
+		float cosY = D3DXVec3Dot( &axisY, &m_rayDelta );
+		float cosZ = D3DXVec3Dot( &axisZ, &m_rayDelta );
+
+		float maxVel = absMax( absMax( m_rayDelta.x, m_rayDelta.y ), m_rayDelta.z );
+		maxVel *= 1.2f; 
+
+		AGStateManager::getInstance().setRotating( true );
+
+		D3DXVECTOR3 scale; 
+
+		//Выглядит странно, но это работает так, как должно...
+		if( m_selectedObject == m_xyPlane ||
+		    m_selectedObject == m_xzPlane || 
+		    m_selectedObject == m_yzPlane ||
+		    m_selectedObject == m_xyzPlane )
+		{
+			scale = D3DXVECTOR3( maxVel * axis.x * sign( axis.x ), maxVel * axis.y * sign( axis.y ), maxVel * axis.z * sign( axis.z ) );
+		}
+		else
+		{
+			scale = D3DXVECTOR3( cosX * axis.x * sign( axis.x ), cosY * axis.y * sign( axis.y ), cosZ * axis.z * sign( axis.z ) );
 		}
 
-		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getWorldPos();
+		for( int i = 0; i < 7; i++ )
+		{
+			gizmos[ i ]->scaleWorld( scale );
+		}
 
 		if( m_object )
 		{
-			m_object->setPos( worldPos.x, worldPos.y, worldPos.z );
+			m_object->scale( AGVec3( scale.x, scale.y, scale.z ) );
+		}
+		else
+		{
+			for( AGObject* object : m_objects )
+			{
+				object->scale( AGVec3( scale.x, scale.y, scale.z ) );
+			}
 		}
 
 		return;
 	}
-
-	AGPoint2 mousePos = AGInput().getMousePos(); 
-	AGPoint2 dMousePos = AGInput().getMouseDeltaPos(); 
-	AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
-	AGDXCamera* camera = surface->getCamera(); 
-	if( !camera )
-	{
-		return; 
-	}
-	D3DXMATRIX matProj = camera->getProjMatrix(); 
-
-	D3DXVECTOR3 v; 
-	v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
-	v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
-	v.z = 1.0f; 
-
-	D3DXMATRIX mat; 
-	D3DXMATRIX matView = camera->getViewMatrix(); 
-	D3DXVECTOR3 rayOrigin, rayDir; 
-
-	D3DXMatrixInverse( &mat, NULL, &matView );
-
-	rayDir.x = v.x * mat._11 + v.y * mat._21 + v.z * mat._31; 
-	rayDir.y = v.x * mat._12 + v.y * mat._22 + v.z * mat._32; 
-	rayDir.z = v.x * mat._13 + v.y * mat._23 + v.z * mat._33; 
-
-	rayOrigin.x = mat._41;
-	rayOrigin.y = mat._42;
-	rayOrigin.z = mat._43; 
-
-	D3DXVECTOR3 dir; 
-	dir.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
-	dir.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
-	dir.z = 1.0f; 
-
-	//AGDebug() << dir.x << " " << dir.y << " " << dir.z;
 
 	AGDXGizmo* closestPrimitive = nullptr; 
 	float minDist = -1.0f; 
 
 	for( int i = 0; i < 7; i++ )
 	{
-		D3DXMATRIX matInverce;
-
 		AGDXGizmo* gizmo = gizmos[ i ];
+		gizmo->setWorldScale( 1.0f, 1.0f, 1.0f );
 
-		D3DXMATRIX matWorld = gizmo->getWorld();
-		D3DXMatrixInverse( &matInverce, NULL, &matWorld );
+		calculateObjRays( system == AGStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
-		D3DXVECTOR3 rayObjOrigin, rayObjDir; 
-
-		D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
-		D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
-
-		D3DXVec3Normalize( &rayObjDir, &rayObjDir );
-
-		float dist = gizmo->intersect( rayObjOrigin, rayObjDir );
+		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -321,18 +232,35 @@ void AGDXScaler::mouseMoveEvent(AGDXSurface* surface)
 
 void AGDXScaler::draw(AGDXSurface* surface)
 {
-	m_xArrow->draw( surface );
-	m_yArrow->draw( surface );
-	m_zArrow->draw( surface );
+	if( !m_object && m_objects.size() == 0 )
+		return; 
 
-	m_xyPlane->draw( surface );
-	m_xzPlane->draw( surface );
-	m_yzPlane->draw( surface );
-	m_xyzPlane->draw( surface );
-}
+	AGDXGizmo* gizmos[] = 
+	{
+		m_xArrow, m_yArrow, m_zArrow,
+		m_xyzPlane, m_xyPlane, m_xzPlane, m_yzPlane
+	};
 
-float AGDXScaler::intersect(AGDXPrimitive* primitive, D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
-{
-	return -1.0f; 
+	D3DXVECTOR3 gizmoPos; 
+	D3DXVECTOR3 gizmoAngle; 
+
+	if( m_object )
+	{
+		AGVec3 pos = m_object->getPos(); 
+		AGVec3 angle = m_object->getRotation(); 
+		gizmoPos = D3DXVECTOR3( pos.x, pos.y, pos.z );
+		gizmoAngle = D3DXVECTOR3( angle.x, angle.y, angle.z );
+	}
+	else
+	{
+		//TODO: Нахождение центра и перемещение контроллера туда
+	}
+
+	for( int i = 0; i < 7; i++ )
+	{
+		gizmos[ i ]->setWorldPos( gizmoPos );
+		gizmos[ i ]->setWorldAngle( gizmoAngle );
+		gizmos[ i ]->draw( surface );
+	}
 }
 

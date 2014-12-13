@@ -59,7 +59,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 	{
 		case WM_LBUTTONDOWN:
 			AGInput().setButtonPressed( "LMB", true );
-			AGGraphics::getInstance().mouseClickEvent( "LMB" );
+			AGGraphics::getInstance().mouseClickEvent( MouseButton::LMB );
 		break;
 		case WM_LBUTTONUP: 
 			AGInput().setButtonPressed( "LMB", false );
@@ -69,7 +69,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_RBUTTONDOWN:
 			AGInput().setButtonPressed( "RMB", true );
-			AGGraphics::getInstance().mouseClickEvent( "RMB" );
+			AGGraphics::getInstance().mouseClickEvent( MouseButton::RMB );
 		break;
 		case WM_RBUTTONUP:
 			AGInput().setButtonPressed( "RMB", false );
@@ -79,7 +79,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_MBUTTONDOWN:
 			AGInput().setButtonPressed( "MMB", true );
-			AGGraphics::getInstance().mouseClickEvent( "MMB" );
+			AGGraphics::getInstance().mouseClickEvent( MouseButton::MMB );
 		break;
 		case WM_MBUTTONUP:
 			AGInput().setButtonPressed( "MMB", false );

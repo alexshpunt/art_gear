@@ -9,10 +9,6 @@
 
 void AGEngine::init()
 {
-#ifdef _DEBUG
-	AGLogger::getInstance().initialize();
-	AGLogger::getInstance().setMode( AGLogger::Console );
-#endif 
 	m_scene = nullptr;
 }
 

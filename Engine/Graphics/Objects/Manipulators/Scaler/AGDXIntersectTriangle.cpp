@@ -22,8 +22,8 @@ AGDXIntersectTriangle::AGDXIntersectTriangle(ID3D10Device* device, TriangleAxis 
 			secondColor = red; 
 		break;
 		case XZ_AXIS:
-			firstColor = red;
-			secondColor = blue;
+			firstColor = blue;
+			secondColor = red;
 		break;
 		case YZ_AXIS:
 			firstColor = green;
@@ -214,19 +214,70 @@ void AGDXIntersectTriangle::draw(AGDXSurface* surface)
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 
 	D3DXVECTOR3 pos = dir; 
-	setPos( pos );
+	setLocalPos( pos );
 
-	switch( m_axis )
+	D3DXVECTOR3 xAxis( 1.0f, 0.0f, 0.0f );
+	D3DXVECTOR3 zAxis( 0.0f, 0.0f, 1.0f );
+	D3DXVECTOR3 yAxis( 0.0f, 1.0f, 0.0f );
+
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+
+	if( system == AGStateManager::Local )
 	{
-		case XZ_AXIS:
-			setAngle( D3DXToRadian( -90.0f ), D3DXToRadian( 0.0f ), D3DXToRadian( -90.0f  ) );
-		break;
-		case YZ_AXIS:
-			setAngle( 0.0f, D3DXToRadian( -90.0f ), 0.0f );
-		break; 
+		D3DXMATRIX rotMatrix = getWorldRotMatrix(); 
+
+		D3DXVec3TransformCoord( &xAxis, &xAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &yAxis, &yAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
 	}
 
-	m_worldVar->SetMatrix( getWorld() );
+	camEye -= m_worldPos; 
+
+	float cosX = D3DXVec3Dot( &xAxis, &camEye );
+	float cosY = D3DXVec3Dot( &yAxis, &camEye );
+	float cosZ = D3DXVec3Dot( &zAxis, &camEye );
+
+	if( m_axis == XY_AXIS )
+	{
+		cosX = cosX >= 0.0f ? 0.0f : -1.0f;
+		cosY = cosY >= 0.0f ? 0.0f : -1.0f;
+
+		setLocalAngle( D3DXToRadian( 180.0f * cosY ), D3DXToRadian( 180.0f * cosX ), D3DXToRadian( 0.0f  ) );
+	}
+	else if( m_axis == XZ_AXIS )
+	{
+		cosX = cosX >= 0.0f ? 0.0f : -1.0f;
+		cosZ = cosZ > 0.0f ? 1.0f : cosZ < 0.0f ? -1.0f : 0.0f;
+
+		setLocalAngle( D3DXToRadian( ( cosX < 0.0f ? -1.0f : 1.0f ) * 90.0f * cosZ  ), D3DXToRadian( 180.0f * cosX ), D3DXToRadian( 0.0f ) );
+	}
+	else if( m_axis == YZ_AXIS )
+	{
+		cosY = cosY >= 0.0f ? 0.0f : -1.0f;
+		cosZ = cosZ > 0.0f ? 1.0f : cosZ < 0.0f ? -1.0f : 0.0f;
+
+		setLocalAngle( D3DXToRadian( -180.0f * cosY ), D3DXToRadian( -90.0f * cosZ ), 0.0f );
+	}	
+	else if( m_axis == XYZ_AXIS )
+	{
+		cosX = cosX > 0.0f ? 1.0f : cosX < 0.0f ? -1.0f : 0.0f;
+		cosY = cosY >= 0.0f ? 0.0f : -1.0f;
+		cosZ = cosZ > 0.0f ? 1.0f : cosZ < 0.0f ? -1.0f : 0.0f;
+
+		if( cosX * cosZ > 0.0f )
+		{
+			cosX = cosX > 0.0f ? 0.0f : cosX; 
+			cosZ = cosZ > 0.0f ? 0.0f : cosZ; 
+
+			setLocalAngle( D3DXToRadian( -90.0f * cosY ), D3DXToRadian( 90.0f * ( cosX + cosZ ) ), D3DXToRadian( 0.0f ) );	
+		}
+		else if( cosX * cosZ < 0.0f )
+		{
+			setLocalAngle( D3DXToRadian( -90.0f * cosY ), D3DXToRadian( 90.0f * cosX ), D3DXToRadian( 0.0f ) );
+		}
+	}
+
+	m_worldVar->SetMatrix( system == AGStateManager::Local ? getResultMatrix() : getLocalMatrix() );
 	m_viewVar->SetMatrix( camera->getViewMatrix() );
 	m_projectionVar->SetMatrix( camera->getProjMatrix() );
 

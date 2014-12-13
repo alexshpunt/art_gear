@@ -4,6 +4,7 @@
 
 #include "Managers/AGInputManager.h"
 #include "Managers/AGTimeManager.h"
+#include "Managers/AGStateManager.h"
 #include "Managers/AGLogger.h"
 #include "AGEngine.h"
 #include "Graphics/AGGraphics.h"
@@ -16,8 +17,7 @@
 AGEditor::AGEditor()
 {
 #ifdef _DEBUG
-	AGLogger::getInstance().initialize();
-	AGLogger::getInstance().setMode( AGLogger::Console );
+	AGLogger::getInstance().setMode( AGLogger::Terminal );
 #endif 
 
 	setAttribute( Qt::WA_NativeWindow );
@@ -71,6 +71,10 @@ int AGEditor::run( QApplication& app )
 		AGEngine::getInstance().update(); 
 		m_view->update();
 		AGInput().update();
+		if( !AGInput().isButtonPressed( "RMB" ) && !AGInput().isButtonPressed( "LMB" ) )
+		{
+			AGStateManager::getInstance().setRotating( false );
+		}
 	}
 	return 0;
 }

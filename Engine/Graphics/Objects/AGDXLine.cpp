@@ -40,7 +40,7 @@ void AGDXLine::draw(AGDXSurface* surface)
 	AGDXCamera* camera = surface->getCamera();
 	ID3D10Device* device = surface->getDevice();
 
-	m_worldVar->SetMatrix( getWorld() );
+	m_worldVar->SetMatrix( getLocalMatrix() );
 	m_viewVar->SetMatrix( camera->getViewMatrix() );
 	m_projectionVar->SetMatrix( camera->getProjMatrix() );
 

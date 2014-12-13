@@ -72,20 +72,29 @@ void AGRenderer::draw( AGDXSurface* surface )
 {
 	AGVec3 pos = m_object->getPos(); 
 	AGVec3 rot = m_object->getRotation();
+	AGVec3 scale = m_object->getScale();
 	AGVec3 pivot = m_object->getPivot();
 	if( m_mesh )
 	{
-		m_mesh->setAngle( rot.x, rot.y, rot.z );
-		m_mesh->setPos( pos.x, pos.y, pos.z );
+		m_mesh->setLocalAngle( rot.x, rot.y, rot.z );
+		m_mesh->setLocalPos( pos.x, pos.y, pos.z );
+		m_mesh->setLocalScale( scale.x, scale.y, scale.z );
 		m_mesh->draw( surface );
 	}
 	else
 	{
-		m_boundingBox->setPos( pos.x, pos.y, pos.z );
+		m_boundingBox->setLocalPos( pos.x, pos.y, pos.z );
 		m_boundingBox->draw( surface ); 
 	}
 	if( m_isSelected )
+	{
 		m_axises->draw( surface );
+		if( m_mesh )
+		{
+			m_mesh->getBoundingBox()->draw( surface );	
+		}
+		
+	}
 }
 
 void AGRenderer::loadMeshFrom(const string& fileName, ID3D10Device* device )

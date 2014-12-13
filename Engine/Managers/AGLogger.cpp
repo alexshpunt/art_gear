@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <iostream>
 
-void AGLogger::initialize()
+void AGLogger::init()
 {
 	m_mode = 0; 
 	m_skipLine = false; 
@@ -29,13 +29,6 @@ void AGLogger::setMode(int mode)
 int AGLogger::getMode() const
 {
 	return m_mode; 
-}
-
-AGLogger& AGLogger::skipLineIfNeeded()
-{
-	if( m_skipLine )
-		*this << '\n';
-	return *this; 
 }
 
 AGLogger& AGLogger::operator<<(int var)
@@ -88,6 +81,14 @@ AGLogger& AGLogger::operator<<(char* var)
 {
 	m_skipLine = true;
 
+	if( m_mode | Terminal )
+		cout << var; 
+	return *this; 
+}
+
+AGLogger& AGLogger::operator<<(const char* var)
+{
+	m_skipLine = true; 
 	if( m_mode | Terminal )
 		cout << var; 
 	return *this; 
@@ -151,9 +152,14 @@ AGLogger& AGLogger::operator<<(const AGRect& var)
 	return *this; 
 }
 
-AGLogger& AGLogger::setLevel(Levels level)
+AGLogger& AGLogger::getLoggerAtLevel(Levels level)
 {
 	m_level = level; 
+
+	SetConsoleTextAttribute( m_stdHandle, FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE );
+	if( m_skipLine )
+		*this << "\n";
+
 	if( m_stdHandle )
 	{
 		if( m_level == Debug )
@@ -174,11 +180,6 @@ AGLogger& AGLogger::setLevel(Levels level)
 		}
 	}
 	return *this;
-}
-
-AGLogger::Levels AGLogger::getLevel() const
-{
-	return m_level; 
 }
 
 

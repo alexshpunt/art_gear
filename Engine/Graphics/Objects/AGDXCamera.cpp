@@ -314,3 +314,10 @@ float AGDXCamera::getAngleY() const
 {
 	return m_angleY;
 }
+
+D3DXVECTOR3 AGDXCamera::getDir()
+{
+	D3DXVECTOR3 dir = m_at - m_eye; 
+	D3DXVec3Normalize( &dir, &dir );
+	return dir; 
+}

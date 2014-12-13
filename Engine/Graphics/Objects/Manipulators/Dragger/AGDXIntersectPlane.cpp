@@ -3,6 +3,7 @@
 #include "AGDXArrow.h"
 
 #include "Managers/AGLogger.h"
+#include "Managers/AGStateManager.h"
 #include "Graphics/Interfaces/AGSurface.h"
 #include "Graphics/Objects/AGDXCamera.h"
 
@@ -125,19 +126,21 @@ void AGDXIntersectPlane::draw(AGDXSurface* surface)
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 
 	D3DXVECTOR3 pos = dir; 
-	setPos( pos );
+	setLocalPos( pos );
 
 	switch( m_axis )
 	{
 		case XZ_AXIS:
-			setAngle( D3DXToRadian( -90.0f ), D3DXToRadian( 0.0f ), D3DXToRadian( -90.0f  ) );
+			setLocalAngle( D3DXToRadian( -90.0f ), D3DXToRadian( 0.0f ), D3DXToRadian( -90.0f  ) );
 		break;
 		case YZ_AXIS:
-			setAngle( 0.0f, D3DXToRadian( -90.0f ), 0.0f );
+			setLocalAngle( 0.0f, D3DXToRadian( -90.0f ), 0.0f );
 		break; 
 	}
 
-	m_worldVar->SetMatrix( getWorld() );
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+
+	m_worldVar->SetMatrix( system == AGStateManager::Local ? getResultMatrix() : getLocalMatrix() );
 	m_viewVar->SetMatrix( camera->getViewMatrix() );
 	m_projectionVar->SetMatrix( camera->getProjMatrix() );
 
@@ -202,6 +205,7 @@ D3DXVECTOR3 AGDXIntersectPlane::getAxis()
 		return D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
 	if( m_axis == YZ_AXIS )
 		return D3DXVECTOR3( 0.0f, 1.0f, 1.0f );
+
 	return D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
 }
 

@@ -187,23 +187,25 @@ void AGDXArrow::draw( AGDXSurface* surface )
 	dir = camEye - dir * 1.0f; 
 	D3DXVECTOR3 pos = dir; 
 	
-	setPos( pos.x, pos.y, pos.z );
+	setLocalPos( pos.x, pos.y, pos.z );
 
-	D3DXMATRIX worldTextMat = getWorld();
+	D3DXMATRIX worldTextMat = getLocalMatrix();
 
 	if( m_axis == X_AXIS )
 	{
-		setAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f ) );	
+		setLocalAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f ) );	
 	}
 	else if( m_axis == Z_AXIS )
 	{
-		setAngle( D3DXToRadian( 90.0f ), 0.0f, 0.0f );	
+		setLocalAngle( D3DXToRadian( 90.0f ), 0.0f, 0.0f );	
 	} 
 
 	D3DXMATRIX viewMat = camera->getViewMatrix();
 	D3DXMATRIX projMat = camera->getProjMatrix();
 
-	m_worldVar->SetMatrix( getWorld() );
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+
+	m_worldVar->SetMatrix( system == AGStateManager::Local ? getResultMatrix() : getLocalMatrix() );
 	m_viewVar->SetMatrix( viewMat );
 	m_projectionVar->SetMatrix( projMat );
 
@@ -227,7 +229,7 @@ void AGDXArrow::draw( AGDXSurface* surface )
 			device->Draw( 2, 22 );
 	}
 
-	m_boundingBox->setWorld( getWorld() );
+	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 
 	/*float halfWidth = surface->getWidth() / 2.0f;
 	float halfHeight = surface->getHeight() / 2.0f; 

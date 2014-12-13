@@ -1,9 +1,7 @@
 #ifndef AGDX_DRAGGER_H
 #define AGDX_DRAGGER_H
 
-#include <d3dx10.h>
-#include <d3d10.h>
-#include <string>
+#include "Graphics/Objects/Manipulators/AGDXManipulator.h"
 
 class AGObject; 
 class AGDXPrimitive;
@@ -15,23 +13,18 @@ class AGDXCircle;
 
 using namespace std; 
 
-class AGDXDragger 
+class AGDXDragger : public AGDXManipulator
 {
 	public:
 		AGDXDragger( ID3D10Device* device );
 		~AGDXDragger();
 
-		void setObject( AGObject* object );
-		AGObject* getObject() const; 
-
-		void mouseClickEvent( const string& btn, AGDXSurface* surface );
+		void mouseClickEvent( MouseButton btn, AGDXSurface* surface );
 		void mouseMoveEvent( AGDXSurface* surface );
 
 		void draw( AGDXSurface* surface );
 
 	private:
-		float intersect( AGDXPrimitive* primitive, D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
-
 		AGDXArrow* m_xArrow;
 		AGDXArrow* m_yArrow; 
 		AGDXArrow* m_zArrow; 
@@ -43,8 +36,6 @@ class AGDXDragger
 		AGDXCircle* m_circle; 
 
 		AGDXGizmo* m_selectedObject; 
-
-		AGObject* m_object; 
 };
 
 #endif 

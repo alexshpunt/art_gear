@@ -27,6 +27,7 @@ class AGDXCubeArrow : public AGDXGizmo
 		AGDXBoundingBox* m_boundingBox;
 		vector< AGColorVertex > m_vertices;
 		vector< int > m_indices; 
+		D3DXVECTOR3 m_axisDir; 
 };
 
 #endif 

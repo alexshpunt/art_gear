@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QSpacerItem>
+#include <QComboBox>
 #include <QIcon>
 #include <QHBoxLayout>
 
@@ -15,7 +16,7 @@
 			      QIcon name##Icon; \
 			      QIcon name##IconChecked; \
 
-
+//Почему реализую именно так: потому что у тулбара Qt отсутствует возможность нормально менять иконку у кнопки при нажатии, а мне это нужно
 class AGEToolBar : public QFrame
 {
 	Q_OBJECT
@@ -27,10 +28,13 @@ class AGEToolBar : public QFrame
 		void btnMirrorToggled( bool checked );
 		void btnMoveToggled( bool checked );
 		void btnRotateToggled( bool checked );
+		void btnScaleToggled( bool checked );
 		void btnXToggled( bool checked );
 		void btnYToggled( bool checked );
 		void btnZToggled( bool checked );
 		void btnXZToggled( bool checked );
+		
+		void coordSystemStateActivated( const QString& state );
 
 	private:
 		void toggleButton( QPushButton* button, bool checked );
@@ -43,10 +47,13 @@ class AGEToolBar : public QFrame
 		BUTTON_CREATE( m_btnMirror );
 		BUTTON_CREATE( m_btnMove );
 		BUTTON_CREATE( m_btnRotate );
+		BUTTON_CREATE( m_btnScale );
 		BUTTON_CREATE( m_btnX );
 		BUTTON_CREATE( m_btnY );
 		BUTTON_CREATE( m_btnZ );
 		BUTTON_CREATE( m_btnXZ );
+
+		QComboBox* m_comboBox; 
 };
 
 #endif 

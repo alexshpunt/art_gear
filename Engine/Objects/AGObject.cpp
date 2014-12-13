@@ -1,6 +1,7 @@
 #include "AGObject.h"
 
 #include "AGComponent.h"
+#include "Managers/AGLogger.h"
 #include "Graphics/Components/AGRenderer.h"
 #include "Graphics/AGGraphics.h"
 
@@ -118,6 +119,7 @@ const AGVec3& AGObject::getPivot() const
 void AGObject::setPos(const AGVec3& pos)
 {
 	m_pos = pos; 
+	AGDebug() << pos.x << " " << pos.y << " " << pos.z;
 }
 
 void AGObject::setPos(float posX, float posY, float posZ)

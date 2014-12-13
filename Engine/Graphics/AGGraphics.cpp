@@ -13,7 +13,6 @@
 #include "Components/AGRenderer.h"
 #include "Interfaces/AGSurface.h"
 #include "Managers/AGLogger.h"
-#include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
 
 void AGGraphics::init()
@@ -26,6 +25,7 @@ void AGGraphics::init()
 
 void AGGraphics::update()
 {
+	m_toolBarState = AGStateManager::getInstance().getToolBarState(); 
 	for( AGDXSurface* surface : m_surfaces )
 	{
 		float color[ 4 ] = { m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f };
@@ -77,7 +77,7 @@ void AGGraphics::update()
 				}
 				else
 				{
-					matWorld = mesh->getWorld(); //Локальные координаты модели
+					matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
 				}
 				AGObject* obj = renderer->getObject(); 
 				AGVec3 pos = obj->getPos(); 
@@ -114,29 +114,17 @@ void AGGraphics::update()
 		for( AGRenderer* renderer : m_renderers )
 		{
 			renderer->draw( surface );
-			if( m_dragger )
-			{
-				m_dragger->setObject( renderer->getObject() );
-			}
-			if( m_rotater )
-			{
-				m_rotater->setObject( renderer->getObject() );
-			}
-			if( m_scaler )
-			{
-				m_scaler->setObject( renderer->getObject() );
-			}
 		}
 
-		if( m_dragger )
+		if( m_dragger && m_toolBarState == AGStateManager::Dragger )
 		{
 			m_dragger->draw( surface );
 		}
-		if( m_rotater )
+		if( m_rotater && m_toolBarState == AGStateManager::Rotater )
 		{
 			m_rotater->draw( surface );
 		}
-		if( m_scaler )
+		if( m_scaler && m_toolBarState == AGStateManager::Scaler )
 		{
 			m_scaler->draw( surface );
 		}
@@ -158,11 +146,11 @@ void AGGraphics::addSurface(AGDXSurface* surface)
 	m_surfaces.push_back( surface );
 	if( !m_dragger )
 	{
-		//m_dragger = new AGDXDragger( surface->getDevice() );
+		m_dragger = new AGDXDragger( surface->getDevice() );
 	}
 	if( !m_rotater )
 	{
-		//m_rotater = new AGDXRotater( surface->getDevice() );
+		m_rotater = new AGDXRotater( surface->getDevice() );
 	}
 	if( !m_scaler )
 	{
@@ -223,7 +211,7 @@ void AGGraphics::removeSelectedObject(AGObject* object)
 	}
 }
 
-void AGGraphics::mouseClickEvent( const string& btn )
+void AGGraphics::mouseClickEvent( MouseButton btn )
 {
 	if( m_dragger )
 	{
@@ -239,17 +227,23 @@ void AGGraphics::mouseClickEvent( const string& btn )
 			m_rotater->mouseClickEvent( btn, surface ); 	
 		}
 	}
+	if( m_scaler )
+	{
+		for( AGDXSurface* surface : m_surfaces )
+		{
+			m_scaler->mouseClickEvent( btn, surface ); 	
+		}
+	}
 
-	if( btn != "LMB" )
+	if( btn != MouseButton::LMB )
 		return; 
 
-	//Убрал на время, не удалять!
-	/*AGPoint2 mousePos = AGInput().getMousePos(); 
+	AGPoint2 mousePos = AGInput().getMousePos(); 
 	AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
 	AGDXCamera* camera = getTopCamera(); 
 	if( !camera )
 	{
-	return; 
+		return; 
 	}
 	D3DXMATRIX matProj = camera->getProjMatrix(); 
 
@@ -279,64 +273,70 @@ void AGGraphics::mouseClickEvent( const string& btn )
 
 	for( AGRenderer* renderer : m_renderers )
 	{
-	AGDXMesh* mesh = renderer->getMesh();
-	D3DXMATRIX matWorld;
-	if( !mesh )
-	{
-	D3DXMatrixIdentity( &matWorld );
-	}
-	else
-	{
-	matWorld = mesh->getWorldMatrix(); //Локальные координаты модели
-	}
-	AGObject* obj = renderer->getObject(); 
-	AGVec3 pos = obj->getPos(); 
-	D3DXMatrixTranslation( &matWorld, pos.x, pos.y, pos.z );
+		AGDXMesh* mesh = renderer->getMesh();
+		D3DXMATRIX matWorld;
+		if( !mesh )
+		{
+			D3DXMatrixIdentity( &matWorld );
+		}
+		else
+		{
+			matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
+		}
+		AGObject* obj = renderer->getObject(); 
+		AGVec3 pos = obj->getPos(); 
+		D3DXMatrixTranslation( &matWorld, pos.x, pos.y, pos.z );
 
-	D3DXMatrixInverse( &matInverce, NULL, &matWorld );
+		D3DXMatrixInverse( &matInverce, NULL, &matWorld );
 
-	D3DXVECTOR3 rayObjOrigin, rayObjDir; 
+		D3DXVECTOR3 rayObjOrigin, rayObjDir; 
 
-	D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
-	D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
+		D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
+		D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
 
-	D3DXVec3Normalize( &rayObjDir, &rayObjDir );
+		D3DXVec3Normalize( &rayObjDir, &rayObjDir );
 
-	float dist = renderer->intersect( rayObjOrigin, rayObjDir );
-	renderer->setSelected( false );
-	if( dist > 0 )
-	{
-	if( minDist < 0 || minDist > dist )
-	{
-	minDist = dist; 
-	nearestObj = renderer;
-	}
-	}
+		float dist = renderer->intersect( rayObjOrigin, rayObjDir );
+		renderer->setSelected( false );
+		if( dist > 0 )
+		{
+			if( minDist < 0 || minDist > dist )
+			{
+				minDist = dist; 
+				nearestObj = renderer;
+			}
+		}
 	}
 
 	if( nearestObj )
 	{
-	nearestObj->setSelected( true );
-	}*/
+		nearestObj->setSelected( true );
+		if( m_dragger && m_rotater && m_scaler )
+		{
+			m_dragger->setObject( nearestObj->getObject() );
+			m_rotater->setObject( nearestObj->getObject() );
+			m_scaler->setObject( nearestObj->getObject() );
+		}
+	}	
 }
 
 void AGGraphics::mouseMoveEvent()
 {
-	if( m_dragger )
+	if( m_dragger && m_toolBarState == AGStateManager::Dragger )
 	{
 		for( AGDXSurface* surface : m_surfaces )
 		{
 			m_dragger->mouseMoveEvent( surface ); 	
 		}
 	}
-	if( m_rotater )
+	if( m_rotater && m_toolBarState == AGStateManager::Rotater )
 	{
 		for( AGDXSurface* surface : m_surfaces )
 		{
 			m_rotater->mouseMoveEvent( surface ); 	
 		}
 	}
-	if( m_scaler )
+	if( m_scaler && m_toolBarState == AGStateManager::Scaler )
 	{
 		for( AGDXSurface* surface : m_surfaces )
 		{

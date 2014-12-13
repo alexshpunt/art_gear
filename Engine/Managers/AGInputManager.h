@@ -13,6 +13,8 @@ using namespace std;
 typedef map< int, bool > KeysMap; 
 typedef map< string, bool > ButtonsMap; 
 
+enum MouseButton { LMB, RMB, MMB };
+
 class AGInputManager
 {
 	DECLARE_SINGLETON_INIT( AGInputManager )

@@ -115,16 +115,16 @@ void AGDXAxises::draw( AGDXSurface* surface )
 	D3DXVECTOR3 dir = camEye - at; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 
-	setPos( dir );
+	setLocalPos( dir );
 
 	AGVec3 angles = m_object->getRotation();
 
-	setAngle( angles.x, angles.y, angles.z );
+	setLocalAngle( angles.x, angles.y, angles.z );
 
 	D3DXMATRIX viewMat = camera->getViewMatrix();
 	D3DXMATRIX projMat = camera->getProjMatrix();
 
-	m_worldVar->SetMatrix( getWorld() );
+	m_worldVar->SetMatrix( getLocalMatrix() );
 	m_viewVar->SetMatrix( viewMat );
 	m_projectionVar->SetMatrix( projMat );
 

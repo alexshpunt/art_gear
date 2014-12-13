@@ -135,23 +135,86 @@ void AGDXCubeArrow::draw(AGDXSurface* surface)
 	dir = camEye - dir * 1.0f; 
 	D3DXVECTOR3 pos = dir; 
 
-	setPos( pos.x, pos.y, pos.z );
+	setLocalPos( pos.x, pos.y, pos.z );
 
-	D3DXMATRIX worldTextMat = getWorld();
+	D3DXMATRIX worldTextMat = getLocalMatrix();
+	D3DXVECTOR3 xAxis( 1.0f, 0.0f, 0.0f );
+	D3DXVECTOR3 yAxis( 0.0f, 1.0f, 0.0f );
+	D3DXVECTOR3 zAxis( 0.0f, 0.0f, 1.0f );
+
+	AGStateManager::CoordSystem system = AGStateManager::getInstance().getCoordSystem(); 
+
+	if( system == AGStateManager::Local )
+	{
+		D3DXMATRIX rotMatrix = getWorldRotMatrix(); 
+
+		D3DXVec3TransformCoord( &xAxis, &xAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &yAxis, &yAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
+	}
+
+	camEye -= m_worldPos;
 
 	if( m_axis == X_AXIS )
 	{
-		setAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f ) );	
+		float cosA = D3DXVec3Dot( &xAxis, &camEye );
+		if( cosA > 0.0f )
+		{
+			cosA = 1.0f; 
+			m_axisDir.x = 1.0f;
+		}
+		else if( cosA < 0.0f )
+		{
+			cosA = -1.0f; 
+			m_axisDir.x = -1.0f;
+		}
+		else 
+		{
+			cosA == 0.0f; 
+			m_axisDir.x = 0.0f;
+		}
+		setLocalAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f * cosA ) );	
+	}
+	else if( m_axis == Y_AXIS )
+	{
+		float cosA = D3DXVec3Dot( &yAxis, &camEye );
+		if( cosA >= 0.0f )
+		{
+			cosA = 0.0f; 
+			m_axisDir.y = 0.0f; 
+		}
+		else if( cosA < 0.0f )
+		{
+			cosA = -1.0f; 
+			m_axisDir.y = -1.0f; 
+		}
+		setLocalAngle( D3DXToRadian( 180.0f * cosA ), 0.0f, 0.0f );	
 	}
 	else if( m_axis == Z_AXIS )
 	{
-		setAngle( D3DXToRadian( 90.0f ), 0.0f, 0.0f );	
-	} 
+		float cosA = D3DXVec3Dot( &zAxis, &camEye );
+		if( cosA > 0.0f )
+		{
+			cosA = 1.0f; 
+			m_axisDir.z = 1.0f; 
+		}
+		else if( cosA < 0.0f )
+		{
+			cosA = -1.0f; 
+			m_axisDir.z = -1.0f; 
+		}
+		else 
+		{
+			cosA == 0.0f; 
+			m_axisDir.z = 0.0f; 
+		}
+		setLocalAngle( D3DXToRadian( 90.0f * cosA ), 0.0f, 0.0f );	
+	} 	
 
 	D3DXMATRIX viewMat = camera->getViewMatrix();
 	D3DXMATRIX projMat = camera->getProjMatrix();
 
-	m_worldVar->SetMatrix( getWorld() );
+	m_worldVar->SetMatrix( system == AGStateManager::Local ? getResultMatrix() : getLocalMatrix() );
 	m_viewVar->SetMatrix( viewMat );
 	m_projectionVar->SetMatrix( projMat );
 
@@ -175,8 +238,7 @@ void AGDXCubeArrow::draw(AGDXSurface* surface)
 			device->Draw( 2, 8 );
 	}
 
-	m_boundingBox->setWorld( getWorld() );
-	//m_boundingBox->draw( surface );
+	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 }
 
 float AGDXCubeArrow::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
@@ -220,6 +282,12 @@ float AGDXCubeArrow::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 
 D3DXVECTOR3 AGDXCubeArrow::getAxis()
 {
-	return D3DXVECTOR3( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+	D3DXVECTOR3 axis( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+
+	axis.x *= m_axisDir.x != 0 ? m_axisDir.x : 1;
+	axis.y *= m_axisDir.y != 0 ? m_axisDir.y : 1; 
+	axis.z *= m_axisDir.z != 0 ? m_axisDir.z : 1;
+
+	return axis;
 }
 
