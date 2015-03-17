@@ -1,16 +1,26 @@
 #include "AGInputManager.h"
 
 #include <windows.h>
-#include <Managers/AGLogger.h>
+#include "Managers/AGConsoleManager.h"
+#include "Managers/AGEStateManager.h"
+#include "Managers/AGLogger.h"
 
 void AGInputManager::update()
 {
-	m_mouseDeltaPos = AGPoint2( 0.0f, 0.0f );
+	setMouseDeltaPos( AGPoint2( 0.0f, 0.0f ) );
 	m_wheelDelta = 0.0f; 
 }
 
 void AGInputManager::setKeyPressed(int key, bool flag)
 {
+	if( key == VK_OEM_3 && flag )
+	{
+		AGEStateManager::getInstance().setConsoleMode( !AGEStateManager::getInstance().isConsoleMode() );
+	} 
+	if( AGEStateManager::getInstance().isConsoleMode() )
+	{	
+		return; 	
+	}
 	m_keyPressed[ key ] = flag;
 	m_keyDown[ key ] = flag;
 	m_keyUp[ key ] = !flag;
@@ -25,7 +35,7 @@ bool AGInputManager::isKeyPressed(int key)
 
 bool AGInputManager::isKeyDown(int key)
 {
-	if( m_keyDown.find( key ) == m_keyDown.end() )
+	if( m_keyDown.find( key ) != m_keyDown.end() )
 	{
 		bool value = m_keyDown.at( key );
 		m_keyDown[ key ] = false;
@@ -124,7 +134,7 @@ void AGInputManager::setMousePos( AGPoint2 pos, bool lockDelta )
 {
 	if( !m_lockDelta )
 	{
-		m_mouseDeltaPos = pos - m_mousePos;
+		setMouseDeltaPos( pos - m_mousePos );
 		m_lockDelta = false;
 	}
 	m_mousePos = pos; 
@@ -138,7 +148,20 @@ const AGPoint2& AGInputManager::getMousePos() const
 
 AGPoint2 AGInputManager::getMouseDeltaPos()
 {
-	return m_mouseDeltaPos;
+	AGPoint2 mouseDeltaPos( 0.0f, 0.0f );
+
+	float curWeight = 1.0f; 
+	float weightStep = 0.4f;
+
+	for( AGPoint2 point : m_mouseStack )
+	{
+		mouseDeltaPos += point * curWeight; 
+		curWeight *= weightStep; 
+	}
+
+	mouseDeltaPos /= m_mouseStack.size(); 
+
+	return mouseDeltaPos;
 }
 
 void AGInputManager::init()
@@ -155,6 +178,41 @@ void AGInputManager::setWheelDelta(float wheelDelta)
 float AGInputManager::getWheelDelta()
 {	
 	return m_wheelDelta; 
+}
+
+void AGInputManager::setCharInput(wchar_t charInput)
+{
+	m_isCharInput = true; 
+	m_charInput = charInput;
+}
+
+bool AGInputManager::isCharInput() const
+{
+	return m_isCharInput; 
+}
+
+char AGInputManager::getCharInput()
+{
+	m_isCharInput = false; 	
+	return char( m_charInput % 256 ); 
+}
+
+wchar_t AGInputManager::getWCharInput()
+{
+	m_isCharInput = false; 
+	return m_charInput; 
+}
+
+void AGInputManager::setMouseDeltaPos(AGPoint2 deltaPos)
+{
+	m_mouseDeltaPos = deltaPos; 
+
+	if( m_mouseStack.size() > 10 )
+	{
+		m_mouseStack.pop_back(); 
+	}
+
+	m_mouseStack.push_front( m_mouseDeltaPos );
 }
 
 

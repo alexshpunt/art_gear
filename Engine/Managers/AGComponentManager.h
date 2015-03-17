@@ -6,9 +6,9 @@
 #include "Patterns/Singleton.h"
 
 class AGComponent; 
-class AGObject; 
+class AGGameObject; 
 
-typedef AGComponent* (*CreationFunction )( AGObject* object );
+typedef AGComponent* (*CreationFunction )( AGGameObject* object );
 
 using namespace std;
 
@@ -19,7 +19,7 @@ class AGComponentManager
 	DECLARE_SINGLETON( AGComponentManager )
 	public:
 		void registerFunction( const string& componentName, CreationFunction func );
-		AGComponent* createComponent( const string& componentName, AGObject* object );
+		AGComponent* createComponent( const string& componentName, AGGameObject* object );
 
 	private:
 		unordered_map< string, CreationFunction > m_creationFunctions; 

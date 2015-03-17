@@ -3,26 +3,29 @@
 
 #include <string>
 
+#include "Engine/Objects/AGGameObject.h"
+
 using namespace std;
 
-class AGObject; 
-class AGScene; 
+class AGGameScene; 
 
 class AGComponent 
 {
 	public:
-		AGComponent( AGObject* object );
+		AGComponent( AGGameObject* object );
 		virtual ~AGComponent(); 
 		
+		virtual void notify( AGGameObject::Change ) = 0; 
+
 		virtual void onSceneInit() = 0;
 		virtual void onSceneUpdate() = 0;
 		virtual void onSceneFixedUpdate() = 0;
 
-		AGObject* getObject() const; 
+		AGGameObject* getObject() const; 
 		const string& getName() const; 
 
 	protected:
-		AGObject* m_object; 
+		AGGameObject* m_object; 
 		string m_name; 
 };
 

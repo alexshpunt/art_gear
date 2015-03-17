@@ -8,7 +8,8 @@ class AGRect
 {
 	public:
 		AGRect(); 
-		AGRect( float x, float y, float w, float h );
+		AGRect( float left, float top, float right, float bottom );
+		//AGRect( float x, float y, float w, float h );
 		AGRect( float x, float y, const AGSize& size ); 
 		AGRect( const AGPoint2& point, float w, float h );
 		AGRect( const AGPoint2& point, const AGSize& size );

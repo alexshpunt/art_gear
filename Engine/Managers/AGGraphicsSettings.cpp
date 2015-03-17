@@ -58,3 +58,18 @@ AGGraphicsSettings::GraphicsSystem AGGraphicsSettings::getGraphicsSystem() const
 	return m_system; 
 }
 
+void AGGraphicsSettings::setBackgroundColor(const AGPoint3& color)
+{
+	m_backgroundColor = color;
+}
+
+void AGGraphicsSettings::setBackgroundColor(float r, float g, float b)
+{
+	setBackgroundColor( AGPoint3( r, g, b ) );
+}
+
+AGPoint3 AGGraphicsSettings::getBackgroundColor() const
+{
+	return m_backgroundColor;
+}
+

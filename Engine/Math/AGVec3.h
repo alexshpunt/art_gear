@@ -16,6 +16,9 @@ class AGVec3
 		float getLength() const;
 		float getSqrLength() const;
 
+		static float dot( const AGVec3& v1, const AGVec3& v2 );
+		static AGVec3 cross( const AGVec3& v1, const AGVec3& v2 );
+
 		static AGVec3 getUp();
 		static AGVec3 getRight();
 		static AGVec3 getForward(); 
@@ -29,8 +32,6 @@ class AGVec3
 		AGVec3 operator-( const AGVec3& var );
 		AGVec3& operator-=( const AGVec3& var );
 
-		AGVec3 operator*( const AGVec3& var );
-		AGVec3 operator*=( const AGVec3& var );
 		AGVec3 operator*( float var );
 		AGVec3& operator*=( float var );
 

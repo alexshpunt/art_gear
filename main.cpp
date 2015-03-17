@@ -1,4 +1,8 @@
 #include "ageditor.h"
+
+#include <QDebug>
+#include <QStyle>
+#include <QStyleFactory>
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])

@@ -1,8 +1,8 @@
 #include "AGComponent.h"
 
-#include "AGObject.h"
+#include "AGGameObject.h"
 
-AGComponent::AGComponent(AGObject* object) : m_object( object )
+AGComponent::AGComponent(AGGameObject* object) : m_object( object )
 {
 	m_name = ""; 
 }
@@ -12,7 +12,7 @@ AGComponent::~AGComponent()
 	m_object->removeComponent( m_name );
 }
 
-AGObject* AGComponent::getObject() const
+AGGameObject* AGComponent::getObject() const
 {
 	return m_object; 
 }

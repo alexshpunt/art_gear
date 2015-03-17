@@ -4,6 +4,7 @@
 #include <string>
 #include <windows.h>
 
+#include "Interfaces/AGSurface.h"
 #include "Math/AGMath.h"
 
 using namespace std;

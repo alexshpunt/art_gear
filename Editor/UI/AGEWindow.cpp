@@ -9,25 +9,40 @@
 
 #include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
-#include "Managers/AGStateManager.h"
+#include "Managers/AGEStateManager.h"
 #include "Graphics/AGGraphics.h"
-#include "Graphics/Objects/AGDXBoundingBox.h"
-#include "Graphics/Objects/AGDXCamera.h"
-#include "Graphics/Objects/AGDXMesh.h"
+#include "Graphics/Objects/AGBoundingBox.h"
+#include "Graphics/Objects/AGCamera.h"
+#include "Graphics/Objects/AGMesh.h"
 #include "Managers/AGLogger.h"
 
 using namespace std;
 
-AGEWindow::AGEWindow() : AGDXSurface( 800, 600, (HWND)winId() )
+#ifndef HID_USAGE_PAGE_GENERIC
+#define HID_USAGE_PAGE_GENERIC         ((USHORT) 0x01)
+#endif
+#ifndef HID_USAGE_GENERIC_MOUSE
+#define HID_USAGE_GENERIC_MOUSE        ((USHORT) 0x02)
+#endif
+
+AGEWindow::AGEWindow() : AGSurface()
 {
-	setMinimumSize( 800, 600 );
+	setMinimumSize( 100, 100 );
 	resize( 800, 600 );
 	setAttribute( Qt::WA_PaintOnScreen );
 	setAttribute( Qt::WA_NativeWindow );
-	
+
+	setup( 800, 600, (HWND)winId() );
 
 	AGGraphicsSettings::getInstance().setScreenWidth( 800 );
 	AGGraphicsSettings::getInstance().setScreenHeight( 600 );
+
+	RAWINPUTDEVICE Rid[1];
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC; 
+	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE; 
+	Rid[0].dwFlags = RIDEV_INPUTSINK;   
+	Rid[0].hwndTarget = (HWND)winId();
+	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0] ) );
 }
 
 AGEWindow::~AGEWindow()
@@ -40,12 +55,6 @@ void AGEWindow::resizeEvent(QResizeEvent* event)
 	resizeSurface( event->size().width(), event->size().height() );
 }
 
-void AGEWindow::paintEvent(QPaintEvent* event)
-{
-	if( !m_device ) 
-		return; 
-}
-
 QPaintEngine* AGEWindow::paintEngine() const
 {
 	return nullptr;
@@ -55,21 +64,26 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 {
 	MSG* msg = (MSG*)message; 
 	int key = ( int )msg->wParam; 
+
+	UINT dwSize = 40;
+	static BYTE lpb[40];
+	RAWINPUT* raw = (RAWINPUT*)lpb;
+
 	switch( msg->message )
 	{
 		case WM_LBUTTONDOWN:
 			AGInput().setButtonPressed( "LMB", true );
-			AGGraphics::getInstance().mouseClickEvent( MouseButton::LMB );
+			AGGraphics::getInstance().mouseClickEvent( AGMouseButton::LMB );
 		break;
 		case WM_LBUTTONUP: 
 			AGInput().setButtonPressed( "LMB", false );
 		break;
 		case WM_LBUTTONDBLCLK:
-
+	
 		break;
 		case WM_RBUTTONDOWN:
 			AGInput().setButtonPressed( "RMB", true );
-			AGGraphics::getInstance().mouseClickEvent( MouseButton::RMB );
+			AGGraphics::getInstance().mouseClickEvent( AGMouseButton::RMB );
 		break;
 		case WM_RBUTTONUP:
 			AGInput().setButtonPressed( "RMB", false );
@@ -79,7 +93,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_MBUTTONDOWN:
 			AGInput().setButtonPressed( "MMB", true );
-			AGGraphics::getInstance().mouseClickEvent( MouseButton::MMB );
+			AGGraphics::getInstance().mouseClickEvent( AGMouseButton::MMB );
 		break;
 		case WM_MBUTTONUP:
 			AGInput().setButtonPressed( "MMB", false );
@@ -87,6 +101,22 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		case WM_MBUTTONDBLCLK:
 
 		break; 
+		case WM_INPUT:
+			GetRawInputData((HRAWINPUT)msg->lParam, RID_INPUT, 
+				lpb, &dwSize, sizeof(RAWINPUTHEADER));
+
+
+			if (raw->header.dwType == RIM_TYPEMOUSE) 
+			{
+				int xPosRelative = raw->data.mouse.lLastX;
+				int yPosRelative = raw->data.mouse.lLastY;
+
+				AGInput().setMouseDeltaPos( AGPoint2( xPosRelative, yPosRelative ) );
+
+			} 
+
+			AGGraphics::getInstance().mouseMoveEvent();
+		break;
 		case WM_MOUSEMOVE:
 			AGPoint2 mousePos;
 			POINT point; 
@@ -94,9 +124,9 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 			ScreenToClient( (HWND)winId(), &point );
 			mousePos.x = point.x;
 			mousePos.y = point.y; 
-			
-			
-			if( AGStateManager::getInstance().isRotating() )
+
+
+			/*if( AGEStateManager::getInstance().isRotating() )
 			{
 				AGInput().setMousePos( mousePos, true );
 				if( mousePos.x < 10 )
@@ -120,17 +150,21 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 				ClientToScreen( (HWND)winId(), &point );
 				SetCursorPos( point.x, point.y );
 				AGInput().setMousePos( mousePos );
-			}
-			else 
+			}*/
+			 
 			{
 				AGInput().setMousePos( mousePos );
 			}
-			AGGraphics::getInstance().mouseMoveEvent(); 
+			//AGGraphics::getInstance().mouseMoveEvent(); 
 		break;
 	}
 	return false; 
 }
 
+void AGEWindow::update()
+{
+
+}
 
 
 

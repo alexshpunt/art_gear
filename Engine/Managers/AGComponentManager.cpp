@@ -1,14 +1,14 @@
 #include "AGComponentManager.h"
 
 #include "Objects/AGComponent.h"
-#include "Objects/AGObject.h"
+#include "Objects/AGGameObject.h"
 
 void AGComponentManager::registerFunction(const string& componentName, CreationFunction func)
 {
 	m_creationFunctions[ componentName ] = func; 
 }
 
-AGComponent* AGComponentManager::createComponent(const string& componentName, AGObject* object)
+AGComponent* AGComponentManager::createComponent(const string& componentName, AGGameObject* object)
 {
 	unordered_map< string, CreationFunction >::iterator iter = m_creationFunctions.find( componentName );
 	AGComponent* component = nullptr;

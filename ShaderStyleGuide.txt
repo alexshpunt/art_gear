@@ -1,0 +1,25 @@
+Названия текстурных карт:
+tx + %Map% ( пример: txDiff )
+
+Полный список всех карт:
+"txAmb",
+"txDiff",
+"txSpecClr",
+"txSpecLvl",
+"txGloss",
+"txSelfIllum",
+"txOpac",
+"txFiltClr",
+"txBump",
+"txRefl",
+"txRefr",
+"txNorm"
+
+Названия матриц: 
+mtx + %Matrix% ( пример: mtxMVP ) 
+
+Названия структур lowerCamelCase 
+
+VertexShader VSIn 
+GeometryShader GSIn
+PixelShader PSIn 

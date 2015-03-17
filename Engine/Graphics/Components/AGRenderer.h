@@ -6,21 +6,25 @@
 #include <string>
 
 #include "Objects/AGComponent.h"
-#include "Graphics/Objects/AGDXBoundingBox.h"
+#include "Graphics/Interfaces/AGMovable.h"
+#include "Graphics/Interfaces/AGPureInterfaces.h"
+#include "Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Interfaces/AGResource.h"
 
 using namespace std;
 
 class AGGraphics; 
 class AGSurface; 
-class AGDXMesh;
-class AGObject; 
-class AGDXAxises; 
+class AGMesh;
+class AGGameObject; 
 
-class AGRenderer : public AGComponent
+class AGRenderer : public AGComponent, public AGMovable
 {
 	public:
-		AGRenderer( AGObject* object );
+		AGRenderer( AGGameObject* object );
 		~AGRenderer();
+
+		void notify(  AGGameObject::Change change ); 
 
 		void onSceneInit();
 		void onSceneUpdate();
@@ -29,20 +33,21 @@ class AGRenderer : public AGComponent
 		void setSelected( bool value );
 		bool isSelected() const;
 
-		void setMesh( AGDXMesh* mesh );
-		AGDXMesh* getMesh() const; 
+		void setMesh( AGMesh* mesh );
+		AGMesh* getMesh() const; 
 
-		void loadMeshFrom( const string& fileName, ID3D10Device* device );
-
+		void loadMeshFrom( const string& fileName ); 
 		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
-		void draw( AGDXSurface* surface ); 
+		void draw( AGSurface* surface ); 
 
 	private:
+		void handleChanges( Changes changes );
+
 		bool m_isSelected; 
-		AGDXMesh* m_mesh;
-		AGDXBoundingBox* m_boundingBox; 
-		AGDXAxises* m_axises;
+		AGResPtr m_mesh; 
+		//AGMesh* m_mesh;
+		AGBoundingBox* m_boundingBox; 
 };
 
 #endif 

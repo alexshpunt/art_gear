@@ -8,13 +8,21 @@ AGRect::AGRect()
 	setBottom( 0.0f );
 }
 
-AGRect::AGRect(float x, float y, float w, float h)
+AGRect::AGRect(float left, float top, float right, float bottom)
+{
+	setLeft( left );
+	setRight( right );
+	setTop( top );
+	setBottom( bottom );
+}
+
+/*AGRect::AGRect(float x, float y, float w, float h)
 {
 	setLeft( x );
 	setRight( x + w );
 	setTop( y );
 	setBottom( y + h );
-}
+}*/
 
 AGRect::AGRect(float x, float y, const AGSize& size)
 {

@@ -3,29 +3,29 @@
 
 #include <d3d10.h>
 #include <d3dx10.h>
+#include <QKeyEvent>
 #include <QWidget>
 
 #include "Engine/Graphics/AGWindow.h"
 #include "Engine/Graphics/Interfaces/AGSurface.h"
 
-class AGDXMesh;
-class AGDXScene; 
-class AGDXCamera; 
+class AGMesh;
+class AGScene; 
+class AGCamera; 
 
-class AGEWindow : public QWidget, public AGDXSurface
+class AGEWindow : public QWidget, public AGSurface
 {
 	Q_OBJECT
 	public:
 		AGEWindow();
 		~AGEWindow();
-
+		void update(); 
 		QPaintEngine* paintEngine() const; 
+
 	protected:
-		void paintEvent( QPaintEvent* event );
 		void resizeEvent( QResizeEvent* event );
-		bool nativeEvent( const QByteArray &eventType, void *message, long *result );
-	private:
-		
+		bool nativeEvent( const QByteArray &eventType, void *message, long *result );	
+
 };
 
 #endif 

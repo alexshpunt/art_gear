@@ -12,6 +12,8 @@
 #define AGWarning() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Warning ) 
 #define AGError() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Error ) 
 
+#define AGCurFileFunctionLineSnippet " Function: "##__FUNCTION__
+
 using namespace std;
 
 class AGLogger 
@@ -26,6 +28,7 @@ class AGLogger
 
 		AGLogger& getLoggerAtLevel( Levels level );
 
+		AGLogger& operator<<(size_t var ); 
 		AGLogger& operator<<( int var );
 		AGLogger& operator<<( float var ); 
 		AGLogger& operator<<( double var );

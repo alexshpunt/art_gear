@@ -31,6 +31,16 @@ int AGLogger::getMode() const
 	return m_mode; 
 }
 
+AGLogger& AGLogger::operator<<(size_t var)
+{
+	m_skipLine = true;
+
+	if( m_mode | Terminal )
+		cout << var; 
+
+	return *this; 
+}
+
 AGLogger& AGLogger::operator<<(int var)
 {
 	m_skipLine = true;

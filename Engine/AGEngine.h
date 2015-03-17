@@ -6,7 +6,7 @@
 #include "Patterns/Singleton.h"
 #include "Graphics/AGGraphics.h"
 
-class AGScene; 
+class AGGameScene; 
 
 class AGEngine 
 {
@@ -15,12 +15,12 @@ class AGEngine
 		int run();
 		void update(); 
 
-		void setScene( AGScene* scene );
-		AGScene* getScene() const; 
+		void setScene( AGGameScene* scene );
+		AGGameScene* getScene() const; 
 
 	private:
 		void init(); 
-		AGScene* m_scene; 
+		AGGameScene* m_scene; 
 		
 };
 

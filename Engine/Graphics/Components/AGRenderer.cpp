@@ -1,19 +1,15 @@
 #include "AGRenderer.h"
 
-#include "Graphics/AGGraphics.h"
-#include "Graphics/Objects/AGDXMesh.h"
-#include "Graphics/Interfaces/AGSurface.h"
-#include "Graphics/Objects/Manipulators/AGDXAxis.h"
+#include "Engine/Graphics/AGGraphics.h"
+#include "Engine/Graphics/Objects/AGMesh.h"
+#include "Engine/Graphics/Interfaces/AGSurface.h"
+#include "Managers/AGEStateManager.h"
 
-#include "Objects/AGObject.h"
+#include "Engine/Objects/AGGameObject.h"
 
-AGRenderer::AGRenderer(AGObject* object) : AGComponent( object )
+AGRenderer::AGRenderer(AGGameObject* object) : AGComponent( object )
 {
-	m_mesh = nullptr;
-	ID3D10Device* device =  (*AGGraphics::getInstance().getSurfaces().begin())->getDevice();
-	m_boundingBox = new AGDXBoundingBox( D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), device );
-	m_axises = new AGDXAxises( device );
-	m_axises->setObject( object );
+	m_boundingBox = new AGBoundingBox( D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 	m_isSelected = false; 
 	AGGraphics::getInstance().addRenderer( this ); 
 }
@@ -22,6 +18,11 @@ AGRenderer::~AGRenderer()
 {
 	delete m_boundingBox; 
 	AGGraphics::getInstance().removeRenderer( this ); 
+}
+
+void AGRenderer::notify(AGGameObject::Change change)
+{
+
 }
 
 void AGRenderer::onSceneInit()
@@ -39,20 +40,22 @@ void AGRenderer::onSceneFixedUpdate()
 
 }
 
-void AGRenderer::setMesh(AGDXMesh* mesh)
+void AGRenderer::setMesh(AGMesh* mesh)
 {
 	m_mesh = mesh; 
 }
 
-AGDXMesh* AGRenderer::getMesh() const
+AGMesh* AGRenderer::getMesh() const
 {
-	return m_mesh; 
+	return (AGMesh*)m_mesh.getData(); 
 }
 
 float AGRenderer::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 {
-	if( m_mesh )
-		return m_mesh->intersect( rayOrigin, rayDir );
+	AGMesh* mesh = (AGMesh*)m_mesh.getData();
+
+	if( mesh )
+		return mesh->intersect( rayOrigin, rayDir );
 	else 
 		return m_boundingBox->intersect( rayOrigin, rayDir );
 }
@@ -68,38 +71,84 @@ bool AGRenderer::isSelected() const
 	return m_isSelected;
 }
 
-void AGRenderer::draw( AGDXSurface* surface )
+void AGRenderer::draw( AGSurface* surface )
 {
-	AGVec3 pos = m_object->getPos(); 
-	AGVec3 rot = m_object->getRotation();
-	AGVec3 scale = m_object->getScale();
-	AGVec3 pivot = m_object->getPivot();
-	if( m_mesh )
+	AGMesh* mesh = (AGMesh*)m_mesh.getData();
+
+	if( mesh )
 	{
-		m_mesh->setLocalAngle( rot.x, rot.y, rot.z );
-		m_mesh->setLocalPos( pos.x, pos.y, pos.z );
-		m_mesh->setLocalScale( scale.x, scale.y, scale.z );
-		m_mesh->draw( surface );
+		mesh->draw( surface );
 	}
-	else
+	else 
 	{
-		m_boundingBox->setLocalPos( pos.x, pos.y, pos.z );
 		m_boundingBox->draw( surface ); 
 	}
+
 	if( m_isSelected )
 	{
-		m_axises->draw( surface );
-		if( m_mesh )
+		if( mesh )
 		{
-			m_mesh->getBoundingBox()->draw( surface );	
+			mesh->getBoundingBox()->draw( surface );	
 		}
-		
+
 	}
+
 }
 
-void AGRenderer::loadMeshFrom(const string& fileName, ID3D10Device* device )
+void AGRenderer::handleChanges(Changes changes)
 {
-	m_mesh = new AGDXMesh;
-	m_mesh->loadFrom( fileName, device );
+	switch( changes )
+	{
+		case World:
+			m_boundingBox->setWorldMatrix( getWorldMatrix() );
+		break;
+		case WorldTrans:
+			m_boundingBox->setWorldTranslMatrix( getWorldTranslMatrix() );
+		break;
+		case WorldRot:
+			m_boundingBox->setWorldRotMatrix( getWorldRotMatrix() );
+		break;
+		case Local:
+			m_boundingBox->setLocalMatrix( getLocalMatrix() );
+		break;
+		case LocalTrans:
+			m_boundingBox->setLocalTranslMatrix( getLocalTranslMatrix() );
+		break;
+		case LocalRot:
+			m_boundingBox->setLocalRotMatrix( getLocalRotMatrix() );
+		break;
+	}
+
+	AGMesh* mesh = (AGMesh*)m_mesh.getData();
+
+	if( !mesh )
+		return; 
+	switch( changes )
+	{
+		case World:
+			mesh->setWorldMatrix( getWorldMatrix() );
+		break;
+		case WorldTrans:
+			mesh->setWorldTranslMatrix( getWorldTranslMatrix() );
+		break;
+		case WorldRot:
+			mesh->setWorldRotMatrix( getWorldRotMatrix() );
+		break;
+		case WorldScale:
+			mesh->setWorldScaleMatrix( getWorldScaleMatrix() );
+		break;
+		case Local:
+			mesh->setLocalMatrix( getLocalMatrix() );
+		break;
+		case LocalTrans:
+			mesh->setLocalTranslMatrix( getLocalTranslMatrix() );
+		break;
+		case LocalRot:
+			mesh->setLocalRotMatrix( getLocalRotMatrix() );
+		break;
+		case LocalScale:
+			mesh->setLocalScaleMatrix( getLocalScaleMatrix() );
+		break;
+	}
 }
 

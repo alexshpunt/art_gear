@@ -1,11 +1,13 @@
 #include "AGEngine.h"
 
+#include "Managers/AGConsoleManager.h"
+#include "Managers/AGInputManager.h"
 #include "Managers/AGEventHandler.h"
 #include "Managers/AGLogger.h"
 #include "Graphics/AGGraphics.h"
 #include "Math/AGSize.h"
 
-#include "Objects/AGScene.h"
+#include "Objects/AGGameScene.h"
 
 void AGEngine::init()
 {
@@ -32,6 +34,10 @@ int AGEngine::run()
 
 void AGEngine::update()
 {
+	if( AGEStateManager::getInstance().isConsoleMode() && AGInput().isCharInput() )
+	{
+		AGConsoleManager::getInstance().pushChar( AGInput().getCharInput() ); 
+	}
 	if( m_scene )
 	{
 		m_scene->update(); 
@@ -39,12 +45,12 @@ void AGEngine::update()
 	AGGraphics::getInstance().update();
 }
 
-void AGEngine::setScene(AGScene* scene)
+void AGEngine::setScene(AGGameScene* scene)
 {
 	m_scene = scene; 
 }
 
-AGScene* AGEngine::getScene() const
+AGGameScene* AGEngine::getScene() const
 {
 	return m_scene; 
 }

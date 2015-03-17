@@ -1,7 +1,9 @@
 #ifndef AG_MATH_H
 #define AG_MATH_H
 
-#include "AGMatrix4x4.h"
+#include <vector>
+
+#include "AGMatrix.h"
 #include "AGPoint2.h"
 #include "AGPoint3.h"
 #include "AGQuat.h"
@@ -9,6 +11,70 @@
 #include "AGSize.h"
 #include "AGVec2.h"
 #include "AGVec3.h"
+#include "AGColor.h"
+
+namespace AGMath 
+{
+	const float Pi = 3.1415926535897932384626433832795f;
+	//Pi multiply 2 
+	const float PiX2 = Pi * 2; 
+	const float Pi2 = Pi / 2.0f; 
+	const float Pi3 = Pi / 3.0f;
+	const float Pi4 = Pi / 4.0f;
+
+	template <class T>
+	T toRadians( T var )
+	{
+		return ( var * AGMath::Pi) / 180.0f; 
+	}
+
+	template <class T>
+	T toDegrees( T var )
+	{
+		return ( 180.0f * var ) / AGMath::Pi; 
+	}
+
+	template< class T >
+	T clamp( const T& var, const T& min, const T& max )
+	{
+		if( var > max )
+			return max; 
+		else if( var < min )
+			return min;
+		return var; 
+	}
+
+	template< class T > 
+	T checkIfLower( const T& var, const T& min )
+	{
+		if( var < min )
+			return min;
+		else 
+			return var; 
+	}
+
+	template< class T > 
+	T checkIfGreater( const T& var, const T& max )
+	{
+		if( var > max )
+			return max;
+		else
+			return var; 
+	}
+
+	bool isEqual( double a, double b );
+	bool isEqual( float a, float b ); 
+
+	void generateCircle2D( float radius, float step, std::vector< AGVec2 >& points );
+
+	template < class T > 
+	inline void swap( T& v1, T& v2 )
+	{
+		T& tmp = v1; 
+		v1 = v2;
+		v2 = tmp; 
+	}
+}
 
 template <class T>
 T absMax( T v1, T v2 )

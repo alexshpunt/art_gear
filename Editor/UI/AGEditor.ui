@@ -15,7 +15,9 @@
   </property>
   <property name="styleSheet">
    <string notr="true">background: rgb( 80, 80, 80 );
-color: white; </string>
+color: white; 
+
+</string>
   </property>
   <property name="iconSize">
    <size>
@@ -40,6 +42,10 @@ color: white; </string>
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSave_as"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -156,6 +162,26 @@ color: white; </string>
   <action name="actionXZ">
    <property name="text">
     <string>XZ</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
    </property>
   </action>
  </widget>
