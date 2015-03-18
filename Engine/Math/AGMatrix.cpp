@@ -1,11 +1,11 @@
 #include "AGMatrix.h"
 
-#include "Engine/Math/AGMath.h"
+#include "AGMath.h"
 
 #include <math.h>
 #include <memory.h>
 
-float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 {
 	float data[] = 
 	{
@@ -18,7 +18,7 @@ float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 	return data; 
 }
 
-float* subMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* subMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 {
 	float data[] = 
 	{
@@ -31,7 +31,7 @@ float* subMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 	return data; 
 }
 
-float* mulMatrix( const AGMatrix& m, float v )
+inline float* mulMatrix( const AGMatrix& m, float v )
 {
 	float data[] = 
 	{
@@ -44,7 +44,7 @@ float* mulMatrix( const AGMatrix& m, float v )
 	return data;
 }
 
-float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 {
 	float e00 = m1( 0, 0 ) * m2( 0, 0 ) + m1( 0, 1 ) * m2( 1, 0 ) + m1( 0, 2 ) * m2( 2, 0 ) + m1( 0, 3 ) * m2( 3, 0 ); 
 	float e01 = m1( 0, 0 ) * m2( 0, 1 ) + m1( 0, 1 ) * m2( 1, 1 ) + m1( 0, 2 ) * m2( 2, 1 ) + m1( 0, 3 ) * m2( 3, 1 ); 
@@ -77,7 +77,7 @@ float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 	return data; 
 }
 
-float* divMatrix( const AGMatrix& m, float v )
+inline float* divMatrix( const AGMatrix& m, float v )
 {
 	float data[] = 
 	{
@@ -118,7 +118,15 @@ class AGMatrixPrivate
 
 		void copyFrom( AGMatrixPrivate* p )
 		{
-			memcpy_s( data, sizeof( data ), p->data, sizeof( p->data ) ); 
+			/*for( int i = 0; i < 4; i++ )
+			{
+				for( int j = 0; j < 4; j++ )
+				{
+					data[ i ][ j ] = p->data[ i ][ j ];
+				}
+			}*/
+
+			memcpy_s( data, sizeof( data ), p->data, sizeof( data ) );
 
 			isIdentity = p->isIdentity;
 			ableTranspose = p->ableTranspose; 
@@ -226,7 +234,14 @@ void AGMatrix::setData(float* data)
 
 AGMatrix::AGMatrix(const AGMatrix& copy)
 {
+	p = new AGMatrixPrivate; 
 	p->copyFrom( copy.p );
+}
+
+AGMatrix::AGMatrix(float* data)
+{
+	p = new AGMatrixPrivate;
+	memcpy_s( p->data, sizeof( p->data ), data, sizeof( p->data ) );
 }
 
 float* AGMatrix::getData() const
@@ -327,21 +342,59 @@ AGMatrix& AGMatrix::operator*=(float var)
 	return *this; 
 }
 
-AGMatrix AGMatrix::operator*(const AGMatrix& mtx)
+AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 )
 {
-	AGMatrix newMtx = *this; 
-	newMtx.setData( mulMatrices( newMtx, mtx ) ); 
-	return newMtx; 
+	return m1 * m2; 
+}
+
+AGMatrix AGMatrix::operator*(const AGMatrix& m2)
+{
+	AGMatrix m1 = *this; 
+	float e00 = m1( 0, 0 ) * m2( 0, 0 ) + m1( 0, 1 ) * m2( 1, 0 ) + m1( 0, 2 ) * m2( 2, 0 ) + m1( 0, 3 ) * m2( 3, 0 ); 
+	float e01 = m1( 0, 0 ) * m2( 0, 1 ) + m1( 0, 1 ) * m2( 1, 1 ) + m1( 0, 2 ) * m2( 2, 1 ) + m1( 0, 3 ) * m2( 3, 1 ); 
+	float e02 = m1( 0, 0 ) * m2( 0, 2 ) + m1( 0, 1 ) * m2( 1, 2 ) + m1( 0, 2 ) * m2( 2, 2 ) + m1( 0, 3 ) * m2( 3, 2 ); 
+	float e03 = m1( 0, 0 ) * m2( 0, 3 ) + m1( 0, 1 ) * m2( 1, 3 ) + m1( 0, 2 ) * m2( 2, 3 ) + m1( 0, 3 ) * m2( 3, 3 ); 
+
+	float e10 = m1( 1, 0 ) * m2( 0, 0 ) + m1( 1, 1 ) * m2( 1, 0 ) + m1( 1, 2 ) * m2( 2, 0 ) + m1( 1, 3 ) * m2( 3, 0 ); 
+	float e11 = m1( 1, 0 ) * m2( 0, 1 ) + m1( 1, 1 ) * m2( 1, 1 ) + m1( 1, 2 ) * m2( 2, 1 ) + m1( 1, 3 ) * m2( 3, 1 ); 
+	float e12 = m1( 1, 0 ) * m2( 0, 2 ) + m1( 1, 1 ) * m2( 1, 2 ) + m1( 1, 2 ) * m2( 2, 2 ) + m1( 1, 3 ) * m2( 3, 2 ); 
+	float e13 = m1( 1, 0 ) * m2( 0, 3 ) + m1( 1, 1 ) * m2( 1, 3 ) + m1( 1, 2 ) * m2( 2, 3 ) + m1( 1, 3 ) * m2( 3, 3 ); 
+
+	float e20 = m1( 2, 0 ) * m2( 0, 0 ) + m1( 2, 1 ) * m2( 1, 0 ) + m1( 2, 2 ) * m2( 2, 0 ) + m1( 2, 3 ) * m2( 3, 0 ); 
+	float e21 = m1( 2, 0 ) * m2( 0, 1 ) + m1( 2, 1 ) * m2( 1, 1 ) + m1( 2, 2 ) * m2( 2, 1 ) + m1( 2, 3 ) * m2( 3, 1 ); 
+	float e22 = m1( 2, 0 ) * m2( 0, 2 ) + m1( 2, 1 ) * m2( 1, 2 ) + m1( 2, 2 ) * m2( 2, 2 ) + m1( 2, 3 ) * m2( 3, 2 ); 
+	float e23 = m1( 2, 0 ) * m2( 0, 3 ) + m1( 2, 1 ) * m2( 1, 3 ) + m1( 2, 2 ) * m2( 2, 3 ) + m1( 2, 3 ) * m2( 3, 3 ); 
+
+	float e30 = m1( 3, 0 ) * m2( 0, 0 ) + m1( 3, 1 ) * m2( 1, 0 ) + m1( 3, 2 ) * m2( 2, 0 ) + m1( 3, 3 ) * m2( 3, 0 ); 
+	float e31 = m1( 3, 0 ) * m2( 0, 1 ) + m1( 3, 1 ) * m2( 1, 1 ) + m1( 3, 2 ) * m2( 2, 1 ) + m1( 3, 3 ) * m2( 3, 1 ); 
+	float e32 = m1( 3, 0 ) * m2( 0, 2 ) + m1( 3, 1 ) * m2( 1, 2 ) + m1( 3, 2 ) * m2( 2, 2 ) + m1( 3, 3 ) * m2( 3, 2 ); 
+	float e33 = m1( 3, 0 ) * m2( 0, 3 ) + m1( 3, 1 ) * m2( 1, 3 ) + m1( 3, 2 ) * m2( 2, 3 ) + m1( 3, 3 ) * m2( 3, 3 ); 
+
+	float data[] =
+	{
+		e00, e01, e02, e03,
+		e10, e11, e12, e13,
+		e20, e21, e22, e23,
+		e30, e31, e32, e33
+	};
+
+	AGMatrix retMtx( data );
+	return retMtx;  
 }
 
 AGMatrix& AGMatrix::operator*=(const AGMatrix& mtx)
 {
-	setData( mulMatrices( *this, mtx ) );
+	AGMatrix newMtx = *this;
+	newMtx = newMtx * mtx; 
+	*this = newMtx;
 	return *this; 
 }
 
 void AGMatrix::operator=(const AGMatrix& mtx)
 {
+	if( p )
+		delete p;
+	p = new AGMatrixPrivate; 
 	p->copyFrom( mtx.p );
 }
 
@@ -375,14 +428,14 @@ void AGMatrix::inverse()
 
 AGMatrix AGMatrix::getInversed()
 {
-	AGMatrix mtx = *this; 
+	AGMatrix mtx( *this );
 	mtx.inverse(); 
 	return mtx; 
 }
 
-void AGMatrix::setProjectionLH(float angle, float aspectRatio, float nearPlane, float farPlane)
+void AGMatrix::setPerspectiveLH(float angle, float aspectRatio, float nearPlane, float farPlane)
 {
-	if( aspectRatio == farPlane || aspectRatio == 0.0f )
+	if( AGMath::isEqual( nearPlane, farPlane ) || aspectRatio == 0.0f )
 		return; 
 
 	float alpha = AGMath::toRadians( angle * 0.5f );
@@ -392,6 +445,77 @@ void AGMatrix::setProjectionLH(float angle, float aspectRatio, float nearPlane, 
 	float cosA = cos( alpha );
 	float cotA = cosA / sinA; 
 	float clip = farPlane - nearPlane; 
+
+	memset( p->data, 0, sizeof( p->data ) );
+	p->data[ 0 ][ 0 ] = cotA / aspectRatio; 
+	p->data[ 1 ][ 1 ] = cotA; 
+	p->data[ 2 ][ 2 ] = farPlane / ( farPlane - nearPlane );
+	p->data[ 2 ][ 3 ] = 1.0f; 
+	p->data[ 3 ][ 2 ] = -p->data[ 2 ][ 2 ] * nearPlane; 
+}
+
+void AGMatrix::setOrthoLH(float viewWidth, float viewHeight, float nearPlane, float farPlane)
+{
+	if( AGMath::isEqual( nearPlane, farPlane ) ||
+	    AGMath::isEqual( viewWidth, 0.0f )     ||
+	    AGMath::isEqual( viewHeight, 0.0f ) )
+	{
+		return; 
+	}
+
+	float range = 1.0f / ( farPlane - nearPlane );
+	
+	memset( p->data, 0, sizeof( p->data ) );
+
+	p->data[ 0 ][ 0 ] = 2.0f / viewWidth; 
+	p->data[ 1 ][ 1 ] = 2.0f / viewHeight;
+	p->data[ 2 ][ 2 ] = range; 
+	p->data[ 3 ][ 2 ] = -range * nearPlane; 
+	p->data[ 3 ][ 3 ] = 1.0f; 
+}
+
+void AGMatrix::setLookAtLH( const AGVec3& inEye, const AGVec3& inCenter, const AGVec3& inUp )
+{
+	AGVec3 zAxis = inCenter - inEye;
+	zAxis.normilize(); 
+	AGVec3 xAxis = AGVec3::cross( inUp, zAxis );
+	xAxis.normilize();
+	AGVec3 yAxis = AGVec3::cross( zAxis, xAxis ); 
+
+	memset( p->data, 0, sizeof( p->data ) );
+
+	p->data[ 0 ][ 0 ] = xAxis.x; 
+	p->data[ 1 ][ 0 ] = xAxis.y;
+	p->data[ 2 ][ 0 ] = xAxis.z; 
+
+	p->data[ 0 ][ 1 ] = yAxis.x; 
+	p->data[ 1 ][ 1 ] = yAxis.y;
+	p->data[ 2 ][ 1 ] = yAxis.z; 
+
+	p->data[ 0 ][ 2 ] = zAxis.x; 
+	p->data[ 1 ][ 2 ] = zAxis.y;
+	p->data[ 2 ][ 2 ] = zAxis.z;
+	
+	p->data[ 3 ][ 0 ] = -AGVec3::dot( xAxis, inEye );
+	p->data[ 3 ][ 1 ] = -AGVec3::dot( yAxis, inEye );
+	p->data[ 3 ][ 2 ] = -AGVec3::dot( zAxis, inEye );
+
+	p->data[ 3 ][ 3 ] = 1.0f; 
+
+	/*AGMatrix rotMatrix = *this; 
+
+	AGMatrix translMatrix; 
+	translMatrix.setIdentity(); 
+	translMatrix( 3, 0 ) = -inEye.x; 
+	translMatrix( 3, 1 ) = -inEye.y;
+	translMatrix( 3, 2 ) = -inEye.z; 
+	
+	*this = rotMatrix * translMatrix; */
+}
+
+void AGMatrix::copyFrom(const AGMatrix& copy)
+{
+	p->copyFrom( copy.p );
 }
 
 

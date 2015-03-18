@@ -84,6 +84,12 @@ AGVec3& AGVec3::operator+=(const AGVec3& var)
 	return *this; 
 }
 
+AGVec3 operator-( const AGVec3& v1, const AGVec3& v2 )
+{
+	return AGVec3( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z );
+}
+
+
 AGVec3 AGVec3::operator-(const AGVec3& var)
 {
 	AGVec3 vec3( *this );
@@ -143,9 +149,13 @@ float AGVec3::dot(const AGVec3& v1, const AGVec3& v2)
 AGVec3 AGVec3::cross(const AGVec3& v1, const AGVec3& v2)
 {
 	AGVec3 vec3;
-	vec3.x = v1.y*v2.z - v2.y*v1.z; 
-	vec3.y = v1.x*v2.z - v2.x*v1.z; 
-	vec3.z = v1.x*v2.y - v2.x*v1.y;
+	/*
+	 |  i   j   k  |
+	 | v1x v1y v1z |
+	 | v2x v2y v2z |
+	*/
+	vec3.x = v1.y*v2.z - v1.z*v2.y; 
+	vec3.y = v1.z*v2.x - v1.x*v2.z; 
+	vec3.z = v1.x*v2.y - v1.y*v2.x;
 	return vec3; 
 }
-

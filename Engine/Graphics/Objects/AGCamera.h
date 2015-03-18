@@ -4,6 +4,8 @@
 #include <d3dx10.h>
 #include <d3d10.h>
 
+#include "Engine/Math/AGMath.h"
+
 #include "Graphics/AGGraphics.h"
 
 class AGCamera
@@ -88,6 +90,9 @@ class AGCamera
 		D3DXVECTOR3 m_at;
 		D3DXVECTOR3 m_up;
 		D3DXVECTOR3 m_eye;
+
+		AGMatrix m_vm; 
+		AGMatrix m_pm; 
 
 		D3DXMATRIX m_rotMatrix; 
 

@@ -59,7 +59,7 @@
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(DXSDK_DIR)\Lib\x86;$(DXSDK_DIR)\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;d3dx10d.lib;d3d10.lib;d3d10_1.lib;dxgi.lib;d3dcompiler.lib;DxErr.lib;WinMM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>false</SuppressStartupBanner>

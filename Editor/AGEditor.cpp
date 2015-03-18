@@ -115,7 +115,7 @@ int AGEditor::run( QApplication& app )
 	ui.statusBar->showMessage( "Loading mesh data" );
 	createObjAction();
 	m_object->getRenderer()->setMesh( AGResourceManager::getInstance().getMesh( "trash.agmsh" ) );
-	createLight(); 
+	createLight();
 	ui.statusBar->showMessage( "Ready" );
 
 	AGDebugManager::getInstance().init(); 

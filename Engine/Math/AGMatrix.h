@@ -3,6 +3,9 @@
 
 class AGMatrixPrivate; 
 
+class AGVec3; 
+class AGVec4;
+
 class AGMatrix 
 {
 	public:
@@ -11,6 +14,8 @@ class AGMatrix
 		AGMatrix( float* data );
 		AGMatrix( const AGMatrix& copy );
 		
+		void copyFrom( const AGMatrix& copy );
+
 		void setData( float* data );
 		float* getData() const; 
 
@@ -24,7 +29,9 @@ class AGMatrix
 		void setIdentity(); 
 		bool isIdentity(); 
 
-		void setProjectionLH( float angle, float aspectRatio, float nearPlane, float farPlane ); 
+		void setPerspectiveLH( float angle, float aspectRatio, float nearPlane, float farPlane ); 
+		void setOrthoLH( float viewWidth, float viewHeight, float nearPlane, float farPlane );
+		void setLookAtLH( const AGVec3& eye, const AGVec3& center, const AGVec3& up ); 
 
 		void operator=( const AGMatrix& mtx );
 
@@ -36,6 +43,8 @@ class AGMatrix
 
 		AGMatrix  operator* ( float var ); 
 		AGMatrix& operator*=( float var );
+
+		friend AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 );
 
 		AGMatrix  operator* ( const AGMatrix& mtx );
 		AGMatrix& operator*=( const AGMatrix& mtx ); 

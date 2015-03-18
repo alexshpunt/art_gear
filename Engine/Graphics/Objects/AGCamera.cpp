@@ -9,6 +9,8 @@
 #include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
 
+#include "Engine/Utils/AGConversion.h"
+
 #define PI_2 1.5707963267948966192313216916398
 
 AGCamera::AGCamera( AGCameraType type )
@@ -145,6 +147,7 @@ void AGCamera::setAt(D3DXVECTOR3 at)
 {
 	m_at = at; 
 	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
+	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
 }
 
 D3DXVECTOR3 AGCamera::getAt() const
@@ -156,6 +159,7 @@ void AGCamera::setUp(D3DXVECTOR3 up)
 {
 	m_up = up; 
 	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
+	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
 }
 
 D3DXVECTOR3 AGCamera::getUp() const
@@ -167,6 +171,7 @@ void AGCamera::setEye(D3DXVECTOR3 forward)
 {
 	m_eye = forward; 
 	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
+	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
 }
 
 D3DXVECTOR3 AGCamera::getEye() const
@@ -351,6 +356,7 @@ void AGCamera::update()
 		AGEStateManager::getInstance().setRotating( false );
 	}
 	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
+	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
 }
 
 float AGCamera::getAngleX() const
@@ -373,6 +379,7 @@ D3DXVECTOR3 AGCamera::getDir()
 void AGCamera::updateProj()
 {
 	D3DXMatrixPerspectiveFovLH( &m_projMatrix, D3DXToRadian( m_fov ), m_aspectRatio, m_nearPlane, m_farPlane );
+	m_pm.setProjectionLH( m_fov, m_aspectRatio, m_nearPlane, m_farPlane );
 }
 
 void AGCamera::updateOrtho()

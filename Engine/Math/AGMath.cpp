@@ -1,11 +1,14 @@
 #include "AGMath.h"
 
+#define EPSILON_FOR_DOUBLE 0.0000001
+#define EPSILON_FOR_FLOAT 0.0001f
+
 namespace AGMath
 {
 
 	bool isEqual( double a, double b )
 	{
-		if( fabs( a - b ) < 0.001 )
+		if( fabs( a - b ) < EPSILON_FOR_DOUBLE )
 			return true; 
 		else 
 			return false; 
@@ -13,7 +16,7 @@ namespace AGMath
 
 	bool isEqual( float a, float b )
 	{
-		if( fabs( a - b ) < 0.001 )
+		if( fabs( a - b ) < EPSILON_FOR_FLOAT )
 			return true; 
 		else 
 			return false; 

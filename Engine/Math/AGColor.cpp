@@ -1,6 +1,6 @@
 #include "AGColor.h"
 
-#include "Math/AGMath.h"
+#include "AGMath.h"
 
 ///////////////////////////////////////////////////////////////////////////
 ///Class that helps to transform INT color representation to normalized 
