@@ -379,7 +379,6 @@ D3DXVECTOR3 AGCamera::getDir()
 void AGCamera::updateProj()
 {
 	D3DXMatrixPerspectiveFovLH( &m_projMatrix, D3DXToRadian( m_fov ), m_aspectRatio, m_nearPlane, m_farPlane );
-	m_pm.setProjectionLH( m_fov, m_aspectRatio, m_nearPlane, m_farPlane );
 }
 
 void AGCamera::updateOrtho()

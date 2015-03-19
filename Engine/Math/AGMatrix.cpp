@@ -4,8 +4,10 @@
 
 #include <math.h>
 #include <memory.h>
+#include <iomanip>
+#include <iostream>
 
-inline float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
 {
 	float data[] = 
 	{
@@ -18,7 +20,7 @@ inline float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 	return data; 
 }
 
-inline float* subMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* subMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
 {
 	float data[] = 
 	{
@@ -31,7 +33,7 @@ inline float* subMatrices( const AGMatrix& m1, const AGMatrix& m2 )
 	return data; 
 }
 
-inline float* mulMatrix( const AGMatrix& m, float v )
+inline float* mulMatrix( const AGMatrix& m, float v, AGMatrix& outM )
 {
 	float data[] = 
 	{
@@ -44,7 +46,7 @@ inline float* mulMatrix( const AGMatrix& m, float v )
 	return data;
 }
 
-inline float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2 )
+inline float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
 {
 	float e00 = m1( 0, 0 ) * m2( 0, 0 ) + m1( 0, 1 ) * m2( 1, 0 ) + m1( 0, 2 ) * m2( 2, 0 ) + m1( 0, 3 ) * m2( 3, 0 ); 
 	float e01 = m1( 0, 0 ) * m2( 0, 1 ) + m1( 0, 1 ) * m2( 1, 1 ) + m1( 0, 2 ) * m2( 2, 1 ) + m1( 0, 3 ) * m2( 3, 1 ); 
@@ -118,14 +120,6 @@ class AGMatrixPrivate
 
 		void copyFrom( AGMatrixPrivate* p )
 		{
-			/*for( int i = 0; i < 4; i++ )
-			{
-				for( int j = 0; j < 4; j++ )
-				{
-					data[ i ][ j ] = p->data[ i ][ j ];
-				}
-			}*/
-
 			memcpy_s( data, sizeof( data ), p->data, sizeof( data ) );
 
 			isIdentity = p->isIdentity;
@@ -139,36 +133,34 @@ class AGMatrixPrivate
 
 		float findDeterminant3x3( IndexPair leftTop, IndexPair rightBot, IndexPair middle )
 		{
-			float detA00 = data[ leftTop.i ][ leftTop.j ] * findDeterminant2x2( IndexPair( middle.i, rightBot.j ), rightBot );
+			float detA00 = data[ leftTop.i ][ leftTop.j ] * findDeterminant2x2( middle, rightBot );
 			float detA01 = data[ leftTop.i ][ middle.j ] * findDeterminant2x2( IndexPair( middle.i, leftTop.j ), rightBot ); 
 			float detA02 = data[ leftTop.i ][ rightBot.j ] * findDeterminant2x2( IndexPair( middle.i, leftTop.j ), IndexPair( rightBot.i, middle.j ) );
 
-			return detA00 + detA01 + detA02; 
+			return detA00 - detA01 + detA02; 
 		}
 
 		void computeAdjMat()
 		{
-			adjMat[ 0 ][ 0 ] = data[ 0 ][ 0 ] * findDeterminant3x3( IndexPair( 1, 1 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
-			adjMat[ 0 ][ 1 ] = data[ 0 ][ 1 ] * findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
-			adjMat[ 0 ][ 2 ] = data[ 0 ][ 2 ] * findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 1 ) );
-			adjMat[ 0 ][ 3 ] = data[ 0 ][ 3 ] * findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 2 ), IndexPair( 2, 1 ) );
-			
-			detMat = adjMat[ 0 ][ 0 ] + adjMat[ 0 ][ 1 ] + adjMat[ 0 ][ 2 ] + adjMat[ 0 ][ 3 ]; 
+			adjMat[ 0 ][ 0 ] = +findDeterminant3x3( IndexPair( 1, 1 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
+			adjMat[ 0 ][ 1 ] = -findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
+			adjMat[ 0 ][ 2 ] = +findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 1 ) );
+			adjMat[ 0 ][ 3 ] = -findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 2 ), IndexPair( 2, 1 ) );
 
-			adjMat[ 1 ][ 0 ] = data[ 1 ][ 0 ] * findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
-			adjMat[ 1 ][ 1 ] = data[ 1 ][ 1 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) ); 
-			adjMat[ 1 ][ 2 ] = data[ 1 ][ 2 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
-			adjMat[ 1 ][ 3 ] = data[ 1 ][ 3 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 2 ), IndexPair( 2, 1 ) );
-			
-			adjMat[ 2 ][ 0 ] = data[ 2 ][ 0 ] * findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 3, 3 ), IndexPair( 1, 2 ) );
-			adjMat[ 2 ][ 1 ] = data[ 2 ][ 1 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 1, 2 ) ); 
-			adjMat[ 2 ][ 2 ] = data[ 2 ][ 2 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 1, 1 ) );
-			adjMat[ 2 ][ 3 ] = data[ 2 ][ 3 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 2 ), IndexPair( 1, 1 ) ); 
-			
-			adjMat[ 3 ][ 0 ] = data[ 3 ][ 0 ] * findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 2, 3 ), IndexPair( 1, 2 ) );
-			adjMat[ 3 ][ 1 ] = data[ 3 ][ 1 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 3 ), IndexPair( 1, 2 ) ); 
-			adjMat[ 3 ][ 2 ] = data[ 3 ][ 2 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 3 ), IndexPair( 1, 1 ) );
-			adjMat[ 3 ][ 3 ] = data[ 3 ][ 3 ] * findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 2 ), IndexPair( 1, 1 ) );  
+			adjMat[ 1 ][ 0 ] = -findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) );
+			adjMat[ 1 ][ 1 ] = +findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 2 ) ); 
+			adjMat[ 1 ][ 2 ] = -findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 1 ) );
+			adjMat[ 1 ][ 3 ] = +findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 2 ), IndexPair( 2, 1 ) );
+
+			adjMat[ 2 ][ 0 ] = +findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 3, 3 ), IndexPair( 1, 2 ) );
+			adjMat[ 2 ][ 1 ] = -findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 1, 2 ) ); 
+			adjMat[ 2 ][ 2 ] = +findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 3 ), IndexPair( 1, 1 ) );
+			adjMat[ 2 ][ 3 ] = -findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 3, 2 ), IndexPair( 1, 1 ) ); 
+
+			adjMat[ 3 ][ 0 ] = -findDeterminant3x3( IndexPair( 0, 1 ), IndexPair( 2, 3 ), IndexPair( 1, 2 ) );
+			adjMat[ 3 ][ 1 ] = +findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 3 ), IndexPair( 1, 2 ) ); 
+			adjMat[ 3 ][ 2 ] = -findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 3 ), IndexPair( 1, 1 ) );
+			adjMat[ 3 ][ 3 ] = +findDeterminant3x3( IndexPair( 0, 0 ), IndexPair( 2, 2 ), IndexPair( 1, 1 ) );  
 
 			swapAdj( IndexPair( 0, 1 ), IndexPair( 1, 0 ) );
 			swapAdj( IndexPair( 0, 2 ), IndexPair( 2, 0 ) );
@@ -347,6 +339,11 @@ AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 )
 	return m1 * m2; 
 }
 
+AGMatrix operator-( const AGMatrix& m1, const AGMatrix& m2 )
+{
+	
+}
+
 AGMatrix AGMatrix::operator*(const AGMatrix& m2)
 {
 	AGMatrix m1 = *this; 
@@ -418,11 +415,13 @@ float AGMatrix::getDeterminant()
 	float detA02 = p->data[ 0 ][ 2 ] * p->findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 3 ), IndexPair( 2, 1 ) );
 	float detA03 = p->data[ 0 ][ 3 ] * p->findDeterminant3x3( IndexPair( 1, 0 ), IndexPair( 3, 2 ), IndexPair( 2, 1 ) );
 
-	return detA00 + detA01 + detA02 + detA03; 
+	p->detMat = detA00 - detA01 + detA02 - detA03; 
+	return p->detMat; 
 }
 
 void AGMatrix::inverse()
 {
+	getDeterminant(); 
 	p->inverse();
 }
 
@@ -501,16 +500,6 @@ void AGMatrix::setLookAtLH( const AGVec3& inEye, const AGVec3& inCenter, const A
 	p->data[ 3 ][ 2 ] = -AGVec3::dot( zAxis, inEye );
 
 	p->data[ 3 ][ 3 ] = 1.0f; 
-
-	/*AGMatrix rotMatrix = *this; 
-
-	AGMatrix translMatrix; 
-	translMatrix.setIdentity(); 
-	translMatrix( 3, 0 ) = -inEye.x; 
-	translMatrix( 3, 1 ) = -inEye.y;
-	translMatrix( 3, 2 ) = -inEye.z; 
-	
-	*this = rotMatrix * translMatrix; */
 }
 
 void AGMatrix::copyFrom(const AGMatrix& copy)
