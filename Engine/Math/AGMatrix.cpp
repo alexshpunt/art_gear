@@ -353,5 +353,99 @@ void AGMatrix::copyFrom(const AGMatrix& copy)
 	p->copyFrom( copy.p );
 }
 
+void AGMatrix::setRotateX(float angle)
+{
+	float radians = AGMath::toRadians( angle );
+
+	float cosA = cos( radians );
+	float sinA = sin( radians );
+
+	p->data[ 0 ][ 0 ] = 1.0f; 
+	p->data[ 1 ][ 1 ] = cosA;
+	p->data[ 2 ][ 2 ] = cosA;
+	p->data[ 2 ][ 1 ] = -sinA; 
+	p->data[ 1 ][ 2 ] =  sinA;
+}
+
+void AGMatrix::setRotateY(float angle)
+{
+	float radians = AGMath::toRadians( angle );
+
+	float cosA = cos( radians );
+	float sinA = sin( radians );
+
+	p->data[ 0 ][ 0 ] =  cosA; 
+	p->data[ 0 ][ 2 ] = -sinA;
+	p->data[ 2 ][ 0 ] =  sinA; 
+	p->data[ 2 ][ 2 ] =  cosA; 
+}
+
+void AGMatrix::setRotateZ(float angle)
+{
+	float radians = AGMath::toRadians( angle );
+
+	float cosA = cos( radians );
+	float sinA = sin( radians );
+
+	p->data[ 0 ][ 0 ] =  cosA; 
+	p->data[ 1 ][ 1 ] =  cosA;
+	p->data[ 0 ][ 1 ] =  sinA; 
+	p->data[ 1 ][ 0 ] = -sinA;
+}
+
+void AGMatrix::setRotate(float angle, const AGVec3& axis)
+{
+	float radians = AGMath::toRadians( angle );
+
+	float cosA = cos( radians );
+	float sinA = sin( radians );
+
+	AGVec3 normal = axis; 
+	normal.normilize(); 
+
+	p->data[ 0 ][ 0 ] = cosA + ( 1 - cosA ) * ( normal.x * normal.x );
+	p->data[ 1 ][ 0 ] = ( 1 - cosA ) * ( normal.x * normal.y ) - sinA * normal.z; 
+	p->data[ 2 ][ 0 ] = ( 1 - cosA ) * ( normal.x * normal.z ) + sinA * normal.y;
+	
+	p->data[ 0 ][ 1 ] = ( 1 - cosA ) * ( normal.y * normal.x ) + sinA * normal.z;
+	p->data[ 1 ][ 1 ] = cosA + ( 1 - cosA ) * ( normal.y * normal.y );  
+	p->data[ 2 ][ 1 ] = ( 1 - cosA ) * ( normal.y * normal.z ) - sinA * normal.x;
+	
+	p->data[ 0 ][ 2 ] = ( 1 - cosA ) * ( normal.z * normal.x ) - sinA * normal.y; 
+	p->data[ 1 ][ 2 ] = ( 1 - cosA ) * ( normal.z * normal.y ) + sinA * normal.x; 
+	p->data[ 2 ][ 2 ] = cosA + ( 1 - cosA ) * ( normal.z * normal.z ); 
+}
+
+void AGMatrix::setRotate(float x, float y, float z)
+{
+	AGMatrix rX; 
+	rX.setIdentity();
+	rX.setRotateX( x );
+
+	AGMatrix rY; 
+	rY.setIdentity();
+	rY.setRotateY( y );
+
+	AGMatrix rZ; 
+	rZ.setIdentity();
+	rZ.setRotateZ( z );
+
+	*this = rZ * rX * rY; 
+}
+
+void AGMatrix::setTranslate(const AGVec3& transl)
+{
+	p->data[ 3 ][ 0 ] = transl.x; 
+	p->data[ 3 ][ 1 ] = transl.y;
+	p->data[ 3 ][ 2 ] = transl.z; 
+}
+
+void AGMatrix::setScale(const AGVec3& scale)
+{
+	p->data[ 0 ][ 0 ] = scale.x; 
+	p->data[ 1 ][ 1 ] = scale.y;
+	p->data[ 2 ][ 2 ] = scale.z; 
+}
+
 
 

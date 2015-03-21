@@ -33,6 +33,14 @@ class AGMatrix
 		void setOrthoLH( float viewWidth, float viewHeight, float nearPlane, float farPlane );
 		void setLookAtLH( const AGVec3& eye, const AGVec3& center, const AGVec3& up ); 
 
+		void setRotateX( float angle );
+		void setRotateY( float angle );
+		void setRotateZ( float angle );
+		void setRotate( float angle, const AGVec3& axis );
+		void setRotate( float x, float y, float z );
+		void setTranslate( const AGVec3& transl );
+		void setScale( const AGVec3& scale ); 
+
 		void operator=( const AGMatrix& mtx );
 
 		AGMatrix& operator+=( const AGMatrix& mtx );
