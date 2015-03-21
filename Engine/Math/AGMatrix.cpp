@@ -7,91 +7,6 @@
 #include <iomanip>
 #include <iostream>
 
-inline float* sumMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
-{
-	float data[] = 
-	{
-		m1( 0, 0 ) + m2( 0, 0 ), m1( 0, 1 ) + m2( 0, 1 ), m1( 0, 2 ) + m2( 0, 2 ), m1( 0, 3 ) + m2( 0, 3 ),
-		m1( 1, 0 ) + m2( 1, 0 ), m1( 1, 1 ) + m2( 1, 1 ), m1( 1, 2 ) + m2( 1, 2 ), m1( 1, 3 ) + m2( 1, 3 ),
-		m1( 2, 0 ) + m2( 2, 0 ), m1( 2, 1 ) + m2( 2, 1 ), m1( 2, 2 ) + m2( 2, 2 ), m1( 2, 3 ) + m2( 2, 3 ),
-		m1( 3, 0 ) + m2( 3, 0 ), m1( 3, 1 ) + m2( 3, 1 ), m1( 3, 2 ) + m2( 3, 2 ), m1( 3, 3 ) + m2( 3, 3 ),
-	};
-
-	return data; 
-}
-
-inline float* subMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
-{
-	float data[] = 
-	{
-		m1( 0, 0 ) - m2( 0, 0 ), m1( 0, 1 ) - m2( 0, 1 ), m1( 0, 2 ) - m2( 0, 2 ), m1( 0, 3 ) - m2( 0, 3 ),
-		m1( 1, 0 ) - m2( 1, 0 ), m1( 1, 1 ) - m2( 1, 1 ), m1( 1, 2 ) - m2( 1, 2 ), m1( 1, 3 ) - m2( 1, 3 ),
-		m1( 2, 0 ) - m2( 2, 0 ), m1( 2, 1 ) - m2( 2, 1 ), m1( 2, 2 ) - m2( 2, 2 ), m1( 2, 3 ) - m2( 2, 3 ),
-		m1( 3, 0 ) - m2( 3, 0 ), m1( 3, 1 ) - m2( 3, 1 ), m1( 3, 2 ) - m2( 3, 2 ), m1( 3, 3 ) - m2( 3, 3 ),
-	};
-
-	return data; 
-}
-
-inline float* mulMatrix( const AGMatrix& m, float v, AGMatrix& outM )
-{
-	float data[] = 
-	{
-		m( 0, 0 ) * v, m( 0, 1 ) * v, m( 0, 2 ) * v, m( 0, 3 ) * v,
-		m( 1, 0 ) * v, m( 1, 1 ) * v, m( 1, 2 ) * v, m( 1, 3 ) * v,
-		m( 2, 0 ) * v, m( 2, 1 ) * v, m( 2, 2 ) * v, m( 2, 3 ) * v,
-		m( 3, 0 ) * v, m( 3, 1 ) * v, m( 3, 2 ) * v, m( 3, 3 ) * v,
-	};
-
-	return data;
-}
-
-inline float* mulMatrices( const AGMatrix& m1, const AGMatrix& m2, AGMatrix& outM )
-{
-	float e00 = m1( 0, 0 ) * m2( 0, 0 ) + m1( 0, 1 ) * m2( 1, 0 ) + m1( 0, 2 ) * m2( 2, 0 ) + m1( 0, 3 ) * m2( 3, 0 ); 
-	float e01 = m1( 0, 0 ) * m2( 0, 1 ) + m1( 0, 1 ) * m2( 1, 1 ) + m1( 0, 2 ) * m2( 2, 1 ) + m1( 0, 3 ) * m2( 3, 1 ); 
-	float e02 = m1( 0, 0 ) * m2( 0, 2 ) + m1( 0, 1 ) * m2( 1, 2 ) + m1( 0, 2 ) * m2( 2, 2 ) + m1( 0, 3 ) * m2( 3, 2 ); 
-	float e03 = m1( 0, 0 ) * m2( 0, 3 ) + m1( 0, 1 ) * m2( 1, 3 ) + m1( 0, 2 ) * m2( 2, 3 ) + m1( 0, 3 ) * m2( 3, 3 ); 
-
-	float e10 = m1( 1, 0 ) * m2( 0, 0 ) + m1( 1, 1 ) * m2( 1, 0 ) + m1( 1, 2 ) * m2( 2, 0 ) + m1( 1, 3 ) * m2( 3, 0 ); 
-	float e11 = m1( 1, 0 ) * m2( 0, 1 ) + m1( 1, 1 ) * m2( 1, 1 ) + m1( 1, 2 ) * m2( 2, 1 ) + m1( 1, 3 ) * m2( 3, 1 ); 
-	float e12 = m1( 1, 0 ) * m2( 0, 2 ) + m1( 1, 1 ) * m2( 1, 2 ) + m1( 1, 2 ) * m2( 2, 2 ) + m1( 1, 3 ) * m2( 3, 2 ); 
-	float e13 = m1( 1, 0 ) * m2( 0, 3 ) + m1( 1, 1 ) * m2( 1, 3 ) + m1( 1, 2 ) * m2( 2, 3 ) + m1( 1, 3 ) * m2( 3, 3 ); 
-
-	float e20 = m1( 2, 0 ) * m2( 0, 0 ) + m1( 2, 1 ) * m2( 1, 0 ) + m1( 2, 2 ) * m2( 2, 0 ) + m1( 2, 3 ) * m2( 3, 0 ); 
-	float e21 = m1( 2, 0 ) * m2( 0, 1 ) + m1( 2, 1 ) * m2( 1, 1 ) + m1( 2, 2 ) * m2( 2, 1 ) + m1( 2, 3 ) * m2( 3, 1 ); 
-	float e22 = m1( 2, 0 ) * m2( 0, 2 ) + m1( 2, 1 ) * m2( 1, 2 ) + m1( 2, 2 ) * m2( 2, 2 ) + m1( 2, 3 ) * m2( 3, 2 ); 
-	float e23 = m1( 2, 0 ) * m2( 0, 3 ) + m1( 2, 1 ) * m2( 1, 3 ) + m1( 2, 2 ) * m2( 2, 3 ) + m1( 2, 3 ) * m2( 3, 3 ); 
-
-	float e30 = m1( 3, 0 ) * m2( 0, 0 ) + m1( 3, 1 ) * m2( 1, 0 ) + m1( 3, 2 ) * m2( 2, 0 ) + m1( 3, 3 ) * m2( 3, 0 ); 
-	float e31 = m1( 3, 0 ) * m2( 0, 1 ) + m1( 3, 1 ) * m2( 1, 1 ) + m1( 3, 2 ) * m2( 2, 1 ) + m1( 3, 3 ) * m2( 3, 1 ); 
-	float e32 = m1( 3, 0 ) * m2( 0, 2 ) + m1( 3, 1 ) * m2( 1, 2 ) + m1( 3, 2 ) * m2( 2, 2 ) + m1( 3, 3 ) * m2( 3, 2 ); 
-	float e33 = m1( 3, 0 ) * m2( 0, 3 ) + m1( 3, 1 ) * m2( 1, 3 ) + m1( 3, 2 ) * m2( 2, 3 ) + m1( 3, 3 ) * m2( 3, 3 ); 
-
-	float data[] =
-	{
-		e00, e01, e02, e03,
-		e10, e11, e12, e13,
-		e20, e21, e22, e23,
-		e30, e31, e32, e33
-	};
-
-	return data; 
-}
-
-inline float* divMatrix( const AGMatrix& m, float v )
-{
-	float data[] = 
-	{
-		m( 0, 0 ) / v, m( 0, 1 ) / v, m( 0, 2 ) / v, m( 0, 3 ) / v,
-		m( 1, 0 ) / v, m( 1, 1 ) / v, m( 1, 2 ) / v, m( 1, 3 ) / v,
-		m( 2, 0 ) / v, m( 2, 1 ) / v, m( 2, 2 ) / v, m( 2, 3 ) / v,
-		m( 3, 0 ) / v, m( 3, 1 ) / v, m( 3, 2 ) / v, m( 3, 3 ) / v,
-	};
-
-	return data;
-}
-
 struct IndexPair 
 {
 	IndexPair( int inI, int inJ ) : i( inI ), j( inJ ) {}  
@@ -295,96 +210,33 @@ float AGMatrix::getElem(int i, int j) const
 	return p->data[ i ][ j ]; 
 }
 
-AGMatrix AGMatrix::operator+(const AGMatrix& mtx)
-{
-	AGMatrix newMtx = *this; 
-	newMtx.setData( sumMatrices( newMtx, mtx ) );
-	return newMtx; 
-}
-
 AGMatrix& AGMatrix::operator+=(const AGMatrix& mtx)
 {
-	setData( sumMatrices( *this, mtx ) );
+	AGMatrix newMtx( *this );
+	*this = newMtx + mtx;
 	return *this; 
 }
 
-AGMatrix AGMatrix::operator-(const AGMatrix& mtx)
-{
-	AGMatrix newMtx = *this; 
-	newMtx.setData( subMatrices( newMtx, mtx ) );
-	return newMtx;
-}
 
 AGMatrix& AGMatrix::operator-=(const AGMatrix& mtx)
 {
-	setData( subMatrices( *this, mtx ) );
+	AGMatrix newMtx( *this );
+	*this = newMtx - mtx;
 	return *this; 
-}
-
-AGMatrix AGMatrix::operator*(float var)
-{
-	AGMatrix newMtx = *this; 
-	newMtx.setData( mulMatrix( newMtx, var ) );
-	return newMtx;
 }
 
 AGMatrix& AGMatrix::operator*=(float var)
 {
-	setData( mulMatrix( *this, var ) );
+	AGMatrix mtx( *this ); 
+	*this = mtx * var; 
 	return *this; 
-}
-
-AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 )
-{
-	return m1 * m2; 
-}
-
-AGMatrix operator-( const AGMatrix& m1, const AGMatrix& m2 )
-{
-	
-}
-
-AGMatrix AGMatrix::operator*(const AGMatrix& m2)
-{
-	AGMatrix m1 = *this; 
-	float e00 = m1( 0, 0 ) * m2( 0, 0 ) + m1( 0, 1 ) * m2( 1, 0 ) + m1( 0, 2 ) * m2( 2, 0 ) + m1( 0, 3 ) * m2( 3, 0 ); 
-	float e01 = m1( 0, 0 ) * m2( 0, 1 ) + m1( 0, 1 ) * m2( 1, 1 ) + m1( 0, 2 ) * m2( 2, 1 ) + m1( 0, 3 ) * m2( 3, 1 ); 
-	float e02 = m1( 0, 0 ) * m2( 0, 2 ) + m1( 0, 1 ) * m2( 1, 2 ) + m1( 0, 2 ) * m2( 2, 2 ) + m1( 0, 3 ) * m2( 3, 2 ); 
-	float e03 = m1( 0, 0 ) * m2( 0, 3 ) + m1( 0, 1 ) * m2( 1, 3 ) + m1( 0, 2 ) * m2( 2, 3 ) + m1( 0, 3 ) * m2( 3, 3 ); 
-
-	float e10 = m1( 1, 0 ) * m2( 0, 0 ) + m1( 1, 1 ) * m2( 1, 0 ) + m1( 1, 2 ) * m2( 2, 0 ) + m1( 1, 3 ) * m2( 3, 0 ); 
-	float e11 = m1( 1, 0 ) * m2( 0, 1 ) + m1( 1, 1 ) * m2( 1, 1 ) + m1( 1, 2 ) * m2( 2, 1 ) + m1( 1, 3 ) * m2( 3, 1 ); 
-	float e12 = m1( 1, 0 ) * m2( 0, 2 ) + m1( 1, 1 ) * m2( 1, 2 ) + m1( 1, 2 ) * m2( 2, 2 ) + m1( 1, 3 ) * m2( 3, 2 ); 
-	float e13 = m1( 1, 0 ) * m2( 0, 3 ) + m1( 1, 1 ) * m2( 1, 3 ) + m1( 1, 2 ) * m2( 2, 3 ) + m1( 1, 3 ) * m2( 3, 3 ); 
-
-	float e20 = m1( 2, 0 ) * m2( 0, 0 ) + m1( 2, 1 ) * m2( 1, 0 ) + m1( 2, 2 ) * m2( 2, 0 ) + m1( 2, 3 ) * m2( 3, 0 ); 
-	float e21 = m1( 2, 0 ) * m2( 0, 1 ) + m1( 2, 1 ) * m2( 1, 1 ) + m1( 2, 2 ) * m2( 2, 1 ) + m1( 2, 3 ) * m2( 3, 1 ); 
-	float e22 = m1( 2, 0 ) * m2( 0, 2 ) + m1( 2, 1 ) * m2( 1, 2 ) + m1( 2, 2 ) * m2( 2, 2 ) + m1( 2, 3 ) * m2( 3, 2 ); 
-	float e23 = m1( 2, 0 ) * m2( 0, 3 ) + m1( 2, 1 ) * m2( 1, 3 ) + m1( 2, 2 ) * m2( 2, 3 ) + m1( 2, 3 ) * m2( 3, 3 ); 
-
-	float e30 = m1( 3, 0 ) * m2( 0, 0 ) + m1( 3, 1 ) * m2( 1, 0 ) + m1( 3, 2 ) * m2( 2, 0 ) + m1( 3, 3 ) * m2( 3, 0 ); 
-	float e31 = m1( 3, 0 ) * m2( 0, 1 ) + m1( 3, 1 ) * m2( 1, 1 ) + m1( 3, 2 ) * m2( 2, 1 ) + m1( 3, 3 ) * m2( 3, 1 ); 
-	float e32 = m1( 3, 0 ) * m2( 0, 2 ) + m1( 3, 1 ) * m2( 1, 2 ) + m1( 3, 2 ) * m2( 2, 2 ) + m1( 3, 3 ) * m2( 3, 2 ); 
-	float e33 = m1( 3, 0 ) * m2( 0, 3 ) + m1( 3, 1 ) * m2( 1, 3 ) + m1( 3, 2 ) * m2( 2, 3 ) + m1( 3, 3 ) * m2( 3, 3 ); 
-
-	float data[] =
-	{
-		e00, e01, e02, e03,
-		e10, e11, e12, e13,
-		e20, e21, e22, e23,
-		e30, e31, e32, e33
-	};
-
-	AGMatrix retMtx( data );
-	return retMtx;  
 }
 
 AGMatrix& AGMatrix::operator*=(const AGMatrix& mtx)
 {
-	AGMatrix newMtx = *this;
-	newMtx = newMtx * mtx; 
-	*this = newMtx;
-	return *this; 
+	AGMatrix newMtx( *this ); 
+	*this = newMtx * mtx;
+	return *this;  
 }
 
 void AGMatrix::operator=(const AGMatrix& mtx)
@@ -395,16 +247,10 @@ void AGMatrix::operator=(const AGMatrix& mtx)
 	p->copyFrom( mtx.p );
 }
 
-AGMatrix AGMatrix::operator/(float var)
-{
-	AGMatrix newMtx = *this; 
-	newMtx.setData( divMatrix( newMtx, var ) );
-	return newMtx;
-}
-
 AGMatrix& AGMatrix::operator/=(float var)
 {
-	setData( divMatrix( *this, var ) );
+	AGMatrix newMtx( *this ); 
+	*this = newMtx / var;
 	return *this; 
 }
 
