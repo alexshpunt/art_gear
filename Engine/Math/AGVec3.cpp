@@ -159,3 +159,8 @@ AGVec3 AGVec3::cross(const AGVec3& v1, const AGVec3& v2)
 	vec3.z = v1.x*v2.y - v1.y*v2.x;
 	return vec3; 
 }
+
+AGVec3::operator float*()
+{
+	return (float*)this; 
+}

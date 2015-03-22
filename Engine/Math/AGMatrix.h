@@ -49,6 +49,8 @@ class AGMatrix
 		AGMatrix& operator*=( const AGMatrix& mtx ); 
 		AGMatrix& operator/=( float var );
 
+		operator float*(); 
+
 		friend AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 );
 		friend AGVec3 operator*( const AGVec3& v, const AGMatrix& m ); 
 		friend AGVec4 operator*( const AGVec4& v, const AGMatrix& m );

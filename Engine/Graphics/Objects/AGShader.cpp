@@ -163,8 +163,11 @@ void AGShader::applySurface(AGSurface* surface)
 		effect->cameraPos->SetRawValue( &camera->getEye(), 0, sizeof( D3DXVECTOR3 ) );
 	}
 
-	effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
-	effect->projMatrix->SetMatrix( camera->getProjMatrix() );
+	/*effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
+	effect->projMatrix->SetMatrix( camera->getProjMatrix() );*/
+
+	effect->viewMatrix->SetMatrix( camera->getVM() );
+	effect->projMatrix->SetMatrix( camera->getPM() );
 
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_curTechnique->GetDesc( &techDesc );

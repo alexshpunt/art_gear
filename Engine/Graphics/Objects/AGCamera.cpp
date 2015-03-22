@@ -379,11 +379,13 @@ D3DXVECTOR3 AGCamera::getDir()
 void AGCamera::updateProj()
 {
 	D3DXMatrixPerspectiveFovLH( &m_projMatrix, D3DXToRadian( m_fov ), m_aspectRatio, m_nearPlane, m_farPlane );
+	m_pm.setPerspectiveLH( m_fov, m_aspectRatio, m_nearPlane, m_farPlane );
 }
 
 void AGCamera::updateOrtho()
 {
 	D3DXMatrixOrthoLH( &m_projMatrix, m_zoom* m_aspectRatio, m_zoom, m_nearPlane, m_farPlane );
+	m_pm.setOrthoLH( m_zoom * m_aspectRatio, m_zoom, m_nearPlane, m_farPlane );
 }
 
 void AGCamera::setFov(float fov)
@@ -480,4 +482,14 @@ void AGCamera::translateInDirection( float z)
 	vec *= -z;
 	m_eye += vec;
 	m_at += vec;
+}
+
+AGMatrix AGCamera::getVM()
+{
+	return m_vm;
+}
+
+AGMatrix AGCamera::getPM()
+{
+	return m_pm; 
 }

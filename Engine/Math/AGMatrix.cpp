@@ -447,5 +447,9 @@ void AGMatrix::setScale(const AGVec3& scale)
 	p->data[ 2 ][ 2 ] = scale.z; 
 }
 
+AGMatrix::operator float *()
+{
+	return p->data[ 0 ];
+}
 
 

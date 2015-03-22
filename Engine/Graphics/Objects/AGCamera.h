@@ -56,6 +56,9 @@ class AGCamera
 		void setEye( D3DXVECTOR3 forward );
 		D3DXVECTOR3 getEye() const; 
 
+		AGMatrix getVM();
+		AGMatrix getPM(); 
+
 		D3DXMATRIX getViewMatrix() const; 
 		D3DXMATRIX getProjMatrix() const; 
 
