@@ -115,7 +115,8 @@ class AGMatrixPrivate
 AGMatrix::AGMatrix( bool identity )
 {
 	p = new AGMatrixPrivate; 
-	setIdentity(); 
+	if( identity )
+		setIdentity(); 
 }
 
 AGMatrix::AGMatrix(float e)

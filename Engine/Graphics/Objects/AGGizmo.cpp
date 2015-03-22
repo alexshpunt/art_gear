@@ -66,7 +66,7 @@ float AGGizmo::getDistance() const
 
 void AGGizmo::updatePos(AGCamera* camera)
 {
-	D3DXVECTOR3 camEye = camera->getEye(); 
+	D3DXVECTOR3 camEye = camera->getPos(); 
 	D3DXVECTOR3 dir = camEye - m_beginPos; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 

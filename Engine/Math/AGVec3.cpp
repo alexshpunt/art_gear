@@ -2,6 +2,8 @@
 
 #include <math.h>
 
+#include "AGMath.h"
+
 AGVec3::AGVec3()
 {
 	x = y = z = 0.0f; 
@@ -122,6 +124,15 @@ AGVec3& AGVec3::operator*=(float var)
 	y *= var;
 	z *= var; 
 	return *this; 
+}
+
+AGVec3& AGVec3::operator*=(const AGMatrix& m)
+{
+	AGVec3 v( *this );
+
+	*this = v * m; 
+
+	return *this;
 }
 
 AGVec3 AGVec3::operator/(float var)

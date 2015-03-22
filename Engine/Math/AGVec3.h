@@ -1,6 +1,8 @@
 #ifndef AG_VEC3_H
 #define AG_VEC3_H
 
+class AGMatrix; 
+
 class AGVec3 
 {
 	public:
@@ -33,6 +35,7 @@ class AGVec3
 		AGVec3 operator-( const AGVec3& var );
 		AGVec3& operator-=( const AGVec3& var );
 
+		AGVec3& operator*=( const AGMatrix& m ); 
 		AGVec3 operator*( float var );
 		AGVec3& operator*=( float var );
 

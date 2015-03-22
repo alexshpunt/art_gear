@@ -90,7 +90,7 @@ void AGCubeArrow::draw( AGSurface* surface )
 		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
 	}
 
-	D3DXVECTOR3 camEye = camera->getEye() - m_beginPos; 	
+	D3DXVECTOR3 camEye = camera->getPos() - m_beginPos; 	
 
 	if( m_axis == X_AXIS )
 	{

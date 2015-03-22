@@ -132,7 +132,7 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 	{
 		D3DXVECTOR3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
+		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
 
 		float cosT = D3DXVec3Dot( &m_tangent, &m_rayDelta );
 

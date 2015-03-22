@@ -1,12 +1,11 @@
 #ifndef AG_CAMERA_H
 #define AG_CAMERA_H
 
-#include <d3dx10.h>
-#include <d3d10.h>
-
 #include "Engine/Math/AGMath.h"
 
 #include "Graphics/AGGraphics.h"
+
+class AGCameraPrivate; 
 
 class AGCamera
 {
@@ -42,22 +41,19 @@ class AGCamera
 		void setSensY( float sensY );
 		float getSensY() const; 
 
-		void setLayer( int layer );
-		int getLayer() const; 
-
-		void setAt( const AGVec3& at );
-		const AGVec3& getAt() const;
+		void setTarget( const AGVec3& at );
+		const AGVec3& getTarget() const;
 
 		void setUp( const AGVec3& up );
 		const AGVec3& getUp() const;
 
 		const AGVec3& getDir(); 
 
-		void setEye( const AGVec3& forward );
-		const AGVec3& getEye() const;  
+		void setPos( const AGVec3& forward );
+		const AGVec3& getPos() const;  
 
-		const AGVec3& getViewMatrix() const; 
-		const AGVec3& getProjMatrix() const; 
+		const AGMatrix& getViewMatrix() const; 
+		const AGMatrix& getProjMatrix() const; 
 
 		float getAngleX() const;
 		float getAngleY() const; 
@@ -65,49 +61,11 @@ class AGCamera
 		void setTargetDistance( float dist );
 		void update(); 
 		void updateProj();
-		void updateOrtho();  
-
-		void rotateY( float angle );
-		void rotateX( float angle ); 
-		void rotate( float angleX, float angleY ); 
+		void updateOrtho();   
 
 		void translateInDirection( float z );
 
 	protected:
-		float m_nearPlane;
-		float m_farPlane;
-		float m_aspectRatio;
-		float m_speed;
-		float m_sprintSpeed; 
-		float m_sensX;
-		float m_sensY;
-		int m_layer;
-
-		float m_targetDistance; 
-		float m_angleX;
-		float m_angleY; 
-
-		AGVec3 m_at;
-		AGVec3 m_up;
-		AGVec3 m_eye;
-
-		AGMatrix m_vm; 
-		AGMatrix m_pm; 
-
-		AGMatrix m_rotMatrix; 
-
-		AGMatrix m_viewMatrix;
-		AGMatrix m_projMatrix; 
-
-		float m_vertSpeed;
-		float m_horSpeed; 
-
-		float m_fov;
-
-		float m_zoom; 
-
-		AGCameraType m_type;
-
-		POINT m_mpos; 
+		AGCameraPrivate* p; 
 };
 #endif 

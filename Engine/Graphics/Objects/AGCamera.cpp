@@ -13,33 +13,72 @@
 
 #define PI_2 1.5707963267948966192313216916398
 
+class AGCameraPrivate
+{
+	public:
+		AGCameraPrivate()
+		{
+			aspectRatio = 1.0f; 
+			farPlane = 1000.0f; 
+			nearPlane = 0.001f; 
+			sensX = 1.1f; 
+			sensY = 1.1f; 
+			speed = 0.2f; 
+			sprintSpeed = speed * 2.0f; 
+			up  = AGVec3( 0.0f, 1.0f, 0.0f );
+			target  = AGVec3( 0.0f, 0.0f, 1.0f );
+			pos = AGVec3( 0.0f, 0.0f, 0.0f );
+
+			horSpeed = vertSpeed = 0; 
+			angleX = angleY = 0.0f;
+
+			zoom = 5.0;
+		}
+		
+		float nearPlane;
+		float farPlane;
+		float aspectRatio;
+		float speed;
+		float sprintSpeed; 
+		float sensX;
+		float sensY;
+		int   layer;
+
+		float targetDistance; 
+		float angleX;
+		float angleY; 
+
+		AGVec3 target;
+		AGVec3 up;
+		AGVec3 pos;
+
+		AGMatrix rotMatrix; 
+
+		AGMatrix viewMatrix;
+		AGMatrix projMatrix; 
+
+		float vertSpeed;
+		float horSpeed; 
+
+		float fov;
+
+		float zoom; 
+
+		AGCamera::AGCameraType type; 
+};
+
 AGCamera::AGCamera( AGCameraType type )
 {
-	m_aspectRatio = 1.0f; 
-	m_farPlane = 1000.0f; 
-	m_nearPlane = 0.001f; 
-	m_sensX = 1.1f; 
-	m_sensY = 1.1f; 
-	m_speed = 0.2f; 
-	m_sprintSpeed = m_speed * 2.0f; 
-	m_up = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
-	m_at = D3DXVECTOR3( 0.0f, 0.0f, 1.0f );
-	m_eye = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-
-	m_zoom = 5.0;
+	p = new AGCameraPrivate; 
 
 	setFov( 45 );
 
-	m_horSpeed = m_vertSpeed = 0; 
+	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
+	p->targetDistance = p->target.getLength(); 
 
-	m_angleX = m_angleY = 0.0f;
+	p->type = type; 
 
-	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
-	m_targetDistance = D3DXVec3Length( &m_at );
-
-	m_type = type; 
-
-	if( m_type == Ortho )
+	if( p->type == Ortho )
 		updateOrtho();
 	else 
 		updateProj();
@@ -47,14 +86,14 @@ AGCamera::AGCamera( AGCameraType type )
 
 AGCamera::~AGCamera()
 {
-
+	delete p; 
 }
 
 void AGCamera::setAspectRatio(float aspectRatio)
 {
-	m_aspectRatio = aspectRatio; 
+	p->aspectRatio = aspectRatio; 
 
-	if( m_type == Ortho )
+	if( p->type == Ortho )
 		updateOrtho();
 	else 
 		updateProj();
@@ -62,13 +101,13 @@ void AGCamera::setAspectRatio(float aspectRatio)
 
 float AGCamera::getAspectRatio() const
 {
-	return m_aspectRatio;
+	return p->aspectRatio;
 }
 
 void AGCamera::setNearPlane(float nearPlane)
 {
-	m_nearPlane = nearPlane; 
-	if( m_type == Ortho )
+	p->nearPlane = nearPlane; 
+	if( p->type == Ortho )
 		updateOrtho();
 	else 
 		updateProj();
@@ -76,13 +115,13 @@ void AGCamera::setNearPlane(float nearPlane)
 
 float AGCamera::getNearPlane() const
 {
-	return m_nearPlane; 
+	return p->nearPlane; 
 }
 
 void AGCamera::setFarPlane(float farPlane)
 {
-	m_farPlane = farPlane; 
-	if( m_type == Ortho )
+	p->farPlane = farPlane; 
+	if( p->type == Ortho )
 		updateOrtho();
 	else 
 		updateProj();
@@ -90,116 +129,104 @@ void AGCamera::setFarPlane(float farPlane)
 
 float AGCamera::getFarPlane() const
 {
-	return m_farPlane; 
+	return p->farPlane; 
 }
 
 void AGCamera::setSpeed(float speed)
 {
-	m_speed = speed;
+	p->speed = speed;
 }
 
 float AGCamera::getSpeed() const
 {
-	return m_speed;
+	return p->speed;
 }
 
 void AGCamera::setSprintSpeed(float sprintSpeed)
 {
-	m_sprintSpeed = sprintSpeed;
+	p->sprintSpeed = sprintSpeed;
 }
 
 float AGCamera::getSprintSpeed() const
 {
-	return m_sprintSpeed;
+	return p->sprintSpeed;
 }
 
 void AGCamera::setSensX(float sensX)
 {
-	m_sensX = sensX; 
+	p->sensX = sensX; 
 }
 
 float AGCamera::getSensX() const
 {
-	return m_sensX; 
+	return p->sensX; 
 }
 
 void AGCamera::setSensY(float sensY)
 {
-	m_sensY = sensY; 
+	p->sensY = sensY; 
 }
 
 float AGCamera::getSensY() const
 {
-	return m_sensY;
+	return p->sensY;
 }
 
-void AGCamera::setLayer(int layer)
+void AGCamera::setTarget(const AGVec3& at)
 {
-	m_layer = layer; 
+	p->target = at; 
+	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
 }
 
-int AGCamera::getLayer() const
+const AGVec3& AGCamera::getTarget() const
 {
-	return m_layer;
+	return p->target; 
 }
 
-void AGCamera::setAt(D3DXVECTOR3 at)
+void AGCamera::setUp(const AGVec3& up)
 {
-	m_at = at; 
-	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
-	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
+	p->up = up; 
+	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
 }
 
-D3DXVECTOR3 AGCamera::getAt() const
+const AGVec3& AGCamera::getUp() const
 {
-	return m_at; 
+	return p->up; 
 }
 
-void AGCamera::setUp(D3DXVECTOR3 up)
+void AGCamera::setPos(const AGVec3& forward)
 {
-	m_up = up; 
-	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
-	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
+	p->pos = forward; 
+	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
 }
 
-D3DXVECTOR3 AGCamera::getUp() const
+const AGVec3& AGCamera::getPos() const
 {
-	return m_up; 
+	return p->pos; 
 }
 
-void AGCamera::setEye(D3DXVECTOR3 forward)
+const AGMatrix& AGCamera::getViewMatrix() const
 {
-	m_eye = forward; 
-	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
-	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
+	return p->viewMatrix; 
 }
 
-D3DXVECTOR3 AGCamera::getEye() const
+const AGMatrix& AGCamera::getProjMatrix() const
 {
-	return m_eye; 
-}
-
-D3DXMATRIX AGCamera::getViewMatrix() const
-{
-	return m_viewMatrix; 
-}
-
-D3DXMATRIX AGCamera::getProjMatrix() const
-{
-	return m_projMatrix; 
+	return p->projMatrix; 
 }
 
 void AGCamera::setTargetDistance(float dist)
 {
-	m_targetDistance = dist;
-	D3DXVECTOR3 v( 0.0f, 0.0f, dist );
-	D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, 0.0f, m_angleX, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
+	p->targetDistance = dist;
+	
+	AGVec3 v( 0.0f, 0.0f, dist );
+	p->rotMatrix.setRotateY( p->angleX );
+	v *= p->rotMatrix; 
 
-	D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, 0.0f, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &m_rotMatrix ); 
+	p->rotMatrix.setRotateX( p->angleY );
+	v *= p->rotMatrix; 
 
-	m_at = m_eye + v; 
+	p->target = p->pos + v; 
 }
 
 void AGCamera::update()
@@ -210,11 +237,11 @@ void AGCamera::update()
 	}
 
 	bool mmb = AGInput().isButtonPressed( "MMB" );
-	m_vertSpeed = AGInput().isKeyPressed( 'W' ) ? 1 : AGInput().isKeyPressed( 'S' ) ? -1 : 0;
-	m_horSpeed = AGInput().isKeyPressed( 'D' ) ? -1 : AGInput().isKeyPressed( 'A' ) ? 1 : 0; 
+	p->vertSpeed = AGInput().isKeyPressed( 'W' ) ? 1 : AGInput().isKeyPressed( 'S' ) ? -1 : 0;
+	p->horSpeed = AGInput().isKeyPressed( 'D' ) ? -1 : AGInput().isKeyPressed( 'A' ) ? 1 : 0; 
 
-	m_vertSpeed = D3DXToRadian( m_vertSpeed );
-	m_horSpeed = D3DXToRadian( m_horSpeed );
+	p->vertSpeed = D3DXToRadian( p->vertSpeed );
+	p->horSpeed = D3DXToRadian( p->horSpeed );
 
 	bool rmb = AGInput().isButtonPressed( "RMB" );
 	bool alt = AGInput().isKeyPressed( "Alt" );
@@ -223,27 +250,27 @@ void AGCamera::update()
 	AGPoint2 dPos = AGInput().getMouseDeltaPos(); 
 	double dt = AGTimeManager::getInstance().getDeltaTime();
 
-	float dAngleY = D3DXToRadian( dPos.x ) * m_sensX;
-	float dAngleX = D3DXToRadian( dPos.y ) * m_sensY;  
+	float dAngleY = D3DXToRadian( dPos.x ) * p->sensX;
+	float dAngleX = D3DXToRadian( dPos.y ) * p->sensY;  
 
 	if( wheelDelta != 0 )
 	{
-		if( m_type == Perspective )
+		if( p->type == Perspective )
 		{
 			bool shift = AGInput().isKeyPressed( "Shift" );
-			D3DXVECTOR3 vec = m_eye - m_at; 
-			vec *= -wheelDelta * m_speed * ( shift ? 5 : 0.5f ); 
-			m_eye += vec;
-			m_at += vec;
+			AGVec3 vec = p->pos - p->target; 
+			vec *= -wheelDelta * p->speed * ( shift ? 5 : 0.5f ); 
+			p->pos += vec;
+			p->target += vec;
 		}
 		else
 		{
-			m_zoom += -wheelDelta * m_speed; 
-			if( m_zoom < 0.1f )
+			p->zoom += -wheelDelta * p->speed; 
+			if( p->zoom < 0.1f )
 			{
-				m_zoom = 0.1f;
+				p->zoom = 0.1f;
 			}
-			//translateInDirection( wheelDelta * m_speed );
+			//translateInDirection( wheelDelta * p->speed );
 			updateOrtho();
 		}
 
@@ -254,144 +281,143 @@ void AGCamera::update()
 	{
 		if( alt )
 		{
-			m_angleY += dAngleY;
-			m_angleX += dAngleX;
+			p->angleY += dAngleY;
+			p->angleX += dAngleX;
 
 			float critAngle = D3DXToRadian( 89.8f );
 
-			if( m_angleX > critAngle )
+			if( p->angleX > critAngle )
 			{
-				m_angleX = critAngle;
+				p->angleX = critAngle;
 			}
-			else if( m_angleX < -critAngle )
+			else if( p->angleX < -critAngle )
 			{
-				m_angleX = -critAngle;
+				p->angleX = -critAngle;
 			}
 
-			D3DXVECTOR3 v( 0.0f, 0.0f, m_targetDistance );
-			D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, 0.0f, m_angleX, 0.0f );
-			D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
+			AGVec3 v( 0.0f, 0.0f, p->targetDistance );
 
-			D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, 0.0f, 0.0f );
-			D3DXVec3TransformCoord( &v, &v, &m_rotMatrix ); 
+			p->rotMatrix.setRotateY( p->angleX );
+			v *= p->rotMatrix; 
 
-			m_eye = m_at - v; 
+			p->rotMatrix.setRotateX( p->angleX );
+			v *= p->rotMatrix;
+
+			p->pos = p->target - v; 
 			AGEStateManager::getInstance().setRotating( true );
 		}
 		else 
 		{
-			D3DXVECTOR3 right( 1.0, 0.0f, 0.0f );
-			D3DXVECTOR3 up( 0.0f, 1.0, 0.0f );
-			D3DXMATRIX rotMatRight;
-			D3DXMATRIX rotMatUp;  
+			AGVec3 right( 1.0, 0.0f, 0.0f );
+			AGVec3 up( 0.0f, 1.0, 0.0f );
+			AGMatrix rotMatRight;
+			AGMatrix rotMatUp;  
 
-			D3DXMatrixRotationYawPitchRoll( &rotMatRight, m_angleY, 0.0f, 0.0f );
-			D3DXMatrixRotationYawPitchRoll( &rotMatUp, 0.0f, m_angleX, 0.0f );
+			rotMatRight.setRotateX( p->angleY );
+			rotMatUp.setRotateY( p->angleX );
 
-			D3DXVec3TransformCoord( &right, &right, &rotMatRight );
-			D3DXVec3TransformCoord( &up, &up, &rotMatUp );
-			D3DXVec3TransformCoord( &up, &up, &rotMatRight );
+			right *= rotMatRight;
+			up *= rotMatUp;
+			up *= rotMatRight; 
 
-			m_at -= right * dAngleY; 
-			m_at += up * dAngleX;
-			m_eye -= right * dAngleY; 
-			m_eye += up * dAngleX;
+			p->target -= right * dAngleY; 
+			p->target += up * dAngleX;
+			p->pos -= right * dAngleY; 
+			p->pos += up * dAngleX;
 			AGEStateManager::getInstance().setRotating( true );
 		}
 	}
 	else if( rmb )
 	{
-		m_angleY += dAngleY;
-		m_angleX += dAngleX;
+		p->angleY += dAngleY;
+		p->angleX += dAngleX;
 
-		float critAngle = D3DXToRadian( 89.8f );
+		float critAngle = AGMath::toRadians( 89.8f );
 
-		if( m_angleX > critAngle )
+		if( p->angleX > critAngle )
 		{
-			m_angleX = critAngle;
+			p->angleX = critAngle;
 		}
-		else if( m_angleX < -critAngle )
+		else if( p->angleX < -critAngle )
 		{
-			m_angleX = -critAngle;
+			p->angleX = -critAngle;
 		}
-		D3DXVECTOR3 v( 0.0f, 0.0f, 1.0f );
-		D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, m_angleX, 0.0f );
-		D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
+		AGVec3 v( 0.0f, 0.0f, 1.0f );
 
-		m_at = m_eye + v; 
+		p->rotMatrix.setRotate( p->angleY, p->angleX, 0.0f );
+		v*= p->rotMatrix; 
+
+		p->target = p->pos + v; 
 
 		AGEStateManager::getInstance().setRotating( true );
 	}
-	if( m_horSpeed != 0 || m_vertSpeed != 0 )
+	if( p->horSpeed != 0 || p->vertSpeed != 0 )
 	{
-		D3DXVECTOR3 vec = m_eye - m_at; 
-		D3DXVec3Normalize( &vec, &vec );
-		D3DXVECTOR3 rightVec( 1.0, 0.0f, 0.0f );
-		D3DXMATRIX rotMatrix; 
-		D3DXMatrixIdentity( &rotMatrix );
-		D3DXMatrixRotationYawPitchRoll( &rotMatrix, m_angleY, 0.0f, 0.0f );
+		AGVec3 vec = p->pos - p->target; 
+		vec.normilize(); 
+		AGVec3 rightVec( 1.0, 0.0f, 0.0f );
+		AGMatrix rotMatrix; 
+		rotMatrix.setRotateX( p->angleY );
 
-		D3DXVec3TransformCoord( &rightVec, &rightVec, &rotMatrix );
-		rightVec *= -m_horSpeed * m_speed; 
-		m_eye += rightVec;
-		m_at += rightVec;
+		rightVec *= rotMatrix; 
 
-		if( m_type == Ortho )
+		rightVec *= -p->horSpeed * p->speed; 
+		p->pos += rightVec;
+		p->target += rightVec;
+
+		if( p->type == Ortho )
 		{
-			m_zoom += ( AGInput().isKeyPressed( "Shift" ) ? -m_sprintSpeed : -m_speed ) * m_vertSpeed; 
-			if( m_zoom < 0.01f )
+			p->zoom += ( AGInput().isKeyPressed( "Shift" ) ? -p->sprintSpeed : -p->speed ) * p->vertSpeed; 
+			if( p->zoom < 0.01f )
 			{
-				m_zoom = 0.01f; 
+				p->zoom = 0.01f; 
 			}
-			//translateInDirection( ( AGInput().isKeyPressed( "Shift" ) ? -m_sprintSpeed : -m_speed ) * m_vertSpeed );
+			//translateInDirection( ( AGInput().isKeyPressed( "Shift" ) ? -p->sprintSpeed : -p->speed ) * p->vertSpeed );
 			updateOrtho(); 
 		}
 		else
 		{
-			vec *= ( AGInput().isKeyPressed( "Shift" ) ? -m_sprintSpeed : -m_speed ) * m_vertSpeed; 
-			m_eye += vec;
-			m_at += vec; 
+			vec *= ( AGInput().isKeyPressed( "Shift" ) ? -p->sprintSpeed : -p->speed ) * p->vertSpeed; 
+			p->pos += vec;
+			p->target += vec; 
 		}
 
 		AGEStateManager::getInstance().setRotating( false );
 	}
-	D3DXMatrixLookAtLH( &m_viewMatrix, &m_eye, &m_at, &m_up );
-	m_vm.setLookAtLH( AGConversion::toAGVec3D( m_eye ), AGConversion::toAGVec3D( m_at ), AGConversion::toAGVec3D( m_up ) );
+	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
 }
 
 float AGCamera::getAngleX() const
 {
-	return m_angleX;
+	return p->angleX;
 }
 
 float AGCamera::getAngleY() const
 {
-	return m_angleY;
+	return p->angleY;
 }
 
-D3DXVECTOR3 AGCamera::getDir()
+const AGVec3& AGCamera::getDir()
 {
-	D3DXVECTOR3 dir = m_at - m_eye; 
-	D3DXVec3Normalize( &dir, &dir );
+	AGVec3 dir = p->target - p->pos; 
+	dir.normilize(); 
 	return dir; 
 }
 
 void AGCamera::updateProj()
 {
-	D3DXMatrixPerspectiveFovLH( &m_projMatrix, D3DXToRadian( m_fov ), m_aspectRatio, m_nearPlane, m_farPlane );
-	m_pm.setPerspectiveLH( m_fov, m_aspectRatio, m_nearPlane, m_farPlane );
+	p->projMatrix.setPerspectiveLH( p->fov, p->aspectRatio, p->nearPlane, p->farPlane );
 }
 
 void AGCamera::updateOrtho()
 {
-	D3DXMatrixOrthoLH( &m_projMatrix, m_zoom* m_aspectRatio, m_zoom, m_nearPlane, m_farPlane );
-	m_pm.setOrthoLH( m_zoom * m_aspectRatio, m_zoom, m_nearPlane, m_farPlane );
+	p->projMatrix.setOrthoLH( p->zoom * p->aspectRatio, p->zoom, p->nearPlane, p->farPlane );
 }
 
 void AGCamera::setFov(float fov)
 {
-	m_fov = fov; 
-	if( m_type == Ortho )
+	p->fov = fov; 
+	if( p->type == Ortho )
 		updateOrtho();
 	else 
 		updateProj();
@@ -399,13 +425,13 @@ void AGCamera::setFov(float fov)
 
 float AGCamera::getFov() const
 {
-	return m_fov; 
+	return p->fov; 
 }
 
 void AGCamera::setType(AGCameraType type)
 {
-	m_type = type; 
-	if( m_type == Ortho )
+	p->type = type; 
+	if( p->type == Ortho )
 	{
 		updateOrtho();
 	}
@@ -417,79 +443,26 @@ void AGCamera::setType(AGCameraType type)
 
 AGCamera::AGCameraType AGCamera::getType() const
 {
-	return m_type; 
+	return p->type; 
 }
 
 void AGCamera::rotateY(float angle)
 {
-	m_angleY = D3DXToRadian( angle );
+	p->angleY = D3DXToRadian( angle );
 
-	D3DXVECTOR3 v( 0.0f, 0.0f, 1.0f );
-	D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, m_angleX, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
+	AGVec3 v( 0.0f, 0.0f, 1.0f );
+	const AGMatrix&RotationYawPitchRoll( &p->rotMatrix, p->angleY, p->angleX, 0.0f );
+	D3DXVec3TransformCoord( &v, &v, &p->rotMatrix );
 
-	m_at = m_eye + v; 
-}
-
-void AGCamera::rotateX(float angle)
-{
-	m_angleX = D3DXToRadian( angle );
-
-	float critAngle = D3DXToRadian( 89.8f );
-
-	if( m_angleX > critAngle )
-	{
-		m_angleX = critAngle;
-	}
-	else if( m_angleX < -critAngle )
-	{
-		m_angleX = -critAngle;
-	}
-	D3DXVECTOR3 v( 0.0f, 0.0f, 1.0f );
-	D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, m_angleX, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
-
-	m_at = m_eye + v; 
-}
-
-void AGCamera::rotate(float angleX, float angleY)
-{
-	m_angleY = D3DXToRadian( angleY );
-	m_angleX = D3DXToRadian( angleX );
-
-	float critAngle = D3DXToRadian( 89.8f );
-
-	if( m_angleX > critAngle )
-	{
-		m_angleX = critAngle;
-	}
-	else if( m_angleX < -critAngle )
-	{
-		m_angleX = -critAngle;
-	}
-	D3DXVECTOR3 v( 0.0f, 0.0f, 1.0f );
-	D3DXMatrixRotationYawPitchRoll( &m_rotMatrix, m_angleY, m_angleX, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &m_rotMatrix );
-
-	m_at = m_eye + v; 
+	p->target = p->pos + v; 
 }
 
 void AGCamera::translateInDirection( float z)
 {
-	D3DXVECTOR3 vec = m_eye - m_at; 
-
-	D3DXVec3Normalize( &vec, &vec );
+	AGVec3 vec = p->pos - p->target; 
+	vec.normilize(); 
+	
 	vec *= -z;
-	m_eye += vec;
-	m_at += vec;
-}
-
-AGMatrix AGCamera::getVM()
-{
-	return m_vm;
-}
-
-AGMatrix AGCamera::getPM()
-{
-	return m_pm; 
+	p->pos += vec;
+	p->target += vec;
 }

@@ -160,7 +160,7 @@ void AGShader::applySurface(AGSurface* surface)
 
 	if( effect->cameraPos )
 	{
-		effect->cameraPos->SetRawValue( &camera->getEye(), 0, sizeof( D3DXVECTOR3 ) );
+		effect->cameraPos->SetRawValue( &camera->getPos(), 0, sizeof( D3DXVECTOR3 ) );
 	}
 
 	/*effect->viewMatrix->SetMatrix( camera->getViewMatrix() );

@@ -109,8 +109,8 @@ void AGSurface::setCameraMode(AGSurfaceCameraMode cameraMode)
 	}
 
 	m_camera->setType( AGCamera::Ortho ); 
-	m_camera->setAt( D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) );
-	m_camera->setEye( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	m_camera->setTarget( D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) );
+	m_camera->setPos( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 
 	switch( m_surfaceCameraMode )
 	{
@@ -520,7 +520,7 @@ void AGSurface::present()
 
 	if( m_surfaceMode == Shaded )
 	{
-		D3DXVECTOR3 camPos = m_camera->getEye(); 
+		D3DXVECTOR3 camPos = m_camera->getPos(); 
 		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( D3DXVECTOR3 ) );
 		if( FAILED( hr ) )
 		{

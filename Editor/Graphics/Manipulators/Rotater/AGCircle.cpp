@@ -420,7 +420,7 @@ void AGCircle::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera(); 
 	ID3D10Device* device = surface->getDevice(); 
 
-	D3DXVECTOR3 camEye = camera->getEye(); 
+	D3DXVECTOR3 camEye = camera->getPos(); 
 	D3DXVECTOR3 dir = camEye - m_beginPos; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.0f; 

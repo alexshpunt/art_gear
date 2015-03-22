@@ -131,7 +131,7 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 
 		D3DXVECTOR3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
+		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
 
 		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getBeginPos();
 

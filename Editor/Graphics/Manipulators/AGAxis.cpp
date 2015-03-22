@@ -57,11 +57,11 @@ void AGAxises::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera();
 	ID3D10Device* device = surface->getDevice();
 
-	D3DXVECTOR3 camEye = camera->getEye(); 
+	D3DXVECTOR3 camEye = camera->getPos(); 
 	AGVec3 objPos = m_object->getLocalPos(); 
 	AGVec3 objPivot = m_object->getPivot();
 	D3DXVECTOR3 at( objPos.x, objPos.y, objPos.z ); 
-	D3DXVECTOR3 camAt = camera->getAt(); 
+	D3DXVECTOR3 camAt = camera->getTarget(); 
 	D3DXVECTOR3 dir = camEye - at; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 

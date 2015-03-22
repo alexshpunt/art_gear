@@ -120,7 +120,7 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 	{
 		D3DXVECTOR3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
+		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
 		D3DXVECTOR3 cameraDir = surface->getCamera()->getDir();
 
 		D3DXVECTOR3 axisX( axis.x, 0.0f, 0.0f );

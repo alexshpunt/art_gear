@@ -17,9 +17,9 @@ class AGComponent
 		
 		virtual void notify( AGGameObject::Change ) = 0; 
 
-		virtual void onSceneInit() = 0;
-		virtual void onSceneUpdate() = 0;
-		virtual void onSceneFixedUpdate() = 0;
+		virtual void onSceneInit(); 
+		virtual void onSceneUpdate();
+		virtual void onSceneFixedUpdate();
 
 		AGGameObject* getObject() const; 
 		const string& getName() const; 

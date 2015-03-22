@@ -15,23 +15,66 @@
 
 namespace AGMath 
 {
+	///////////////////////////////////////////////////////////////////////////
+	///“ригонометрические константы
+	///////////////////////////////////////////////////////////////////////////
 	const float Pi = 3.1415926535897932384626433832795f;
 	//Pi multiply 2 
 	const float PiX2 = Pi * 2; 
 	const float Pi2 = Pi / 2.0f; 
 	const float Pi3 = Pi / 3.0f;
 	const float Pi4 = Pi / 4.0f;
+	///////////////////////////////////////////////////////////////////////////
+	//»спользуетс€ дл€ €вного указани€ способа определени€ угла
+	///////////////////////////////////////////////////////////////////////////
+
+	struct Degrees;
+	struct Radians; 
+
+	struct Degrees
+	{
+		explicit Degrees( float angle ) : value( angle ){}
+		
+		Radians toRadians()
+		{
+			return Radians( ( value * Pi) / 180.0f  );
+		}
+
+		operator float()
+		{
+			return value; 
+		}
+		
+		float value; 
+	};
+
+	struct Radians
+	{
+		explicit Radians( float radian ) : value( radian ){}
+
+		Degrees toDegrees()
+		{
+			return Degrees( ( 180.0f * value ) / Pi );
+		}
+
+		operator float()
+		{
+			return value; 
+		}
+		
+		float value; 
+	};
 
 	template <class T>
 	T toRadians( T var )
 	{
-		return ( var * AGMath::Pi) / 180.0f; 
+		return ( var * Pi) / 180.0f; 
 	}
 
 	template <class T>
 	T toDegrees( T var )
 	{
-		return ( 180.0f * var ) / AGMath::Pi; 
+		return ( 180.0f * value ) / Pi ; 
 	}
 
 	template< class T >
