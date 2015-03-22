@@ -112,9 +112,10 @@ class AGMatrixPrivate
 		bool ableTranspose; 
 };
 
-AGMatrix::AGMatrix()
+AGMatrix::AGMatrix( bool identity )
 {
 	p = new AGMatrixPrivate; 
+	setIdentity(); 
 }
 
 AGMatrix::AGMatrix(float e)
@@ -393,7 +394,7 @@ void AGMatrix::setRotateZ(float angle)
 	p->data[ 1 ][ 0 ] = -sinA;
 }
 
-void AGMatrix::setRotate(float angle, const AGVec3& axis)
+void AGMatrix::setRotate( const AGVec3& axis, float angle )
 {
 	float radians = AGMath::toRadians( angle );
 
@@ -447,7 +448,7 @@ void AGMatrix::setScale(const AGVec3& scale)
 	p->data[ 2 ][ 2 ] = scale.z; 
 }
 
-AGMatrix::operator float *()
+AGMatrix::operator float *() const
 {
 	return p->data[ 0 ];
 }

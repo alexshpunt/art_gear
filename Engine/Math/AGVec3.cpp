@@ -160,7 +160,7 @@ AGVec3 AGVec3::cross(const AGVec3& v1, const AGVec3& v2)
 	return vec3; 
 }
 
-AGVec3::operator float*()
+AGVec3::operator float*() const
 {
 	return (float*)this; 
 }

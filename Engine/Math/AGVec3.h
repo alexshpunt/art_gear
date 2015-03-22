@@ -39,7 +39,7 @@ class AGVec3
 		AGVec3 operator/( float var );
 		AGVec3& operator/=( float var );
 
-		operator float*(); 
+		operator float*() const; 
 };
 
 #endif 

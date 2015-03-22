@@ -45,22 +45,19 @@ class AGCamera
 		void setLayer( int layer );
 		int getLayer() const; 
 
-		void setAt( D3DXVECTOR3 at );
-		D3DXVECTOR3 getAt() const;
+		void setAt( const AGVec3& at );
+		const AGVec3& getAt() const;
 
-		void setUp( D3DXVECTOR3 up );
-		D3DXVECTOR3 getUp() const;
+		void setUp( const AGVec3& up );
+		const AGVec3& getUp() const;
 
-		D3DXVECTOR3 getDir(); 
+		const AGVec3& getDir(); 
 
-		void setEye( D3DXVECTOR3 forward );
-		D3DXVECTOR3 getEye() const; 
+		void setEye( const AGVec3& forward );
+		const AGVec3& getEye() const;  
 
-		AGMatrix getVM();
-		AGMatrix getPM(); 
-
-		D3DXMATRIX getViewMatrix() const; 
-		D3DXMATRIX getProjMatrix() const; 
+		const AGVec3& getViewMatrix() const; 
+		const AGVec3& getProjMatrix() const; 
 
 		float getAngleX() const;
 		float getAngleY() const; 
@@ -90,17 +87,17 @@ class AGCamera
 		float m_angleX;
 		float m_angleY; 
 
-		D3DXVECTOR3 m_at;
-		D3DXVECTOR3 m_up;
-		D3DXVECTOR3 m_eye;
+		AGVec3 m_at;
+		AGVec3 m_up;
+		AGVec3 m_eye;
 
 		AGMatrix m_vm; 
 		AGMatrix m_pm; 
 
-		D3DXMATRIX m_rotMatrix; 
+		AGMatrix m_rotMatrix; 
 
-		D3DXMATRIX m_viewMatrix;
-		D3DXMATRIX m_projMatrix; 
+		AGMatrix m_viewMatrix;
+		AGMatrix m_projMatrix; 
 
 		float m_vertSpeed;
 		float m_horSpeed; 

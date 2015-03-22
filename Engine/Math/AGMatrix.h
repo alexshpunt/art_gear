@@ -9,7 +9,7 @@ class AGMatrixPrivate;
 class AGMatrix 
 {
 	public:
-		AGMatrix();
+		AGMatrix( bool identity = true );
 		AGMatrix( float e );
 		AGMatrix( float* data );
 		AGMatrix( const AGMatrix& copy );
@@ -36,7 +36,7 @@ class AGMatrix
 		void setRotateX( float angle );
 		void setRotateY( float angle );
 		void setRotateZ( float angle );
-		void setRotate( float angle, const AGVec3& axis );
+		void setRotate( const AGVec3& axis, float angle );
 		void setRotate( float x, float y, float z );
 		void setTranslate( const AGVec3& transl );
 		void setScale( const AGVec3& scale ); 
@@ -49,7 +49,7 @@ class AGMatrix
 		AGMatrix& operator*=( const AGMatrix& mtx ); 
 		AGMatrix& operator/=( float var );
 
-		operator float*(); 
+		operator float*() const; 
 
 		friend AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 );
 		friend AGVec3 operator*( const AGVec3& v, const AGMatrix& m ); 
