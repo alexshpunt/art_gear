@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <iostream>
 
+#include <assert.h>
+
 struct IndexPair 
 {
 	IndexPair( int inI, int inJ ) : i( inI ), j( inJ ) {}  
@@ -17,28 +19,19 @@ struct IndexPair
 class AGMatrixPrivate
 {
 	public:
-		enum AGMatrixDataType{ Identity, Translation, Rotation, Scale, Proj, Ortho };
+		enum AGMatrixDataType{ Identity, Translation, Rotation, Scale, Proj, Ortho, General };
 		AGMatrixPrivate()
 		{
-			isIdentity = false;
-			ableTranspose = false; 
 			detMat = 0.0f; 
 			memset( data, 0, sizeof( data ) );
 			memset( adjMat, 0, sizeof( data ) );
-		} 
 
-		void setUndefinedState()
-		{
-			isIdentity = false;
-			ableTranspose = false; 
-		}
+			type = General; 
+		} 
 
 		void copyFrom( AGMatrixPrivate* p )
 		{
 			memcpy_s( data, sizeof( data ), p->data, sizeof( data ) );
-
-			isIdentity = p->isIdentity;
-			ableTranspose = p->ableTranspose; 
 		}
 
 		float findDeterminant2x2( IndexPair leftTop, IndexPair rightBot )
@@ -95,6 +88,10 @@ class AGMatrixPrivate
 		void inverse()
 		{
 			computeAdjMat(); 
+			if( AGMath::isEqual( detMat, 0.0f ) )
+			{
+				return; 
+			}
 			for( int i = 0; i < 4; i++ )
 			{
 				for( int j = 0; j < 4; j++ )
@@ -108,8 +105,7 @@ class AGMatrixPrivate
 		float adjMat[ 4 ][ 4 ];
 		float detMat; 
 
-		bool isIdentity; 
-		bool ableTranspose; 
+		AGMatrixDataType type; 
 };
 
 AGMatrix::AGMatrix( bool identity )
@@ -130,15 +126,11 @@ AGMatrix::AGMatrix(float e)
 			p->data[ i ][ j ] = e; 
 		}
 	}
-
-	p->isIdentity = false;
-	p->ableTranspose = true; 
 }
 
 void AGMatrix::setData(float* data)
 {
 	memcpy_s( p->data, sizeof( p->data ), data, sizeof( p->data ) );
-	p->setUndefinedState(); 
 }
 
 AGMatrix::AGMatrix(const AGMatrix& copy)
@@ -167,50 +159,29 @@ void AGMatrix::setIdentity()
 
 	memcpy_s( p->data, sizeof( p->data ), m, sizeof( m ) );
 
-	p->isIdentity = true; 
+	p->type = AGMatrixPrivate::Identity; 
 }
 
 bool AGMatrix::isIdentity()
 {
-	return p->isIdentity; 
+	return p->type == AGMatrixPrivate::Identity; 
 }
 
 float& AGMatrix::operator()(int i, int j)
 {
-	if( i < 0 || i > 4 || j < 0 || j > 4 )
-	{
-		return p->data[ 0 ][ 0 ];  
-	}
+	assert( i >= 0 && i < 4 || j >= 0 && j < 4);
+
 	return p->data[ i ][ j ]; 
 
 }
 
 float AGMatrix::operator()(int i, int j) const
 {
-	if( i < 0 || i > 4 || j < 0 || j > 4 )
-	{
-		return p->data[ 0 ][ 0 ];  
-	}
+	assert( i >= 0 && i < 4 || j >= 0 && j < 4);
+
 	return p->data[ i ][ j ]; 
 }
 
-float& AGMatrix::getElem(int i, int j)
-{
-	if( i < 0 || i > 4 || j < 0 || j > 4 )
-	{
-		return p->data[ 0 ][ 0 ];
-	}
-	return p->data[ i ][ j ]; 
-}
-
-float AGMatrix::getElem(int i, int j) const
-{
-	if( i < 0 || i > 4 || j < 0 || j > 4 )
-	{
-		return p->data[ 0 ][ 0 ];
-	}
-	return p->data[ i ][ j ]; 
-}
 
 AGMatrix& AGMatrix::operator+=(const AGMatrix& mtx)
 {
@@ -241,6 +212,7 @@ AGMatrix& AGMatrix::operator*=(const AGMatrix& mtx)
 	return *this;  
 }
 
+//TODO: Протесть оператор присовоения + Добавить проверку на самоприсваивание 
 void AGMatrix::operator=(const AGMatrix& mtx)
 {
 	if( p )
@@ -273,19 +245,24 @@ void AGMatrix::inverse()
 	p->inverse();
 }
 
-AGMatrix AGMatrix::getInversed()
+AGMatrix AGMatrix::inversed()
 {
 	AGMatrix mtx( *this );
 	mtx.inverse(); 
 	return mtx; 
 }
 
-void AGMatrix::setPerspectiveLH(float angle, float aspectRatio, float nearPlane, float farPlane)
+void AGMatrix::setPerspectiveLH(AGMath::Degrees angle, float aspectRatio, float nearPlane, float farPlane)
+{
+	setPerspectiveLH( angle.toRadians(), aspectRatio, nearPlane, farPlane );
+}
+
+void AGMatrix::setPerspectiveLH(AGMath::Radians angle, float aspectRatio, float nearPlane, float farPlane)
 {
 	if( AGMath::isEqual( nearPlane, farPlane ) || aspectRatio == 0.0f )
 		return; 
 
-	float alpha = AGMath::toRadians( angle * 0.5f );
+	float alpha = angle * 0.5f;
 	float sinA = sin( alpha );
 	if( sinA == 0 )
 		return; 
@@ -303,12 +280,10 @@ void AGMatrix::setPerspectiveLH(float angle, float aspectRatio, float nearPlane,
 
 void AGMatrix::setOrthoLH(float viewWidth, float viewHeight, float nearPlane, float farPlane)
 {
-	if( AGMath::isEqual( nearPlane, farPlane ) ||
-	    AGMath::isEqual( viewWidth, 0.0f )     ||
-	    AGMath::isEqual( viewHeight, 0.0f ) )
-	{
-		return; 
-	}
+	
+	assert( AGMath::isEqual( nearPlane, farPlane ) ||
+	        AGMath::isEqual( viewWidth, 0.0f )     ||
+	        AGMath::isEqual( viewHeight, 0.0f ) );
 
 	float range = 1.0f / ( farPlane - nearPlane );
 	
@@ -321,11 +296,11 @@ void AGMatrix::setOrthoLH(float viewWidth, float viewHeight, float nearPlane, fl
 	p->data[ 3 ][ 3 ] = 1.0f; 
 }
 
-void AGMatrix::setLookAtLH( const AGVec3& inEye, const AGVec3& inCenter, const AGVec3& inUp )
+void AGMatrix::setLookAtLH( const AGVec3& eye, const AGVec3& target, const AGVec3& up )
 {
-	AGVec3 zAxis = inCenter - inEye;
+	AGVec3 zAxis = target - eye;
 	zAxis.normilize(); 
-	AGVec3 xAxis = AGVec3::cross( inUp, zAxis );
+	AGVec3 xAxis = AGVec3::cross( up, zAxis );
 	xAxis.normilize();
 	AGVec3 yAxis = AGVec3::cross( zAxis, xAxis ); 
 
@@ -343,9 +318,9 @@ void AGMatrix::setLookAtLH( const AGVec3& inEye, const AGVec3& inCenter, const A
 	p->data[ 1 ][ 2 ] = zAxis.y;
 	p->data[ 2 ][ 2 ] = zAxis.z;
 	
-	p->data[ 3 ][ 0 ] = -AGVec3::dot( xAxis, inEye );
-	p->data[ 3 ][ 1 ] = -AGVec3::dot( yAxis, inEye );
-	p->data[ 3 ][ 2 ] = -AGVec3::dot( zAxis, inEye );
+	p->data[ 3 ][ 0 ] = -AGVec3::dot( xAxis, eye );
+	p->data[ 3 ][ 1 ] = -AGVec3::dot( yAxis, eye );
+	p->data[ 3 ][ 2 ] = -AGVec3::dot( zAxis, eye );
 
 	p->data[ 3 ][ 3 ] = 1.0f; 
 }
@@ -355,12 +330,10 @@ void AGMatrix::copyFrom(const AGMatrix& copy)
 	p->copyFrom( copy.p );
 }
 
-void AGMatrix::setRotateX(float angle)
+void AGMatrix::setRotateX(AGMath::Radians angle)
 {
-	float radians = AGMath::toRadians( angle );
-
-	float cosA = cos( radians );
-	float sinA = sin( radians );
+	float cosA = cos( angle );
+	float sinA = sin( angle );
 
 	p->data[ 0 ][ 0 ] = 1.0f; 
 	p->data[ 1 ][ 1 ] = cosA;
@@ -369,12 +342,15 @@ void AGMatrix::setRotateX(float angle)
 	p->data[ 1 ][ 2 ] =  sinA;
 }
 
-void AGMatrix::setRotateY(float angle)
+void AGMatrix::setRotateX(AGMath::Degrees angle)
 {
-	float radians = AGMath::toRadians( angle );
+	setRotateX( angle.toRadians() );
+}
 
-	float cosA = cos( radians );
-	float sinA = sin( radians );
+void AGMatrix::setRotateY(AGMath::Radians angle)
+{
+	float cosA = cos( angle );
+	float sinA = sin( angle );
 
 	p->data[ 0 ][ 0 ] =  cosA; 
 	p->data[ 0 ][ 2 ] = -sinA;
@@ -382,12 +358,15 @@ void AGMatrix::setRotateY(float angle)
 	p->data[ 2 ][ 2 ] =  cosA; 
 }
 
-void AGMatrix::setRotateZ(float angle)
+void AGMatrix::setRotateY(AGMath::Degrees angle)
 {
-	float radians = AGMath::toRadians( angle );
+	setRotateY( angle.toRadians() );
+}
 
-	float cosA = cos( radians );
-	float sinA = sin( radians );
+void AGMatrix::setRotateZ(AGMath::Radians angle)
+{
+	float cosA = cos( angle );
+	float sinA = sin( angle );
 
 	p->data[ 0 ][ 0 ] =  cosA; 
 	p->data[ 1 ][ 1 ] =  cosA;
@@ -395,12 +374,15 @@ void AGMatrix::setRotateZ(float angle)
 	p->data[ 1 ][ 0 ] = -sinA;
 }
 
-void AGMatrix::setRotate( const AGVec3& axis, float angle )
+void AGMatrix::setRotateZ(AGMath::Degrees angle)
 {
-	float radians = AGMath::toRadians( angle );
 
-	float cosA = cos( radians );
-	float sinA = sin( radians );
+}
+
+void AGMatrix::setRotate( const AGVec3& axis, AGMath::Radians angle )
+{
+	float cosA = cos( angle );
+	float sinA = sin( angle );
 
 	AGVec3 normal = axis; 
 	normal.normilize(); 
@@ -418,21 +400,19 @@ void AGMatrix::setRotate( const AGVec3& axis, float angle )
 	p->data[ 2 ][ 2 ] = cosA + ( 1 - cosA ) * ( normal.z * normal.z ); 
 }
 
-void AGMatrix::setRotate(float x, float y, float z)
+void AGMatrix::setRotate(AGMath::Radians x, AGMath::Radians y, AGMath::Radians z)
 {
-	AGMatrix rX; 
-	rX.setIdentity();
-	rX.setRotateX( x );
+	*this = AGMatrix::RotationZ( z ) * AGMatrix::RotationX( x ) * AGMatrix::RotationY( y ); 
+}
 
-	AGMatrix rY; 
-	rY.setIdentity();
-	rY.setRotateY( y );
+void AGMatrix::setRotate(const AGVec3& axis, AGMath::Degrees angle)
+{
+	setRotate( axis, angle.toRadians() );
+}
 
-	AGMatrix rZ; 
-	rZ.setIdentity();
-	rZ.setRotateZ( z );
-
-	*this = rZ * rX * rY; 
+void AGMatrix::setRotate(AGMath::Degrees x, AGMath::Degrees y, AGMath::Degrees z)
+{
+	setRotate( x.toRadians(), y.toRadians(), z.toRadians() );
 }
 
 void AGMatrix::setTranslate(const AGVec3& transl)

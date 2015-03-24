@@ -138,7 +138,7 @@
     <ClCompile Include="Engine\Managers\AGResourceManager.cpp" />
     <ClCompile Include="Engine\Managers\AGTimeManager.cpp" />
     <ClCompile Include="Engine\Math\AGColor.cpp" />
-    <ClCompile Include="Engine\Math\AGMath.cpp" />
+    <ClCompile Include="Engine\Math\AGMathHelp.cpp" />
     <ClCompile Include="Engine\Math\AGMatrix.cpp" />
     <ClCompile Include="Engine\Math\AGPoint2.cpp" />
     <ClCompile Include="Engine\Math\AGPoint3.cpp" />
@@ -265,6 +265,7 @@
     <ClInclude Include="Engine\Interfaces\AGEvent.h" />
     <ClInclude Include="Engine\Interfaces\AGResource.h" />
     <ClInclude Include="Engine\Math\AGColor.h" />
+    <ClInclude Include="Engine\Math\AGMathHelp.h" />
     <ClInclude Include="Engine\Math\AGVec4.h" />
     <ClInclude Include="Engine\Utils\AGConversion.h" />
     <ClInclude Include="GeneratedFiles\ui_AGETransformPanel.h" />
