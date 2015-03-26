@@ -293,6 +293,9 @@
     <ClCompile Include="Engine\Math\AGMathHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Objects\Shapes\AGShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Editor\AGEditor.h">
@@ -544,6 +547,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\AGMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Objects\Shapes\AGShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

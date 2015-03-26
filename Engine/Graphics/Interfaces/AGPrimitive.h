@@ -10,12 +10,14 @@
 #include "AGSurface.h"
 #include "AGPureInterfaces.h"
 
+#include "Engine/Math/AGMath.h"
+
 using namespace std;
 
 struct AGPrimitiveVertex 
 {
-	D3DXVECTOR3 pos;
-	D3DXVECTOR4 color; 
+	AGVec3 pos;
+	AGColor color; 
 };
 
 class AGPrimitive :  public AGMovable, public AGDrawable

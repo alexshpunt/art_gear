@@ -13,27 +13,26 @@ class AGSphereShapePrivate
 	public:
 		AGSphereShapePrivate()
 		{
-			vbo = nullptr; 
+			radius = 0.0f;
+			circleVerticesCount = 0;
+			verticesCount = 0; 
 		}
 		~AGSphereShapePrivate()
 		{
-			delete vbo; 
 		}
 
 		float radius;
 		unsigned int circleVerticesCount; 
 		unsigned int verticesCount; 
-		AGBuffer< AGPrimitiveVertex >* vbo;
 		AGColor color; 
 };
 
-AGSphereShape::AGSphereShape( float radius, const AGColor& color )
+AGSphereShape::AGSphereShape( float radius, const AGColor& color ) : AGShape( color )
 {
-	m_shader = AGResourceManager::getInstance().getShader( L"shape" );
 	m_p = new AGSphereShapePrivate; 
 	setRadius( radius );
-	setColor( color );
-	setup(); 
+
+	setupShape(); 
 }
 
 AGSphereShape::~AGSphereShape()
@@ -53,35 +52,25 @@ float AGSphereShape::getRadius() const
 
 void AGSphereShape::draw(AGSurface* surface)
 {
-	AGCamera* camera = surface->getCamera(); 
-	ID3D10Device* device = surface->getDevice(); 
-
-	m_shader->applySurface( surface );
-
-	m_shader->setWorldMatrix( getResultMatrix() );
-
-	m_p->vbo->apply( surface );
+	prepareDraw( surface );
 
 	while( m_shader->applyNextPass() )
 	{
-		
-		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
-
 		for( int i = 0; i < m_p->circleVerticesCount - 2; i++ )
 		{
-			device->Draw( 2, i );
-			device->Draw( 2, m_p->circleVerticesCount + i );
-			device->Draw( 2, 2*m_p->circleVerticesCount + i );
+			surface->draw( 2, i );
+			surface->draw( 2, m_p->circleVerticesCount + i );
+			surface->draw( 2, 2*m_p->circleVerticesCount + i );
 		}
 	}
 }
 
-void AGSphereShape::setup()
+void AGSphereShape::setupShape()
 {
-	if( m_p->vbo )
+	if( m_vertexBuffer )
 	{
-		delete m_p->vbo; 
-		m_p->vbo = nullptr; 
+		delete m_vertexBuffer; 
+		m_vertexBuffer = nullptr; 
 	}
 
 	std::vector< AGVec2 > points; 
@@ -89,42 +78,32 @@ void AGSphereShape::setup()
 	AGMath::generateCircle2D( m_p->radius, AGMath::Pi / 12.0f , points );
 
 	AGPrimitiveVertex vertex; 
-	vertex.color = D3DXVECTOR4( m_p->color.getRedF(), m_p->color.getGreenF(), m_p->color.getBlueF(), m_p->color.getAlphaF() );
+	vertex.color = m_p->color;
 
 	//XY Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = D3DXVECTOR3( point.x, point.y, 0.0f ); 
+		vertex.pos = AGVec3( point );
 		vertices.push_back( vertex ); 
 	}
 
 	//XZ Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = D3DXVECTOR3( point.x, 0.0f, point.y ); 
+		vertex.pos = AGVec3( point );
 		vertices.push_back( vertex ); 
 	}
 
 	//YZ Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = D3DXVECTOR3( 0.0f, point.x, point.y ); 
+		vertex.pos = AGVec3( point );
 		vertices.push_back( vertex ); 
 	}
 
 	m_p->verticesCount = vertices.size(); 
 	m_p->circleVerticesCount = points.size(); 
 
-	m_p->vbo = new AGBuffer< AGPrimitiveVertex >( vertices, Vertex );
-}
-
-void AGSphereShape::setColor(const AGColor& color)
-{
-	m_p->color = color; 
-}
-
-const AGColor& AGSphereShape::getColor() const
-{
-	return m_p->color; 
+	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vertices, Vertex );
 }
 

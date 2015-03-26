@@ -16,31 +16,31 @@ class AGMatrix
 		AGMatrix( const AGMatrix& copy );
 		
 		///////////////////////////////////////////////////////////////////////////
-		///Named Constructions
+		///////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////
 		static AGMatrix Identity(); 
 
-		static AGMatrix PerspectiveLH( AGMath::Degrees angle, float aspectRatio, float nearPlane, float farPlane );
-		static AGMatrix PerspectiveLH( AGMath::Radians angle, float aspectRatio, float nearPlane, float farPlane );
+		static AGMatrix PerspectiveLH( AGDegrees angle, float aspectRatio, float nearPlane, float farPlane );
+		static AGMatrix PerspectiveLH( AGRadians angle, float aspectRatio, float nearPlane, float farPlane );
 
 		static AGMatrix OrthoLH( float viewWidth, float viewHeight, float nearPlane, float farPlane );
 		
 		static AGMatrix LookAtLH( const AGVec3& eye, const AGVec3& target, const AGVec3& up );
 
-		static AGMatrix RotationX( AGMath::Radians angle );
-		static AGMatrix RotationX( AGMath::Degrees angle );
+		static AGMatrix RotationX( AGRadians angle );
+		static AGMatrix RotationX( AGDegrees angle );
 
-		static AGMatrix RotationY( AGMath::Degrees angle );
-		static AGMatrix RotationY( AGMath::Radians angle );
+		static AGMatrix RotationY( AGDegrees angle );
+		static AGMatrix RotationY( AGRadians angle );
 
-		static AGMatrix RotationZ( AGMath::Radians angle );
-		static AGMatrix RotationZ( AGMath::Degrees angle );
+		static AGMatrix RotationZ( AGRadians angle );
+		static AGMatrix RotationZ( AGDegrees angle );
 				
-		static AGMatrix Rotation( const AGVec3& axis, AGMath::Radians angle );
-		static AGMatrix Rotation( const AGVec3& axis, AGMath::Degrees angle );
+		static AGMatrix Rotation( const AGVec3& axis, AGRadians angle );
+		static AGMatrix Rotation( const AGVec3& axis, AGDegrees angle );
 
-		static AGMatrix Rotation( AGMath::Radians x, AGMath::Radians y, AGMath::Radians z );
-		static AGMatrix Rotation( AGMath::Degrees x, AGMath::Degrees y, AGMath::Degrees z  );
+		static AGMatrix Rotation( AGRadians x, AGRadians y, AGRadians z );
+		static AGMatrix Rotation( AGDegrees x, AGDegrees y, AGDegrees z  );
 
 		static AGMatrix Translation( const AGVec3& transl );
 
@@ -61,28 +61,32 @@ class AGMatrix
 		void setIdentity(); 
 		bool isIdentity(); 
 
-		void setPerspectiveLH( AGMath::Radians angle, float aspectRatio, float nearPlane, float farPlane ); 
-		void setPerspectiveLH( AGMath::Degrees angle, float aspectRatio, float nearPlane, float farPlane ); 
+		void setPerspectiveLH( AGRadians angle, float aspectRatio, float nearPlane, float farPlane ); 
+		void setPerspectiveLH( AGDegrees angle, float aspectRatio, float nearPlane, float farPlane ); 
 
 		void setOrthoLH( float viewWidth, float viewHeight, float nearPlane, float farPlane );
 		void setLookAtLH( const AGVec3& eye, const AGVec3& target, const AGVec3& up ); 
 
-		void setRotateX( AGMath::Radians angle );
-		void setRotateX( AGMath::Degrees angle );
+		void setRotateX( AGRadians angle );
+		void setRotateX( AGDegrees angle );
 
-		void setRotateY( AGMath::Radians angle );
-		void setRotateY( AGMath::Degrees angle );
+		void setRotateY( AGRadians angle );
+		void setRotateY( AGDegrees angle );
 
-		void setRotateZ( AGMath::Radians angle );
-		void setRotateZ( AGMath::Degrees angle );
+		void setRotateZ( AGRadians angle );
+		void setRotateZ( AGDegrees angle );
 
-		void setRotate( const AGVec3& axis, AGMath::Radians angle );
-		void setRotate( const AGVec3& axis, AGMath::Degrees angle );
+		void setRotate( const AGVec3& axis, AGRadians angle );
+		void setRotate( const AGVec3& axis, AGDegrees angle );
 
-		void setRotate( AGMath::Radians x, AGMath::Radians y, AGMath::Radians z );
-		void setRotate( AGMath::Degrees x, AGMath::Degrees y, AGMath::Degrees z );
+		void setRotate( AGRadians x, AGRadians y, AGRadians z );
+		void setRotate( AGDegrees x, AGDegrees y, AGDegrees z );
 		void setTranslate( const AGVec3& transl );
 		void setScale( const AGVec3& scale ); 
+
+		///////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////////////////////////////
 
 		void operator=( const AGMatrix& mtx );
 
@@ -104,9 +108,136 @@ class AGMatrix
 
 		float& operator()( int i, int j ); 
 		float  operator()( int i, int j ) const; 
+
 	private:	
 		AGMatrixPrivate* p; 
 };
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+inline AGMatrix AGMatrix::Identity()
+{
+	return AGMatrix(); 
+}
+
+inline AGMatrix AGMatrix::PerspectiveLH(AGDegrees angle, float aspectRatio, float nearPlane, float farPlane)
+{
+	AGMatrix m;
+	m.setPerspectiveLH( angle, aspectRatio, nearPlane, farPlane );
+	return m; 
+}
+
+inline AGMatrix AGMatrix::PerspectiveLH(AGRadians angle, float aspectRatio, float nearPlane, float farPlane)
+{
+	AGMatrix m;
+	m.setPerspectiveLH( angle, aspectRatio, nearPlane, farPlane );
+	return m; 
+}
+
+inline AGMatrix AGMatrix::OrthoLH(float viewWidth, float viewHeight, float nearPlane, float farPlane)
+{
+	AGMatrix m;
+	m.setOrthoLH( viewWidth, viewHeight, nearPlane, farPlane );
+	return m; 
+}
+
+inline AGMatrix AGMatrix::LookAtLH(const AGVec3& eye, const AGVec3& target, const AGVec3& up)
+{
+	AGMatrix m;
+	m.setLookAtLH( eye, target, up );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationX(AGRadians angle)
+{
+	AGMatrix m;
+	m.setRotateX( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationX(AGDegrees angle)
+{
+	AGMatrix m;
+	m.setRotateX( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationY(AGDegrees angle)
+{
+	AGMatrix m;
+	m.setRotateY( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationY(AGRadians angle)
+{
+	AGMatrix m;
+	m.setRotateY( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationZ(AGRadians angle)
+{
+	AGMatrix m;
+	m.setRotateZ( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::RotationZ(AGDegrees angle)
+{
+	AGMatrix m;
+	m.setRotateZ( angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Rotation(const AGVec3& axis, AGRadians angle)
+{
+	AGMatrix m;
+	m.setRotate( axis, angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Rotation(const AGVec3& axis, AGDegrees angle)
+{
+	AGMatrix m;
+	m.setRotate( axis, angle );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Rotation(AGRadians x, AGRadians y, AGRadians z)
+{
+	AGMatrix m;
+	m.setRotate( x, y, z );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Rotation(AGDegrees x, AGDegrees y, AGDegrees z)
+{
+	AGMatrix m;
+	m.setRotate( x, y, z );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Translation(const AGVec3& transl)
+{
+	AGMatrix m;
+	m.setTranslate( transl );
+	return m;
+}
+
+inline AGMatrix AGMatrix::Scaling(const AGVec3& scale)
+{
+	AGMatrix m;
+	m.setScale( scale );
+	return m;
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 inline AGMatrix operator*( const AGMatrix& m1, const AGMatrix& m2 )
 {

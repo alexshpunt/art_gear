@@ -2,8 +2,16 @@
 
 #include "AGVec2.h"
 
-#define EPSILON_FOR_DOUBLE 0.0000001
-#define EPSILON_FOR_FLOAT 0.0001f
+AGRadians AGDegrees::toRadians()
+{
+	return AGRadians( AGMath::toRadians( value ) ); 
+}
+
+
+AGDegrees AGRadians::toDegrees()
+{
+	return AGDegrees( AGMath::toDegrees( value ) );
+}
 
 namespace AGMath
 {
@@ -32,16 +40,5 @@ namespace AGMath
 		}
 	}
 
-
-	AGMath::Radians Degrees::toRadians()
-	{
-		return Radians( AGMath::toRadians( value ) ); 
-	}
-
-
-	AGMath::Degrees Radians::toDegrees()
-	{
-		return Degrees( AGMath::toDegrees( value ) );
-	}
-
 }
+

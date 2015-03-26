@@ -25,9 +25,9 @@ class AGCameraPrivate
 			sensY = 1.1f; 
 			speed = 0.2f; 
 			sprintSpeed = speed * 2.0f; 
-			up  = AGVec3( 0.0f, 1.0f, 0.0f );
-			target  = AGVec3( 0.0f, 0.0f, 1.0f );
-			pos = AGVec3( 0.0f, 0.0f, 0.0f );
+			up      = AGVec3::Up(); 
+			target  = AGVec3::Forward(); 
+			pos     = AGVec3::Zero(); 
 
 			horSpeed = vertSpeed = 0; 
 			angleX = angleY = 0.0f;
@@ -51,8 +51,6 @@ class AGCameraPrivate
 		AGVec3 target;
 		AGVec3 up;
 		AGVec3 pos;
-
-		AGMatrix rotMatrix; 
 
 		AGMatrix viewMatrix;
 		AGMatrix projMatrix; 
@@ -220,11 +218,9 @@ void AGCamera::setTargetDistance(float dist)
 	p->targetDistance = dist;
 	
 	AGVec3 v( 0.0f, 0.0f, dist );
-	p->rotMatrix.setRotateY( p->angleX );
-	v *= p->rotMatrix; 
 
-	p->rotMatrix.setRotateX( p->angleY );
-	v *= p->rotMatrix; 
+	v *= AGMatrix::RotationY( AGRadians( p->angleX ) ); 
+	v *= AGMatrix::RotationX( AGRadians( p->angleY ) ); 
 
 	p->target = p->pos + v; 
 }
@@ -250,8 +246,8 @@ void AGCamera::update()
 	AGPoint2 dPos = AGInput().getMouseDeltaPos(); 
 	double dt = AGTimeManager::getInstance().getDeltaTime();
 
-	float dAngleY = D3DXToRadian( dPos.x ) * p->sensX;
-	float dAngleX = D3DXToRadian( dPos.y ) * p->sensY;  
+	float dAngleY = AGMath::toRadians( dPos.x ) * p->sensX;
+	float dAngleX = AGMath::toRadians( dPos.y ) * p->sensY;  
 
 	if( wheelDelta != 0 )
 	{
@@ -297,11 +293,8 @@ void AGCamera::update()
 
 			AGVec3 v( 0.0f, 0.0f, p->targetDistance );
 
-			p->rotMatrix.setRotateY( p->angleX );
-			v *= p->rotMatrix; 
-
-			p->rotMatrix.setRotateX( p->angleX );
-			v *= p->rotMatrix;
+			v *= AGMatrix::RotationY( AGRadians( p->angleX ) );; 
+			v *= AGMatrix::RotationX( AGRadians( p->angleY ) );;
 
 			p->pos = p->target - v; 
 			AGEStateManager::getInstance().setRotating( true );
@@ -310,15 +303,13 @@ void AGCamera::update()
 		{
 			AGVec3 right( 1.0, 0.0f, 0.0f );
 			AGVec3 up( 0.0f, 1.0, 0.0f );
-			AGMatrix rotMatRight;
-			AGMatrix rotMatUp;  
-
-			rotMatRight.setRotateX( p->angleY );
-			rotMatUp.setRotateY( p->angleX );
+			AGMatrix rotMatRight = AGMatrix::RotationX( AGRadians( p->angleY ) );
 
 			right *= rotMatRight;
-			up *= rotMatUp;
 			up *= rotMatRight; 
+
+			up *= AGMatrix::RotationY( AGRadians( p->angleX ) );;
+			
 
 			p->target -= right * dAngleY; 
 			p->target += up * dAngleX;
@@ -342,10 +333,9 @@ void AGCamera::update()
 		{
 			p->angleX = -critAngle;
 		}
-		AGVec3 v( 0.0f, 0.0f, 1.0f );
+		AGVec3 v = AGVec3::Forward();
 
-		p->rotMatrix.setRotate( p->angleY, p->angleX, 0.0f );
-		v*= p->rotMatrix; 
+		v*= AGMatrix::Rotation( AGRadians( p->angleY ), AGRadians( p->angleX ), AGRadians( 0.0f ) ); 
 
 		p->target = p->pos + v; 
 
@@ -353,15 +343,13 @@ void AGCamera::update()
 	}
 	if( p->horSpeed != 0 || p->vertSpeed != 0 )
 	{
-		AGVec3 vec = p->pos - p->target; 
-		vec.normilize(); 
-		AGVec3 rightVec( 1.0, 0.0f, 0.0f );
-		AGMatrix rotMatrix; 
-		rotMatrix.setRotateX( p->angleY );
+		AGVec3 vec = ( p->pos - p->target ).normilized(); 
 
-		rightVec *= rotMatrix; 
+		AGVec3 rightVec = AGVec3::Right(); 
 
+		rightVec *= AGMatrix::RotationX( AGRadians( p->angleY ) ); 
 		rightVec *= -p->horSpeed * p->speed; 
+
 		p->pos += rightVec;
 		p->target += rightVec;
 
@@ -406,7 +394,7 @@ const AGVec3& AGCamera::getDir()
 
 void AGCamera::updateProj()
 {
-	p->projMatrix.setPerspectiveLH( p->fov, p->aspectRatio, p->nearPlane, p->farPlane );
+	p->projMatrix.setPerspectiveLH( AGDegrees( p->fov ), p->aspectRatio, p->nearPlane, p->farPlane );
 }
 
 void AGCamera::updateOrtho()
@@ -446,21 +434,9 @@ AGCamera::AGCameraType AGCamera::getType() const
 	return p->type; 
 }
 
-void AGCamera::rotateY(float angle)
-{
-	p->angleY = D3DXToRadian( angle );
-
-	AGVec3 v( 0.0f, 0.0f, 1.0f );
-	const AGMatrix&RotationYawPitchRoll( &p->rotMatrix, p->angleY, p->angleX, 0.0f );
-	D3DXVec3TransformCoord( &v, &v, &p->rotMatrix );
-
-	p->target = p->pos + v; 
-}
-
 void AGCamera::translateInDirection( float z)
 {
-	AGVec3 vec = p->pos - p->target; 
-	vec.normilize(); 
+	AGVec3 vec = ( p->pos - p->target ).normilized(); 
 	
 	vec *= -z;
 	p->pos += vec;

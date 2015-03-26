@@ -1,49 +1,43 @@
 #include "AGCylinderShape.h"
 
-#include <Engine/Managers/AGResourceManager.h>
-#include "Engine/Utils/AGConversion.h"
-
-AGCylinderShape::AGCylinderShape( float radius, float height, const AGColor& color )
+class AGCylinderShapePrivate 
 {
-	m_shader = AGResourceManager::getInstance().getShader( L"shape" );
-	m_vertexBuffer = nullptr; 
+	public:
+		AGCylinderShapePrivate()
+		{
+
+		}
+
+		AGColor color; 
+		AGSize size; 
+
+		int indexCount; 
+		vector< AGPrimitiveVertex > vertices;
+		vector< int > indices; 
+}
+
+AGCylinderShape::AGCylinderShape( float radius, float height, const AGColor& color ) : AGShape( color )
+{
+	p = new AGCylinderShapePrivate;
+
 	setSize( radius, height );
-	setColor( color );
-	setup(); 
+	setupShape(); 
 }
 
 AGCylinderShape::~AGCylinderShape()
 {
+	delete p; 
 }
 
 void AGCylinderShape::draw(AGSurface* surface)
 {
-	AGCamera* camera = surface->getCamera(); 
-	ID3D10Device* device = surface->getDevice(); 
-
-	m_shader->applySurface( surface );
-
-	m_shader->setWorldMatrix( getResultMatrix() );
-
-	ID3D10Buffer* vbo = m_vertexBuffer->applyTo( device );
-
-	if( vbo )
-	{
-		UINT stride = sizeof( AGPrimitiveVertex );
-		UINT offset = 0; 
-		device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
-	}
-	else 
-	{
-		return; 
-	}
+	prepareDraw( surface );
 
 	while( m_shader->applyNextPass() )
 	{
-		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
-		for( int i = 0; i < m_vertices.size() - 2; i++ )
+		for( int i = 0; i < p->vertices.size() - 2; i++ )
 		{
-			device->Draw( 2, i );
+			surface->draw( 2, i ); 
 		}
 	}
 }

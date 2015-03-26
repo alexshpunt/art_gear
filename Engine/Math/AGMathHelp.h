@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#define EPSILON_FOR_DOUBLE 0.0000001
+#define EPSILON_FOR_FLOAT 0.0001f
+
 class AGVec2; 
 
 namespace AGMath 
@@ -17,39 +20,6 @@ namespace AGMath
 	const float Pi2 = Pi / 2.0f; 
 	const float Pi3 = Pi / 3.0f;
 	const float Pi4 = Pi / 4.0f;
-
-	///////////////////////////////////////////////////////////////////////////
-	//Используется для явного указания способа определения угла
-	///////////////////////////////////////////////////////////////////////////
-
-	struct Degrees;
-	struct Radians; 
-
-	struct Degrees
-	{
-		explicit Degrees( float degrees ) : value( degrees ){}
-		Radians toRadians();
-		operator float()
-		{
-			return value; 
-		}
-		
-		float value; 
-	};
-
-	struct Radians
-	{
-		explicit Radians( float radian ) : value( radian ){}
-
-		Degrees toDegrees();
-
-		operator float()
-		{
-			return value; 
-		}
-		
-		float value; 
-	};
 
 	///////////////////////////////////////////////////////////////////////////
 	///Функции преобразования углов
@@ -114,6 +84,157 @@ namespace AGMath
 		v2 = tmp; 
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////
+//Используется для явного указания способа определения угла
+///////////////////////////////////////////////////////////////////////////
+
+struct AGDegrees;
+struct AGRadians; 
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+struct AGDegrees
+{
+	explicit AGDegrees( float degrees ) : value( degrees ){}
+	AGDegrees( const AGDegrees& degrees ) : value( degrees.value ){} 
+
+	AGRadians toRadians();
+	operator float() const
+	{
+		return value; 
+	}
+
+	AGDegrees& operator=( const AGDegrees& degrees ){ value = degrees.value; return *this; }
+	bool operator==( const AGDegrees& d ) { return AGMath::isEqual( value, d.value ); }
+	bool operator==( float var ) { return AGMath::isEqual( value, var ); }
+
+	friend AGDegrees operator+( const AGDegrees& r1, const AGDegrees& r2 );
+	AGDegrees& operator+=( const AGDegrees& d )
+	{
+		value += d.value;
+		return *this; 
+	}
+
+	friend AGDegrees operator-( const AGDegrees& r1, const AGDegrees& r2 );
+	AGDegrees& operator-=( const AGDegrees& d )
+	{
+		value -= d.value;
+		return *this; 
+	}
+
+	float value; 
+};
+
+inline AGDegrees operator+( const AGDegrees& r1, const AGDegrees& r2 )
+{
+	return AGDegrees( r1.value + r2.value );
+}
+
+inline AGDegrees operator-( const AGDegrees& r1, const AGDegrees& r2 )
+{
+	return AGDegrees( r1.value - r2.value );
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+struct AGRadians
+{
+	explicit AGRadians( float radian ) : value( radian ){}
+	AGRadians( const AGRadians& radians ) : value( radians.value ){}
+
+	AGDegrees toDegrees();
+
+	operator float() const
+	{
+		return value; 
+	}
+
+	AGRadians& operator=( const AGRadians& radians ){ value = radians.value; return *this; }
+	bool operator==( const AGRadians& r ) { return AGMath::isEqual( value, r.value ); }
+	bool operator==( float var ) { return AGMath::isEqual( value, var ); }
+
+	friend AGRadians operator+( const AGRadians& r1, const AGRadians& r2 );
+	AGRadians& operator+=( const AGRadians& r )
+	{
+		value += r.value;
+		return *this; 
+	}
+
+	friend AGRadians operator-( const AGRadians& r1, const AGRadians& r2 );
+	AGRadians& operator-=( const AGRadians& r )
+	{
+		value -= r.value;
+		return *this; 
+	}
+
+	float value; 
+};
+
+inline AGRadians operator+( const AGRadians& r1, const AGRadians& r2 )
+{
+	return AGRadians( r1.value + r2.value );
+}
+
+inline AGRadians operator-( const AGRadians& r1, const AGRadians& r2 )
+{
+	return AGRadians( r1.value - r2.value );
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+struct AGEulerAngles 
+{
+	explicit AGEulerAngles( AGRadians inX = AGRadians( 0.0f ) , AGRadians inY = AGRadians( 0.0f ), AGRadians inZ = AGRadians( 0.0f ) ) : x( inX ), y( inY ), z( inZ ){}
+	explicit AGEulerAngles( AGDegrees inX, AGDegrees inY, AGDegrees inZ ) : x( inX.toRadians() ), y( inY.toRadians() ), z( inZ.toRadians() ){}
+	AGEulerAngles( const AGEulerAngles& copy ) : x( copy.x ), y( copy.y ), z( copy.z ){}
+
+	AGEulerAngles& operator=( const AGEulerAngles& copy )
+	{
+		AGEulerAngles a( copy );
+		*this = a; 
+		return *this; 
+	}
+	bool operator==( const AGEulerAngles& a )
+	{
+		return AGMath::isEqual( x, a.x ) && AGMath::isEqual( y, a.y ) && AGMath::isEqual( z, a.z );
+	}
+
+	friend AGEulerAngles operator+( const AGEulerAngles& a1, const AGEulerAngles& a2 );
+	AGEulerAngles& operator+=( const AGEulerAngles& a )
+	{
+		x += a.x; 
+		y += a.y;
+		z += a.z;
+
+		return *this; 
+	}
+
+	friend AGEulerAngles operator-( const AGEulerAngles& a1, const AGEulerAngles& a2 );
+	AGEulerAngles& operator-=( const AGEulerAngles& a );
+
+	AGRadians x, y, z; 
+};
+
+AGEulerAngles operator+( const AGEulerAngles& a1, const AGEulerAngles& a2 )
+{
+	return AGEulerAngles( a1.x + a2.x, a1.y + a2.y, a1.z + a2.z );
+}
+
+AGEulerAngles operator-( const AGEulerAngles& a1, const AGEulerAngles& a2 )
+{
+	return AGEulerAngles( a1.x - a2.x, a1.y - a2.y, a1.z - a2.z );
+}
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 template <class T>
 T absMax( T v1, T v2 )

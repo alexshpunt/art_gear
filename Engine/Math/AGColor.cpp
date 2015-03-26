@@ -82,14 +82,14 @@ class AGColorPrivate
 
 AGColor::AGColor()
 {
-	m_p = new AGColorPrivate; 
-	m_p->setInt( 255, 255, 255, 255 );
+	p = new AGColorPrivate; 
+	p->setInt( 255, 255, 255, 255 );
 }
 
 AGColor::AGColor(const AGColor& color)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setInt( color.m_p->ri, color.m_p->gi, color.m_p->bi, color.m_p->ai );
+	p = new AGColorPrivate; 
+	p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -98,20 +98,20 @@ AGColor::AGColor(const AGColor& color)
 
 AGColor::AGColor(int color)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setInt( color, color, color, 255 ); 
+	p = new AGColorPrivate; 
+	p->setInt( color, color, color, 255 ); 
 }
 
 AGColor::AGColor(int r, int g, int b)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setInt( r, g, b, 255 );
+	p = new AGColorPrivate; 
+	p->setInt( r, g, b, 255 );
 }
 
 AGColor::AGColor(int r, int g, int b, int a)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setInt( r, g, b, a );
+	p = new AGColorPrivate; 
+	p->setInt( r, g, b, a );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -120,20 +120,20 @@ AGColor::AGColor(int r, int g, int b, int a)
 
 AGColor::AGColor(float color)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setFloat( color, color, color, 1.0f );
+	p = new AGColorPrivate; 
+	p->setFloat( color, color, color, 1.0f );
 }
 
 AGColor::AGColor(float r, float g, float b )
 {
-	m_p = new AGColorPrivate; 
-	m_p->setFloat( r, g, b, 1.0f );
+	p = new AGColorPrivate; 
+	p->setFloat( r, g, b, 1.0f );
 }
 
 AGColor::AGColor(float r, float g, float b, float a)
 {
-	m_p = new AGColorPrivate; 
-	m_p->setFloat( r, g, b, a );
+	p = new AGColorPrivate; 
+	p->setFloat( r, g, b, a );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ AGColor::AGColor(float r, float g, float b, float a)
 
 AGColor::~AGColor()
 {
-	delete m_p;
+	delete p;
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -151,62 +151,62 @@ AGColor::~AGColor()
 
 void AGColor::setRed(int r)
 {
-	m_p->setRI( r );
+	p->setRI( r );
 }
 
 void AGColor::setRed(float r)
 {
-	m_p->setRF( r );
+	p->setRF( r );
 }
 
 void AGColor::setGreen(int g)
 {
-	m_p->setGI( g );
+	p->setGI( g );
 }
 
 void AGColor::setGreen(float g)
 {
-	m_p->setGF( g );
+	p->setGF( g );
 }
 
 void AGColor::setBlue(int b)
 {
-	m_p->setBI( b );
+	p->setBI( b );
 }
 
 void AGColor::setBlue(float b)
 {
-	m_p->setBF( b );
+	p->setBF( b );
 }
 
 void AGColor::setAlpha(int a)
 {
-	m_p->setAI( a );
+	p->setAI( a );
 }
 
 void AGColor::setAlpha(float a)
 {
-	m_p->setAF( a );
+	p->setAF( a );
 }
 
 void AGColor::setColor(int r, int g, int b)
 {
-	m_p->setInt( r, g, b, 255 );
+	p->setInt( r, g, b, 255 );
 }
 
 void AGColor::setColor(int r, int b, int g, int a)
 {
-	m_p->setInt( r, g, b, a );
+	p->setInt( r, g, b, a );
 }
 
 void AGColor::setColor(float r, float g, float b)
 {
-	m_p->setFloat( r, g, b, 1.0f );
+	p->setFloat( r, g, b, 1.0f );
 }
 
 void AGColor::setColor(float r, float b, float g, float a)
 {
-	m_p->setFloat( r, g, b, a );
+	p->setFloat( r, g, b, a );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -215,48 +215,52 @@ void AGColor::setColor(float r, float b, float g, float a)
 
 float AGColor::getRedF() const
 {
-	return m_p->rf; 
+	return p->rf; 
 }
 
 float AGColor::getGreenF() const
 {
-	return m_p->gf; 
+	return p->gf; 
 }
 
 float AGColor::getBlueF() const
 {
-	return m_p->bf; 
+	return p->bf; 
 }
 
 float AGColor::getAlphaF() const
 {
-	return m_p->af; 
+	return p->af; 
 }
 
 int AGColor::getRed() const
 {
-	return m_p->ri; 
+	return p->ri; 
 }
 
 int AGColor::getGreen() const
 {
-	return m_p->gi;
+	return p->gi;
 }
 
 int AGColor::getBlue() const
 {
-	return m_p->bi;
+	return p->bi;
 }
 
 int AGColor::getAlpha() const
 {
-	return m_p->ai;
+	return p->ai;
 }
 
 AGColor& AGColor::operator=(AGColor color)
 {
-	m_p->setInt( color.m_p->ri, color.m_p->gi, color.m_p->bi, color.m_p->ai );
+	p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
 	return *this; 
 }
 
-
+AGColor::operator float*() const
+{
+	float color[] = { p->rf, p->gf, p->bf, p->af };
+	return color; 
+}

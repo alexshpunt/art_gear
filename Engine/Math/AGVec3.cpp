@@ -9,6 +9,12 @@ AGVec3::AGVec3()
 	x = y = z = 0.0f; 
 }
 
+AGVec3::AGVec3(float value)
+{
+	x =y = z = value; 
+}
+
+
 AGVec3::AGVec3( float inX, float inY, float inZ )
 {
 	x = inX;
@@ -23,12 +29,26 @@ AGVec3::AGVec3(const AGVec3& copy)
 	z = copy.z; 
 }
 
+AGVec3::AGVec3(const AGVec2& vec2)
+{
+	x = vec2.x;
+	y = vec2.y;
+	z = 0.0f; 
+}
+
 void AGVec3::normilize()
 {
 	float len = getLength();
 	x /= len;
 	y /= len;
 	z /= len; 
+}
+
+AGVec3 AGVec3::normilized()
+{
+	AGVec3 vec( *this ); 
+	vec.normilize();
+	return vec; 
 }
 
 float AGVec3::getLength() const
@@ -41,19 +61,24 @@ float AGVec3::getSqrLength() const
 	return x*x + y*y + z*z; 
 }
 
-AGVec3 AGVec3::getUp()
+AGVec3 AGVec3::Up()
 {
 	return AGVec3( 0.0f, 1.0f, 0.0f );
 }
 
-AGVec3 AGVec3::getRight()
+AGVec3 AGVec3::Right()
 {
 	return AGVec3( 1.0f, 0.0f, 0.0f );
 }
 
-AGVec3 AGVec3::getForward()
+AGVec3 AGVec3::Forward()
 {
 	return AGVec3( 0.0f, 0.0f, 1.0f );
+}
+
+AGVec3 AGVec3::Zero()
+{
+	return AGVec3( 0.0f );
 }
 
 bool AGVec3::operator==(const AGVec3& var)
@@ -175,3 +200,10 @@ AGVec3::operator float*() const
 {
 	return (float*)this; 
 }
+
+AGVec3 AGVec3::operator-()
+{
+	return AGVec3( -x, -y, -z );
+}
+
+

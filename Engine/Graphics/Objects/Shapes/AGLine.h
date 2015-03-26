@@ -1,17 +1,19 @@
 #ifndef AG_LINE_H
 #define AG_LINE_H
 
-#include "Graphics/Interfaces/AGPrimitive.h"
+#include "AGShape.h"
 
-class AGLine : public AGPrimitive
+#include "Engine/Math/AGMath.h"
+
+class AGLine : public AGShape
 {
 	public:
-		AGLine( D3DXVECTOR3 startPoint, D3DXVECTOR3 endPoint, D3DXVECTOR4 color = D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) ); 
+		AGLine( const AGVec3& startPoint, const AGVec3& endPoint, const AGColor& color = AGColor( 1.0f ) ); 
 		~AGLine();
 
-		void setLine( D3DXVECTOR3 startPoint, D3DXVECTOR3 endPoint, D3DXVECTOR4 color = D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+		void setLine( const AGVec3& startPoint, const AGVec3& endPoint, const AGColor& color = AGColor( 1.0f ) );
 
-		void draw( AGSurface* surface );
+		void draw( AGSurface* surface ) override;
 };
 
 #endif 

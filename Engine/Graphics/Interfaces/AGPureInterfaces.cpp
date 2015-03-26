@@ -90,7 +90,7 @@ void AGClickable::calculateRays(AGSurface* surface, D3DXMATRIX worldMatrix)
 	m_rayDir = dir; 
 }
 
-void AGClickable::calculateObjRays( D3DXMATRIX matWorld )
+void AGClickable::calculateObjRays( const AGMatrix& matWorld )
 {
 	D3DXMATRIX matInverce;
 	D3DXMatrixInverse( &matInverce, NULL, &matWorld );

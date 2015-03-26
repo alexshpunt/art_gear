@@ -1,6 +1,8 @@
 #ifndef AG_PUREINTERFACES_H
 #define AG_PUREINTERFACES_H
 
+#include "Engine/Math/AGMath.h"
+
 #include "Engine/Graphics/Interfaces/AGSurface.h"
 
 #include "Engine/Managers/AGInputManager.h"
@@ -12,7 +14,7 @@ class AGDrawable
 	public:
 		virtual void draw( AGSurface* surface ) = 0;
 		//Если возвращаемое значение < 0, значит, что луч не коснулся сетки примитива, иначе это дистанция 
-		virtual float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir ){ return -1.0f; }
+		virtual float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ){ return -1.0f; }
 };
 
 //Данный интерфейс позволяет классу совершать более сложную обработку событий мыши
@@ -25,15 +27,15 @@ class AGClickable : public AGDrawable
 
 	protected: 
 		void calculateRays( AGSurface* surface );
-		void calculateRays( AGSurface* surface, D3DXMATRIX worldMatrix );
-		void calculateObjRays( D3DXMATRIX matWorld ); 
+		void calculateRays( AGSurface* surface, const AGMatrix& worldMatrix );
+		void calculateObjRays( const AGMatrix& matWorld ); 
 
-		D3DXVECTOR3 m_rayOrigin;
-		D3DXVECTOR3 m_rayDir; 
-		D3DXVECTOR3 m_rayDelta; 
+		AGVec3 m_rayOrigin;
+		AGVec3 m_rayDir; 
+		AGVec3 m_rayDelta; 
 
-		D3DXVECTOR3 m_rayObjOrigin;
-		D3DXVECTOR3 m_rayObjDir; 
+		AGVec3 m_rayObjOrigin;
+		AGVec3 m_rayObjDir; 
 };
 
 #endif 

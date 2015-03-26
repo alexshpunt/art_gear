@@ -30,7 +30,7 @@ class AGMesh : public AGMovable, public AGResource
 		void setSelected( bool value );
 		bool isSelected() const; 
 
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
 		AGBoundingBox* getBoundingBox() const; 
 	private:

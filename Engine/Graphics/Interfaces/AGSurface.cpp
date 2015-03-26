@@ -10,6 +10,7 @@
 #include "Graphics/Objects/AGCamera.h"
 #include "Graphics/AGGraphics.h"
 
+#include <assert.h>
 
 #include <Engine/Graphics/Objects/AGLight.h>
 
@@ -568,4 +569,18 @@ bool AGSurface::isMaximizedMode() const
 unsigned AGSurface::getId() const
 {
 	return m_id; 
+}
+
+void AGSurface::draw(unsigned int nVertices, unsigned int offset)
+{
+	assert( m_device );
+
+	m_device->Draw( nVertices, offset );
+}
+
+void AGSurface::drawIndexed(unsigned int indexCount, unsigned int startIndexLocation, unsigned int baseVertexLocation)
+{
+	assert( m_device );
+
+	m_device->DrawIndexed( indexCount, startIndexLocation, baseVertexLocation );
 }

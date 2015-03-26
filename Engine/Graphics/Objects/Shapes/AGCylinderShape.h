@@ -1,11 +1,13 @@
 #ifndef AG_CYLINDERSHAPE_H
 #define AG_CYLINDERSHAPE_H
 
-#include "Engine/Graphics/Interfaces/AGPrimitive.h"
+#include "AGShape.h"
 
 #include "Engine/Math/AGMath.h"
 
-class AGCylinderShape : public AGPrimitive
+class AGCylinderShapePrivate; 
+
+class AGCylinderShape : public AGShape
 {
 	public:	
 		AGCylinderShape( float radius = 1.0f, float height = 1.0f, const AGColor& color = AGColor( 1.0f ) ); 
@@ -23,21 +25,10 @@ class AGCylinderShape : public AGPrimitive
 		void setSize( const AGSize& size );
 		const AGSize& getSize() const; 
 
-		void setColor( float r, float g, float b, float a = 1.0f );
-		void setColor( int r, int g, int b, int a = 255 );
-		void setColor( const AGColor& color );
-
-		const AGColor& getColor() const; 
-
-		void setup(); 
+		void setupShape(); 
 
 	private:
-		AGColor m_color; 
-		AGSize m_size; 
-
-		int m_nIndices; 
-		vector< AGPrimitiveVertex > m_vertices;
-		vector< int > m_indices; 
+		AGCylinderShapePrivate* p; 
 };
 
 #endif 

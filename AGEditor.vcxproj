@@ -111,6 +111,7 @@
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGConeShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGCylinderShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGLine.cpp" />
+    <ClCompile Include="Engine\Graphics\Objects\Shapes\AGShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGSphereShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\System\AGConsole.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Textures\AGTexture2D.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGConeShape.h" />
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGCylinderShape.h" />
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGLine.h" />
+    <ClInclude Include="Engine\Graphics\Objects\Shapes\AGShape.h" />
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGSphereShape.h" />
     <ClInclude Include="Engine\Graphics\Objects\Textures\AGTexture2D.h" />
     <ClInclude Include="Engine\Interfaces\AGEvent.h" />

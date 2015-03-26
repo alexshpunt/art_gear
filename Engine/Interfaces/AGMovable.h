@@ -1,9 +1,6 @@
 #ifndef AG_MOVABLE_H
 #define AG_MOVABLE_H
 
-#include <d3dx10.h>
-#include <d3d10.h>
-
 #include "Engine/Math/AGMath.h"
 
 class AGMovablePrivate; 
@@ -29,29 +26,50 @@ class AGMovable
 
 		void translateWorld( const AGVec3& pos );
 
-		void setLocalAngle( float x, float y, float z );
-		const AGVec3& getLocalAngle() const; 
+		void setLocalAngle( const AGEulerAngles& angles );
+		void setLocalAngle( AGRadians x, AGRadians y, AGRadians z );
+		void setLocalAngle( AGDegrees x, AGDegrees y, AGDegrees z );
+		const AGEulerAngles& getLocalAngle() const; 
 
-		void setWorldAngle( float x, float y, float z );
-		const AGVec3& getWorldAngle() const; 
+		void setWorldAngle( const AGEulerAngles& angles );
+		void setWorldAngle( AGRadians x, AGRadians y, AGRadians z );
+		void setWorldAngle( AGDegrees x, AGDegrees y, AGDegrees z );
+		const AGEulerAngles& getWorldAngle() const; 
 
-		void rotateLocalAxis( const AGVec3& axis, float angle );
-		void rotateLocalX( float angle );
-		void rotateLocalY( float angle );
-		void rotateLocalZ( float angle );
-		void rotateLocal( float x, float y, float z );
+		void rotateLocalAxis( const AGVec3& axis, AGRadians angle );
+		void rotateLocalAxis( const AGVec3& axis, AGDegrees angle );
+		void rotateLocalX( AGRadians angle );
+		void rotateLocalX( AGDegrees angle );
+		void rotateLocalY( AGRadians angle );
+		void rotateLocalY( AGDegrees angle );
+		void rotateLocalZ( AGRadians angle );
+		void rotateLocalZ( AGDegrees angle );
 
-		void rotateWorldAxis( const AGVec3& axis, float angle );
+		void rotateLocal( const AGEulerAngles& angles ); 
+		void rotateLocal( AGRadians x, AGRadians y, AGRadians z );
+		void rotateLocal( AGDegrees x, AGDegrees y, AGDegrees z );
 
-		void rotateAroundWorldX( float angle );
-		void rotateAroundWorldY( float angle );
-		void rotateAroundWorldZ( float angle );
+		void rotateWorldAxis( const AGVec3& axis, AGRadians angle );
+		void rotateWorldAxis( const AGVec3& axis, AGDegrees angle );
+
+		void rotateAroundWorldX( AGRadians angle );
+		void rotateAroundWorldX( AGDegrees angle );
+		void rotateAroundWorldY( AGRadians angle );
+		void rotateAroundWorldY( AGDegrees angle );
+		void rotateAroundWorldZ( AGRadians angle );
+		void rotateAroundWorldZ( AGDegrees angle );
 		
 		//Rotate around "parent" axis
-		void rotateWorldX( float angle );
-		void rotateWorldY( float angle );
-		void rotateWorldZ( float angle );
-		void rotateWorld( const AGVec3& angle );
+		void rotateWorldX( AGRadians angle );
+		void rotateWorldX( AGDegrees angle );
+		void rotateWorldY( AGRadians angle );
+		void rotateWorldY( AGDegrees angle );
+		void rotateWorldZ( AGRadians angle );
+		void rotateWorldZ( AGDegrees angle );
+	
+		void rotateWorld( const AGEulerAngles& angles );
+		void rotateWorld( AGRadians x, AGRadians y, AGRadians z );
+		void rotateWorld( AGDegrees x, AGDegrees y, AGDegrees z );
 
 		void setLocalScale( const AGVec3& factor );
 		const AGVec3& getLocalScale() const; 

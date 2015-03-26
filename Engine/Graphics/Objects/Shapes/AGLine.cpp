@@ -1,12 +1,7 @@
 #include "AGLine.h"
 
-#include "Managers/AGResourceManager.h"
-
-AGLine::AGLine(D3DXVECTOR3 startPoint, D3DXVECTOR3 endPoint, D3DXVECTOR4 color )
+AGLine::AGLine( const AGVec3& startPoint, const AGVec3& endPoint, const AGColor& color ) : AGShape( color )
 {
-	m_shader = AGResourceManager::getInstance().getShader( L"shape" );
-	m_vertexBuffer = nullptr; 
-
 	setLine( startPoint, endPoint, color );
 }
 
@@ -15,7 +10,7 @@ AGLine::~AGLine()
 
 }
 
-void AGLine::setLine( D3DXVECTOR3 startPoint, D3DXVECTOR3 endPoint, D3DXVECTOR4 color )
+void AGLine::setLine( const AGVec3& startPoint, const AGVec3& endPoint, const AGColor& color )
 {
 	if( m_vertexBuffer )
 		delete m_vertexBuffer; 
@@ -37,26 +32,11 @@ void AGLine::setLine( D3DXVECTOR3 startPoint, D3DXVECTOR3 endPoint, D3DXVECTOR4 
 
 void AGLine::draw( AGSurface* surface )
 {
-	ID3D10Device* device = surface->getDevice(); 
-
-	m_shader->applySurface( surface );
-	m_shader->setWorldMatrix( getLocalMatrix() ); 	
-
-	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
-
-	ID3D10Buffer* vertexBuffer = m_vertexBuffer->applyTo( device ); 
-
-	AGInputLayout* layout = AGGraphics::getInstance().getInputLayout( device );
-
-	device->IASetInputLayout( layout->colorVertexInputLayout );
-	UINT stride = sizeof( AGPrimitiveVertex );
-
-	UINT offset = 0; 
-	device->IASetVertexBuffers( 0, 1, &vertexBuffer, &stride, &offset );
+	prepareDraw( surface );
 
 	while( m_shader->applyNextPass() )
 	{
-		device->Draw( 2, 0 );
+		surface->draw( 2, 0 );
 	}
 }
 

@@ -1,13 +1,13 @@
 #ifndef AG_SPHERESHAPE_H
 #define AG_SPHERESHAPE_H
 
-#include "Engine/Math/AGColor.h"
+#include "AGShape.h"
 
-#include "Engine/Graphics/Interfaces/AGPrimitive.h"
+#include "Engine/Math/AGMath.h"
 
 class AGSphereShapePrivate; 
 
-class AGSphereShape : public AGPrimitive
+class AGSphereShape : public AGShape
 {
 	public:
 		AGSphereShape( float radius = 1.0f, const AGColor& color = AGColor( 1.0f ) );
@@ -16,12 +16,9 @@ class AGSphereShape : public AGPrimitive
 		void setRadius( float radius );
 		float getRadius() const;
 
-		void setColor( const AGColor& color );
-		const AGColor& getColor() const; 
-
 		void draw( AGSurface* surface ); 
 
-		void setup(); 
+		void setupShape(); 
 	private:
 		AGSphereShapePrivate* m_p; 
 };

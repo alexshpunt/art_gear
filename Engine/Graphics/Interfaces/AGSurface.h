@@ -44,6 +44,8 @@ class AGSurface
 
 		unsigned getId() const; 
 
+		void draw( unsigned int nVertices, unsigned int offset );
+		void drawIndexed( unsigned int indexCount, unsigned int startIndexLocation, unsigned int baseVertexLocation ); 
 	protected:
 		void setup( float width, float height, HWND hwnd );
 

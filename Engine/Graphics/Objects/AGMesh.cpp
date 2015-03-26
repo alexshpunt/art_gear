@@ -21,7 +21,7 @@ class AGSubMesh
 
 		void loadFrom( ifstream& in );
 		void draw( AGSurface* surface ); 
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 	private:
 		AGMesh* m_mesh;
 		vector< AGVertex > m_vertices; 
@@ -148,15 +148,15 @@ void AGSubMesh::draw( AGSurface* surface )
 	ibo->Release();*/
 }
 
-float AGSubMesh::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	float retDist = -1.0f;
 	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
-		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
+		AGVec3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		AGVec3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
 		float dist, u, v; 
 
@@ -256,7 +256,7 @@ bool AGMesh::isSelected() const
 	return m_isSelected;
 }
 
-float AGMesh::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
+float AGMesh::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 {
 	float res = -1.0f; 
 	for( AGSubMesh* subMesh : m_subMeshes )
