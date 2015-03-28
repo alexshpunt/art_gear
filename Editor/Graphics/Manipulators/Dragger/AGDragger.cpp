@@ -114,18 +114,18 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 	};
 	
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateRays( surface );
+	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
-		D3DXVECTOR3 cameraDir = surface->getCamera()->getDir();
+		AGVec3 cameraEye = surface->getCamera()->getPos();
+		AGVec3 cameraDir = surface->getCamera()->getDir();
 
-		D3DXVECTOR3 axisX( axis.x, 0.0f, 0.0f );
-		D3DXVECTOR3 axisY( 0.0f, axis.y, 0.0f );
-		D3DXVECTOR3 axisZ( 0.0f, 0.0f, axis.z );
+		AGVec3 axisX( axis.x, 0.0f, 0.0f );
+		AGVec3 axisY( 0.0f, axis.y, 0.0f );
+		AGVec3 axisZ( 0.0f, 0.0f, axis.z );
 
 		D3DXMATRIX rotMatrix = m_selectedObject->getWorldRotMatrix(); 
 
@@ -142,17 +142,17 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 
 		for( int i = 0; i < 6; i++ )
 		{
-			D3DXVECTOR3 worldPos = gizmos[ i ]->getBeginPos(); 
-			D3DXVECTOR3 lookDir = worldPos - cameraEye; 
+			AGVec3 worldPos = gizmos[ i ]->getBeginPos(); 
+			AGVec3 lookDir = worldPos - cameraEye; 
 
 			float len = D3DXVec3LengthSq( &lookDir );
 		
-			gizmos[ i ]->translateBeginPos( D3DXVECTOR3( axisX.x, axisX.y, axisX.z ) * cosX * len );
-			gizmos[ i ]->translateBeginPos( D3DXVECTOR3( axisY.x, axisY.y, axisY.z ) * cosY * len );
-			gizmos[ i ]->translateBeginPos( D3DXVECTOR3( axisZ.x, axisZ.y, axisZ.z ) * cosZ * len );
+			gizmos[ i ]->translateBeginPos( AGVec3( axisX.x, axisX.y, axisX.z ) * cosX * len );
+			gizmos[ i ]->translateBeginPos( AGVec3( axisY.x, axisY.y, axisY.z ) * cosY * len );
+			gizmos[ i ]->translateBeginPos( AGVec3( axisZ.x, axisZ.y, axisZ.z ) * cosZ * len );
 		}
 
-		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getBeginPos();
+		AGVec3 worldPos = gizmos[ 0 ]->getBeginPos();
 
 		if( m_object )
 		{

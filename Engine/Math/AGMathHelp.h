@@ -1,4 +1,4 @@
-#ifndef AG_MATHHELP_H
+п»ї#ifndef AG_MATHHELP_H
 #define AG_MATHHELP_H
 
 #include <vector>
@@ -7,11 +7,12 @@
 #define EPSILON_FOR_FLOAT 0.0001f
 
 class AGVec2; 
+class AGVec3; 
 
 namespace AGMath 
 {
 	///////////////////////////////////////////////////////////////////////////
-	///Тригонометрические константы
+	///РўСЂРёРіРѕРЅРѕРјРµС‚СЂРёС‡РµСЃРєРёРµ РєРѕРЅСЃС‚Р°РЅС‚С‹
 	///////////////////////////////////////////////////////////////////////////
 
 	const float Pi = 3.1415926535897932384626433832795f;
@@ -22,7 +23,7 @@ namespace AGMath
 	const float Pi4 = Pi / 4.0f;
 
 	///////////////////////////////////////////////////////////////////////////
-	///Функции преобразования углов
+	///Р¤СѓРЅРєС†РёРё РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ СѓРіР»РѕРІ
 	///////////////////////////////////////////////////////////////////////////
 
 	inline float toRadians( float var )
@@ -36,7 +37,7 @@ namespace AGMath
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	///Функции сравнения 
+	///Р¤СѓРЅРєС†РёРё СЃСЂР°РІРЅРµРЅРёСЏ 
 	///////////////////////////////////////////////////////////////////////////
 
 	template< class T >
@@ -49,6 +50,7 @@ namespace AGMath
 		return var; 
 	}
 
+	//DEPRECATED - JUST MIN AND MAX
 	template< class T > 
 	T checkIfLower( const T& var, const T& min )
 	{
@@ -71,7 +73,7 @@ namespace AGMath
 	bool isEqual( float a, float b ); 
 
 	///////////////////////////////////////////////////////////////////////////
-	///Другое
+	///Р”СЂСѓРіРѕРµ
 	///////////////////////////////////////////////////////////////////////////
 
 	void generateCircle2D( float radius, float step, std::vector< AGVec2 >& points );
@@ -83,10 +85,35 @@ namespace AGMath
 		v1 = v2;
 		v2 = tmp; 
 	}
+
+	struct IntersectResult
+	{
+		IntersectResult()
+		{
+			hit = false;
+			distance = -1.0f;
+			u = v = 0.0f; 
+		}
+		bool hit; 
+		float distance; 
+		float u, v; 
+	};
+
+	struct Triangle 
+	{
+		Triangle( AGVec3 inV1, AGVec3 inV2, AGVec3 inV3 ) : v1( inV1 ), v2( inV2 ), v3( inV3 ){}
+		AGVec3 v1, v2, v3; 
+	};
+
+	/*
+		MГ¶llerвЂ“Trumbore intersection algorithm
+		http://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+	*/
+	IntersectResult intersectTriangle( const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace = true ); 
 }
 
 ///////////////////////////////////////////////////////////////////////////
-//Используется для явного указания способа определения угла
+//РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ СЏРІРЅРѕРіРѕ СѓРєР°Р·Р°РЅРёСЏ СЃРїРѕСЃРѕР±Р° РѕРїСЂРµРґРµР»РµРЅРёСЏ СѓРіР»Р°
 ///////////////////////////////////////////////////////////////////////////
 
 struct AGDegrees;

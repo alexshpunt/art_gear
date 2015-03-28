@@ -8,7 +8,7 @@ AGGizmo::AGGizmo()
 {
 	m_isSelected = false; 
 	m_distance = 1.0f;
-	m_beginPos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	m_beginPos = AGVec3( 0.0f, 0.0f, 0.0f );
 
 	m_vbo = nullptr;
 	m_ibo = nullptr; 
@@ -19,29 +19,29 @@ AGGizmo::~AGGizmo()
 
 }
 
-void AGGizmo::setBeginPos(D3DXVECTOR3 beginPos)
+void AGGizmo::setBeginPos(AGVec3 beginPos)
 {
 	m_beginPos = beginPos; 
 }
 
 void AGGizmo::setBeginPos(float x, float y, float z)
 {
-	m_beginPos = D3DXVECTOR3( x, y ,z );
+	m_beginPos = AGVec3( x, y ,z );
 }
 
-D3DXVECTOR3 AGGizmo::getBeginPos() const
+AGVec3 AGGizmo::getBeginPos() const
 {
 	return m_beginPos; 
 }
 
-void AGGizmo::translateBeginPos(D3DXVECTOR3 delta)
+void AGGizmo::translateBeginPos(AGVec3 delta)
 {
 	m_beginPos += delta;
 }
 
 void AGGizmo::translateBeginPos(float x, float y, float z)
 {
-	m_beginPos += D3DXVECTOR3( x, y, z );
+	m_beginPos += AGVec3( x, y, z );
 }
 
 void AGGizmo::setSelected(bool value)
@@ -66,11 +66,11 @@ float AGGizmo::getDistance() const
 
 void AGGizmo::updatePos(AGCamera* camera)
 {
-	D3DXVECTOR3 camEye = camera->getPos(); 
-	D3DXVECTOR3 dir = camEye - m_beginPos; 
+	AGVec3 camEye = camera->getPos(); 
+	AGVec3 dir = camEye - m_beginPos; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.5f; 
-	D3DXVECTOR3 pos = dir; 
+	AGVec3 pos = dir; 
 
 	setLocalPos( pos.x, pos.y, pos.z );
 }

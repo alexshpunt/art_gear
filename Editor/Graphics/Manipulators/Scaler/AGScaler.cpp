@@ -48,7 +48,7 @@ bool AGScaler::mouseClickEvent( AGMouseButton btn, AGSurface* surface)
 		return false; 
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateRays( surface );
+	calculateDeltaRays( surface );
 
 	AGGizmo* gizmos[] = 
 	{
@@ -123,21 +123,21 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 	};
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateRays( surface );
+	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
 		calculateObjRays( system == AGEStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
 
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
+		AGVec3 cameraEye = surface->getCamera()->getPos();
 
-		D3DXVECTOR3 worldPos = gizmos[ 0 ]->getBeginPos();
+		AGVec3 worldPos = gizmos[ 0 ]->getBeginPos();
 
-		D3DXVECTOR3 axisX( axis.x, 0.0f, 0.0f );
-		D3DXVECTOR3 axisY( 0.0f, axis.y, 0.0f );
-		D3DXVECTOR3 axisZ( 0.0f, 0.0f, axis.z );
+		AGVec3 axisX( axis.x, 0.0f, 0.0f );
+		AGVec3 axisY( 0.0f, axis.y, 0.0f );
+		AGVec3 axisZ( 0.0f, 0.0f, axis.z );
 
 		D3DXMATRIX rotMatrix = m_selectedObject->getWorldRotMatrix(); 
 
@@ -154,7 +154,7 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 
 		AGEStateManager::getInstance().setRotating( true );
 
-		D3DXVECTOR3 scale; 
+		AGVec3 scale; 
 
 		//Выглядит странно, но это работает так, как должно...
 		if( m_selectedObject == m_xyPlane ||
@@ -162,11 +162,11 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 		    m_selectedObject == m_yzPlane ||
 		    m_selectedObject == m_xyzPlane )
 		{
-			scale = D3DXVECTOR3( maxVel * axis.x * sign( axis.x ), maxVel * axis.y * sign( axis.y ), maxVel * axis.z * sign( axis.z ) );
+			scale = AGVec3( maxVel * axis.x * sign( axis.x ), maxVel * axis.y * sign( axis.y ), maxVel * axis.z * sign( axis.z ) );
 		}
 		else
 		{
-			scale = D3DXVECTOR3( cosX * axis.x * sign( axis.x ), cosY * axis.y * sign( axis.y ), cosZ * axis.z * sign( axis.z ) );
+			scale = AGVec3( cosX * axis.x * sign( axis.x ), cosY * axis.y * sign( axis.y ), cosZ * axis.z * sign( axis.z ) );
 		}
 
 		for( int i = 0; i < 7; i++ )
@@ -275,15 +275,15 @@ void AGScaler::draw( AGSurface* surface )
 		m_xyzPlane, m_xyPlane, m_xzPlane, m_yzPlane
 	};
 
-	D3DXVECTOR3 gizmoPos; 
-	D3DXVECTOR3 gizmoAngle; 
+	AGVec3 gizmoPos; 
+	AGVec3 gizmoAngle; 
 
 	if( m_object )
 	{
 		AGVec3 pos = m_object->getLocalPos(); 
 		AGVec3 angle = m_object->getLocalRot(); 
-		gizmoPos = D3DXVECTOR3( pos.x, pos.y, pos.z );
-		gizmoAngle = D3DXVECTOR3( angle.x, angle.y, angle.z );
+		gizmoPos = AGVec3( pos.x, pos.y, pos.z );
+		gizmoAngle = AGVec3( angle.x, angle.y, angle.z );
 	}
 	else
 	{

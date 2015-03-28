@@ -210,8 +210,8 @@ AGMesh::AGMesh(const std::string &fileName)
 		subMesh->loadFrom( in );
 		m_subMeshes.push_back( subMesh );
 	}
-	D3DXVECTOR3 v1;
-	D3DXVECTOR3 v2; 
+	AGVec3 v1;
+	AGVec3 v2; 
 
 	READ( v1.x );
 	READ( v1.y );

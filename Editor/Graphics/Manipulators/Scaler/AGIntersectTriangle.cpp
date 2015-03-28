@@ -45,55 +45,55 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 		{
 			//Selected tri
 			//XY Selected
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow },                //0
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellow },                //1
+			{ AGVec3( 0.0f, len, 0.0f  ), yellow },                //0
+			{ AGVec3( len, 0.0f, 0.0f  ), yellow },                //1
 
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow },                //2
-			{ D3DXVECTOR3( len / 2.0f , len / 2.0f, 0.0f  ), yellow },  //3
+			{ AGVec3( 0.0f, len, 0.0f  ), yellow },                //2
+			{ AGVec3( len / 2.0f , len / 2.0f, 0.0f  ), yellow },  //3
 
 			//XZ Selected
-			{ D3DXVECTOR3( 0.0f, 0.0f, len ), yellow },                 //4
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellow },                //5
+			{ AGVec3( 0.0f, 0.0f, len ), yellow },                 //4
+			{ AGVec3( len, 0.0f, 0.0f  ), yellow },                //5
 
-			{ D3DXVECTOR3( 0.0f, 0.0f,  len  ), yellow },               //6
-			{ D3DXVECTOR3( len / 2.0f , 0.0f , len / 2.0f  ), yellow }, //7
+			{ AGVec3( 0.0f, 0.0f,  len  ), yellow },               //6
+			{ AGVec3( len / 2.0f , 0.0f , len / 2.0f  ), yellow }, //7
 
 			//YZ Selected
-			{ D3DXVECTOR3( 0.0f, 0.0f, len ), yellow },                 //8
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow },                //9
+			{ AGVec3( 0.0f, 0.0f, len ), yellow },                 //8
+			{ AGVec3( 0.0f, len, 0.0f  ), yellow },                //9
 
-			{ D3DXVECTOR3( 0.0f, 0.0f,  len  ), yellow },               //10
-			{ D3DXVECTOR3( 0.0f, len / 2.0f, len / 2.0f  ), yellow },   //11
+			{ AGVec3( 0.0f, 0.0f,  len  ), yellow },               //10
+			{ AGVec3( 0.0f, len / 2.0f, len / 2.0f  ), yellow },   //11
 
 			//X Selected
-			{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f  ), yellow },         //12
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellow },        //13
+			{ AGVec3( 0.0f, 0.0f, 0.0f  ), yellow },         //12
+			{ AGVec3( len, 0.0f, 0.0f  ), yellow },        //13
 			//Y Selected
-			{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f  ), yellow },         //14
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow },        //15
+			{ AGVec3( 0.0f, 0.0f, 0.0f  ), yellow },         //14
+			{ AGVec3( 0.0f, len, 0.0f  ), yellow },        //15
 			//Z Selected
-			{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f  ), yellow },         //16
-			{ D3DXVECTOR3( 0.0f, 0.0f, len  ), yellow },        //17
+			{ AGVec3( 0.0f, 0.0f, 0.0f  ), yellow },         //16
+			{ AGVec3( 0.0f, 0.0f, len  ), yellow },        //17
 
 			//XY Selected
-			{ D3DXVECTOR3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //18
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellowTransp },          //19
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellowTransp },          //20
+			{ AGVec3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //18
+			{ AGVec3( 0.0f, len, 0.0f  ), yellowTransp },          //19
+			{ AGVec3( len, 0.0f, 0.0f  ), yellowTransp },          //20
 
 			//YZ Selected
-			{ D3DXVECTOR3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //21
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellowTransp },          //22
-			{ D3DXVECTOR3( 0.0f, 0.0f, len  ), yellowTransp },          //23
+			{ AGVec3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //21
+			{ AGVec3( 0.0f, len, 0.0f  ), yellowTransp },          //22
+			{ AGVec3( 0.0f, 0.0f, len  ), yellowTransp },          //23
 
 			//XZ Selected
-			{ D3DXVECTOR3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //24
-			{ D3DXVECTOR3( 0.0f, 0.0f , len  ), yellowTransp },          //25
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellowTransp },          //26
+			{ AGVec3 ( 0.0f, 0.0f, 0.0f ), yellowTransp },          //24
+			{ AGVec3( 0.0f, 0.0f , len  ), yellowTransp },          //25
+			{ AGVec3( len, 0.0f, 0.0f  ), yellowTransp },          //26
 
 			//XYZ Selected
-			{ D3DXVECTOR3 ( 0.0f, 0.0f, len ), yellowTransp },          //27
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellowTransp },          //28
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellowTransp },          //29
+			{ AGVec3 ( 0.0f, 0.0f, len ), yellowTransp },          //27
+			{ AGVec3( 0.0f, len, 0.0f  ), yellowTransp },          //28
+			{ AGVec3( len, 0.0f, 0.0f  ), yellowTransp },          //29
 		};
 
 		for (int i = 0; i < 9; i++)
@@ -109,33 +109,33 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 		AGPrimitiveVertex vertices[] = 
 		{
 			//Unselected tri
-			{ D3DXVECTOR3 ( 0.0f, len / 1.5, 0.0f ), firstColor },                         //0
-			{ D3DXVECTOR3 ( (len / 1.5f) / 2.0f, (len / 1.5) / 2.0f, 0.0f ), firstColor }, //1
+			{ AGVec3 ( 0.0f, len / 1.5, 0.0f ), firstColor },                         //0
+			{ AGVec3 ( (len / 1.5f) / 2.0f, (len / 1.5) / 2.0f, 0.0f ), firstColor }, //1
 
-			{ D3DXVECTOR3 ( (len / 1.5f) / 2.0f, (len / 1.5) / 2.0f, 0.0f ), secondColor },//2
-			{ D3DXVECTOR3( len / 1.5f, 0.0f, 0.0f  ), secondColor },                       //3
+			{ AGVec3 ( (len / 1.5f) / 2.0f, (len / 1.5) / 2.0f, 0.0f ), secondColor },//2
+			{ AGVec3( len / 1.5f, 0.0f, 0.0f  ), secondColor },                       //3
 
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), firstColor },                               //4
-			{ D3DXVECTOR3( len / 2.0f, len / 2.0f, 0.0f  ), firstColor },                  //5
+			{ AGVec3( 0.0f, len, 0.0f  ), firstColor },                               //4
+			{ AGVec3( len / 2.0f, len / 2.0f, 0.0f  ), firstColor },                  //5
 
-			{ D3DXVECTOR3( len / 2.0f, len / 2.0f, 0.0f  ), secondColor },                 //6
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), secondColor },                              //7
+			{ AGVec3( len / 2.0f, len / 2.0f, 0.0f  ), secondColor },                 //6
+			{ AGVec3( len, 0.0f, 0.0f  ), secondColor },                              //7
 
 			//Selected Tri
-			{ D3DXVECTOR3 ( 0.0f, len / 1.5, 0.0f ), yellow },  //8
-			{ D3DXVECTOR3( len / 1.5f, 0.0f, 0.0f  ), yellow }, //9
+			{ AGVec3 ( 0.0f, len / 1.5, 0.0f ), yellow },  //8
+			{ AGVec3( len / 1.5f, 0.0f, 0.0f  ), yellow }, //9
 
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellow },        //10
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow },        //11
+			{ AGVec3( len, 0.0f, 0.0f  ), yellow },        //10
+			{ AGVec3( 0.0f, len, 0.0f  ), yellow },        //11
 
 			//Selected Rect
-			{ D3DXVECTOR3 ( 0.0f, len / 1.5, 0.0f ), yellowTransp },  //12
-			{ D3DXVECTOR3( len / 1.5f, 0.0f, 0.0f  ), yellowTransp }, //13
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellowTransp },        //14
+			{ AGVec3 ( 0.0f, len / 1.5, 0.0f ), yellowTransp },  //12
+			{ AGVec3( len / 1.5f, 0.0f, 0.0f  ), yellowTransp }, //13
+			{ AGVec3( 0.0f, len, 0.0f  ), yellowTransp },        //14
 
-			{ D3DXVECTOR3( len / 1.5f, 0.0f, 0.0f  ), yellowTransp }, //15
-			{ D3DXVECTOR3( len, 0.0f, 0.0f  ), yellowTransp },        //16
-			{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellowTransp },        //17
+			{ AGVec3( len / 1.5f, 0.0f, 0.0f  ), yellowTransp }, //15
+			{ AGVec3( len, 0.0f, 0.0f  ), yellowTransp },        //16
+			{ AGVec3( 0.0f, len, 0.0f  ), yellowTransp },        //17
 		};
 
 		for (int i = 0; i < 6; i++)
@@ -165,9 +165,9 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 
 	updatePos( camera );
 
-	D3DXVECTOR3 xAxis( 1.0f, 0.0f, 0.0f );
-	D3DXVECTOR3 zAxis( 0.0f, 0.0f, 1.0f );
-	D3DXVECTOR3 yAxis( 0.0f, 1.0f, 0.0f );
+	AGVec3 xAxis( 1.0f, 0.0f, 0.0f );
+	AGVec3 zAxis( 0.0f, 0.0f, 1.0f );
+	AGVec3 yAxis( 0.0f, 1.0f, 0.0f );
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
 
@@ -180,7 +180,7 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
 	}
 
-	D3DXVECTOR3 camEye = camera->getPos() - m_beginPos; 
+	AGVec3 camEye = camera->getPos() - m_beginPos; 
 
 	float cosX = D3DXVec3Dot( &xAxis, &camEye );
 	float cosY = D3DXVec3Dot( &yAxis, &camEye );
@@ -260,15 +260,15 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 	releaseBuffers(); 
 }
 
-float AGIntersectTriangle::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGIntersectTriangle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 {
 	float retDist = -1.0f;
 	int high = ( m_axis == XYZ_AXIS ) ? 3 : 2; 
 	for( int i = 0; i < high; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ 3*i ];
-		D3DXVECTOR3 vertex2 = m_vertices[ 3*i + 1 ];
-		D3DXVECTOR3 vertex3 = m_vertices[ 3*i + 2 ];
+		AGVec3 vertex1 = m_vertices[ 3*i ];
+		AGVec3 vertex2 = m_vertices[ 3*i + 1 ];
+		AGVec3 vertex3 = m_vertices[ 3*i + 2 ];
 
 		float dist, u, v; 
 
@@ -289,16 +289,16 @@ float AGIntersectTriangle::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 	return retDist; 
 }
 
-D3DXVECTOR3 AGIntersectTriangle::getAxis()
+AGVec3 AGIntersectTriangle::getAxis()
 {
 	if( m_axis == XY_AXIS )
-		return D3DXVECTOR3( 1.0f, 1.0f, 0.0f );
+		return AGVec3( 1.0f, 1.0f, 0.0f );
 	if( m_axis == XZ_AXIS )
-		return D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
+		return AGVec3( 1.0f, 0.0f, 1.0f );
 	if( m_axis == YZ_AXIS )
-		return D3DXVECTOR3( 0.0f, 1.0f, 1.0f );
+		return AGVec3( 0.0f, 1.0f, 1.0f );
 	if( m_axis == XYZ_AXIS )
-		return D3DXVECTOR3( 1.0f, 1.0f, 1.0f ); 
-	return D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+		return AGVec3( 1.0f, 1.0f, 1.0f ); 
+	return AGVec3( 0.0f, 0.0f, 0.0f );
 }
 

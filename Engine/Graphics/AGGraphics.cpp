@@ -57,14 +57,14 @@ void AGGraphics::update()
 			}
 			D3DXMATRIX matProj = camera->getProjMatrix(); 
 
-			D3DXVECTOR3 v; 
+			AGVec3 v; 
 			v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
 			v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
 			v.z = 1.0f; 
 
 			D3DXMATRIX mat; 
 			D3DXMATRIX matView = camera->getViewMatrix(); 
-			D3DXVECTOR3 rayOrigin, rayDir; 
+			AGVec3 rayOrigin, rayDir; 
 
 			D3DXMatrixInverse( &mat, NULL, &matView );
 
@@ -99,7 +99,7 @@ void AGGraphics::update()
 
 				D3DXMatrixInverse( &matInverce, NULL, &matWorld );
 
-				D3DXVECTOR3 rayObjOrigin, rayObjDir; 
+				AGVec3 rayObjOrigin, rayObjDir; 
 
 				D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
 				D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
@@ -419,8 +419,8 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0; 
 
-	D3DXVECTOR3 nearPoint( mousePos.x, mousePos.y, 0.0f );
-	D3DXVECTOR3 farPoint( mousePos.x, mousePos.y, 1.0f );
+	AGVec3 nearPoint( mousePos.x, mousePos.y, 0.0f );
+	AGVec3 farPoint( mousePos.x, mousePos.y, 1.0f );
 
 	for( AGRenderer* renderer : m_renderers )
 	{
@@ -442,7 +442,7 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 		D3DXVec3Unproject( &nearPoint, &nearPoint, &viewport, &matProj, &matView, &matWorld );
 		D3DXVec3Unproject( &farPoint, &farPoint, &viewport, &matProj, &matView, &matWorld );
 
-		D3DXVECTOR3 dir = farPoint - nearPoint; 
+		AGVec3 dir = farPoint - nearPoint; 
 
 		float dist = renderer->intersect( nearPoint, dir );
 		renderer->setSelected( false );

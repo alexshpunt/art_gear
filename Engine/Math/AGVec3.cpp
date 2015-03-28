@@ -206,4 +206,21 @@ AGVec3 AGVec3::operator-()
 	return AGVec3( -x, -y, -z );
 }
 
+AGVec3 AGVec3::unproject( const AGVec3& vec, const AGRect& viewport, const AGMatrix& world, const AGMatrix& view, const AGMatrix& proj )
+{
+	AGMatrix invMat = ( world * view *proj  ).inversed(); 
+
+	AGVec3 tmp;
+	tmp.x = 2.0f * ( vec.x - viewport.getLeft() ) / viewport.getWidth() - 1.0f; 
+	tmp.y = 2.0f * ( vec.y - viewport.getTop() ) / viewport.getHeight() - 1.0f;
+	tmp.z = vec.z; 
+
+	tmp.y = -tmp.y; 
+
+	tmp *= invMat; 
+
+	return tmp; 
+}
+
+
 

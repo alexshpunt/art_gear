@@ -160,7 +160,7 @@ void AGShader::applySurface(AGSurface* surface)
 
 	if( effect->cameraPos )
 	{
-		effect->cameraPos->SetRawValue( &camera->getPos(), 0, sizeof( D3DXVECTOR3 ) );
+		effect->cameraPos->SetRawValue( &camera->getPos(), 0, sizeof( AGVec3 ) );
 	}
 
 	/*effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
@@ -206,7 +206,7 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 	texture->apply( effect->maps[ slot ], surface );
 }
 
-void AGShader::setWorldMatrix(D3DXMATRIX world)
+void AGShader::setWorldMatrix(const AGMatrix& world)
 {
 	for( AGSurface* surface : m_surfaces )
 	{

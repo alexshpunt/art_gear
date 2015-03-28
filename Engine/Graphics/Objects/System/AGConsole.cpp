@@ -56,10 +56,10 @@ AGConsole::AGConsole(  ID3D10Device* device  )
 
 	device->IASetInputLayout( m_inputLayout );
 
-	D3DXVECTOR3 vertices[] = 
+	AGVec3 vertices[] = 
 	{
-		D3DXVECTOR3( -1.0f, 1.0f, 0.5f ), D3DXVECTOR3( 1.0f, 1.0f, 0.5f ), D3DXVECTOR3( -1.0f, 0.0f, 0.5f ),
-		D3DXVECTOR3( 1.0f, 1.0f, 0.5f ), D3DXVECTOR3( 1.0f, 0.0f, 0.5f ), D3DXVECTOR3( -1.0f, 0.0f, 0.5f ),
+		AGVec3( -1.0f, 1.0f, 0.5f ), AGVec3( 1.0f, 1.0f, 0.5f ), AGVec3( -1.0f, 0.0f, 0.5f ),
+		AGVec3( 1.0f, 1.0f, 0.5f ), AGVec3( 1.0f, 0.0f, 0.5f ), AGVec3( -1.0f, 0.0f, 0.5f ),
 	};
 
 	D3D10_BUFFER_DESC buffDesc; 
@@ -110,7 +110,7 @@ void AGConsole::draw( AGSurface* surface )
 
 	device->IASetInputLayout( m_inputLayout );
 
-	UINT stride = sizeof( D3DXVECTOR3 );
+	UINT stride = sizeof( AGVec3 );
 	UINT offset = 0; 
 	device->IASetVertexBuffers( 0, 1, &m_vertexBuffer, &stride, &offset );
 

@@ -287,13 +287,13 @@
     <ClCompile Include="Engine\Math\AGVec4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Interfaces\AGMovable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Math\AGMathHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Interfaces\AGMovable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -540,9 +540,6 @@
     <ClInclude Include="Engine\Math\AGVec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Interfaces\AGMovable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Math\AGMathHelp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -550,6 +547,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Interfaces\AGMovable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

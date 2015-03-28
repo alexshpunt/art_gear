@@ -11,21 +11,21 @@
 
 using namespace std;
 
-AGBoundingBox::AGBoundingBox( D3DXVECTOR3 v1, D3DXVECTOR3 v2 )
+AGBoundingBox::AGBoundingBox( AGVec3 v1, AGVec3 v2 )
 {
 	D3DXVECTOR4 clr( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ D3DXVECTOR3( v2.x, v2.y, v2.z ), clr }, //0
-		{ D3DXVECTOR3( v2.x, v1.y, v2.z ), clr }, //1
-		{ D3DXVECTOR3( v1.x, v1.y, v2.z ), clr }, //2
-		{ D3DXVECTOR3( v1.x, v2.y, v2.z ), clr }, //3
+		{ AGVec3( v2.x, v2.y, v2.z ), clr }, //0
+		{ AGVec3( v2.x, v1.y, v2.z ), clr }, //1
+		{ AGVec3( v1.x, v1.y, v2.z ), clr }, //2
+		{ AGVec3( v1.x, v2.y, v2.z ), clr }, //3
 
-		{ D3DXVECTOR3( v2.x, v2.y, v1.z ), clr }, //4
-		{ D3DXVECTOR3( v2.x, v1.y, v1.z ), clr }, //5
-		{ D3DXVECTOR3( v1.x, v1.y, v1.z ), clr }, //6
-		{ D3DXVECTOR3( v1.x, v2.y, v1.z ), clr }, //7
+		{ AGVec3( v2.x, v2.y, v1.z ), clr }, //4
+		{ AGVec3( v2.x, v1.y, v1.z ), clr }, //5
+		{ AGVec3( v1.x, v1.y, v1.z ), clr }, //6
+		{ AGVec3( v1.x, v2.y, v1.z ), clr }, //7
 	};
 
 	for( int i = 0; i < 8; i++ )
@@ -150,14 +150,14 @@ void AGBoundingBox::draw( AGSurface* surface )
 
 }
 
-float AGBoundingBox::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
+float AGBoundingBox::intersect( AGVec3 rayOrigin, AGVec3 rayDir )
 {
 	float retDist = -1.0f; 
 	for( int i = 0; i < 34; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ];
-		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ];
-		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ];
+		AGVec3 vertex1 = m_vertices[ m_indices[ i ] ];
+		AGVec3 vertex2 = m_vertices[ m_indices[ i + 1 ] ];
+		AGVec3 vertex3 = m_vertices[ m_indices[ i + 2 ] ];
 
 		float dist, u, v; 
 

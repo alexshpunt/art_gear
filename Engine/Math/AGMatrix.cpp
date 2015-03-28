@@ -281,9 +281,9 @@ void AGMatrix::setPerspectiveLH(AGRadians angle, float aspectRatio, float nearPl
 void AGMatrix::setOrthoLH(float viewWidth, float viewHeight, float nearPlane, float farPlane)
 {
 	
-	assert( AGMath::isEqual( nearPlane, farPlane ) ||
-	        AGMath::isEqual( viewWidth, 0.0f )     ||
-	        AGMath::isEqual( viewHeight, 0.0f ) );
+	assert( !AGMath::isEqual( nearPlane, farPlane ) ||
+	        !AGMath::isEqual( viewWidth, 0.0f )     ||
+	        !AGMath::isEqual( viewHeight, 0.0f ) );
 
 	float range = 1.0f / ( farPlane - nearPlane );
 	

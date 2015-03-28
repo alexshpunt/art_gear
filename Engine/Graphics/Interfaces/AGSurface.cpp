@@ -16,7 +16,7 @@
 
 struct SurfaceVertex
 {
-	D3DXVECTOR3 pos;
+	AGVec3 pos;
 	D3DXVECTOR2 uv; 
 };
 
@@ -110,8 +110,8 @@ void AGSurface::setCameraMode(AGSurfaceCameraMode cameraMode)
 	}
 
 	m_camera->setType( AGCamera::Ortho ); 
-	m_camera->setTarget( D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) );
-	m_camera->setPos( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	m_camera->setTarget( AGVec3( 0.0f, 0.0f, 1.0f ) );
+	m_camera->setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
 
 	switch( m_surfaceCameraMode )
 	{
@@ -297,13 +297,13 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 
 	SurfaceVertex vertices[] =
 	{
-		D3DXVECTOR3( -1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 0.0f ), //1
-		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //2
-		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//3
+		AGVec3( -1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 0.0f ), //1
+		AGVec3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //2
+		AGVec3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//3
 
-		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //4
-		D3DXVECTOR3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 1.0f ), //5
-		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//6
+		AGVec3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //4
+		AGVec3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 1.0f ), //5
+		AGVec3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//6
 	};
 
 	D3D10_BUFFER_DESC bufferDesc;
@@ -521,8 +521,8 @@ void AGSurface::present()
 
 	if( m_surfaceMode == Shaded )
 	{
-		D3DXVECTOR3 camPos = m_camera->getPos(); 
-		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( D3DXVECTOR3 ) );
+		AGVec3 camPos = m_camera->getPos(); 
+		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
 		if( FAILED( hr ) )
 		{
 			AGDebug() << DXGetErrorDescription( hr );

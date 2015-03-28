@@ -40,3 +40,8 @@ void AGLine::draw( AGSurface* surface )
 	}
 }
 
+void AGLine::setupShape()
+{
+
+}
+

@@ -18,7 +18,7 @@ AGRotater::AGRotater() : AGManipulator()
 	m_zCircle = new AGCircle( AGCircle::Z_AXIS );
 
 	m_selectedObject = nullptr;
-	m_angles = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	m_angles = AGVec3( 0.0f, 0.0f, 0.0f );
 }
 
 AGRotater::~AGRotater()
@@ -76,9 +76,9 @@ bool AGRotater::mouseClickEvent( AGMouseButton btn, AGSurface* surface)
 		m_v1 = m_selectedObject->getBeginPos();
 		m_v2 = ( reinterpret_cast< AGCircle* >( m_selectedObject ) )->getTangent(); 
 
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 pos = m_selectedObject->getBeginPos();
+		AGVec3 pos = m_selectedObject->getBeginPos();
 
 		D3DXMATRIX worldRot = m_selectedObject->getWorldRotMatrix();
 
@@ -126,13 +126,13 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 	};
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateRays( surface );
+	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getPos();
+		AGVec3 cameraEye = surface->getCamera()->getPos();
 
 		float cosT = D3DXVec3Dot( &m_tangent, &m_rayDelta );
 
@@ -232,15 +232,15 @@ void AGRotater::draw( AGSurface* surface )
 		m_xCircle, m_yCircle, m_zCircle,
 	};
 
-	D3DXVECTOR3 gizmoPos; 
-	D3DXVECTOR3 gizmoAngles; 
+	AGVec3 gizmoPos; 
+	AGVec3 gizmoAngles; 
 
 	if( m_object )
 	{
 		AGVec3 pos = m_object->getLocalPos();
 		AGVec3 angles = m_object->getLocalRot(); 
-		gizmoPos = D3DXVECTOR3( pos.x, pos.y, pos.z );
-		gizmoAngles = D3DXVECTOR3( angles.x, angles.y, angles.z );
+		gizmoPos = AGVec3( pos.x, pos.y, pos.z );
+		gizmoAngles = AGVec3( angles.x, angles.y, angles.z );
 	}
 	else 
 	{
@@ -254,7 +254,7 @@ void AGRotater::draw( AGSurface* surface )
 		gizmos[ i ]->draw( surface );
 	}
 
-	//AGDebugDraw::getInstance().drawLine( surface, D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), m_tangent, D3DXVECTOR4( 1.0f, 1.0f, 0.0f, 1.0f ) );
+	//AGDebugDraw::getInstance().drawLine( surface, AGVec3( 0.0f, 0.0f, 0.0f ), m_tangent, D3DXVECTOR4( 1.0f, 1.0f, 0.0f, 1.0f ) );
 }
 
  

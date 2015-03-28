@@ -16,9 +16,9 @@ class AGArrow : public AGGizmo
 		~AGArrow();
 
 		void draw(  AGSurface* surface  );
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
-		D3DXVECTOR3 getAxis(); 
+		AGVec3 getAxis(); 
 	private:
 		int m_nIndices; 
 		ArrowAxis m_axis; 

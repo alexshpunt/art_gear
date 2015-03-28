@@ -1,6 +1,7 @@
 #include "AGMathHelp.h"
 
 #include "AGVec2.h"
+#include "AGVec3.h"
 
 AGRadians AGDegrees::toRadians()
 {
@@ -39,6 +40,90 @@ namespace AGMath
 			points.push_back( AGVec2( radius * cos( angle ), radius * sin( angle ) ) );
 		}
 	}
+
+	AGMath::IntersectResult intersectTriangle(const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace = true )
+	{
+		IntersectResult res; 
+		double det, invDet; 
+
+		AGVec3 edge1 = triangle.v2 - triangle.v1; 
+		AGVec3 edge2 = triangle.v3 - triangle.v1; 
+
+		AGVec3 pVec = AGVec3::cross( rayDir, edge2 );
+
+		det = AGVec3::dot( edge1, pVec ); 
+
+		if( cullFace )
+		{
+			if( det < EPSILON_FOR_DOUBLE )
+			{
+				return res; 
+			}
+
+			AGVec3 tVec = rayOrigin - triangle.v1; 
+
+			res.u = AGVec3::dot( tVec, pVec );
+
+			if( res.u < 0.0f || res.u > det )
+			{
+				return res; 
+			}
+
+			AGVec3 qVec = AGVec3::cross( tVec, edge1 );
+
+			res.v = AGVec3::dot( rayDir, qVec );
+
+			if( res.v < 0.0f || ( res.v + res.u ) > det )
+			{
+				return res; 
+			}
+
+			res.distance = AGVec3::dot( edge2, qVec );
+
+			invDet = 1.0f / det; 
+
+			res.distance *= invDet;
+			res.u *= invDet;
+			res.v *= invDet; 
+			res.hit = true;
+		}
+		else 
+		{
+			if( fabs( det ) < EPSILON_FOR_DOUBLE )
+			{
+				return res; 
+			}
+			invDet = 1.0f / det; 
+
+			AGVec3 tVec = rayOrigin - triangle.v1; 
+
+			res.u = AGVec3::dot( tVec, pVec ) * invDet; 
+
+			if( res.u < 0.0f || res.u > 1.0f ) 
+			{
+				return res; 
+			}
+
+			AGVec3 qVec = AGVec3::cross( tVec, edge1 );
+
+			res.v = AGVec3::dot( rayDir, qVec ) * invDet;
+
+			if( res.v < 0.0f || res.v > 1.0f ) 
+			{
+				return res; 
+			}
+
+			res.distance = AGVec3::dot( edge2, qVec ) * invDet; 
+
+			if( res.distance > EPSILON_FOR_DOUBLE )
+			{
+				res.hit = true;
+			}
+		}
+
+		return res; 
+	}
+
 
 }
 

@@ -2,7 +2,7 @@
 #define AG_VEC3_H
 
 class AGMatrix; 
-
+class AGRect; 
 class AGVec2; 
 
 class AGVec3 
@@ -25,6 +25,7 @@ class AGVec3
 
 		static float dot( const AGVec3& v1, const AGVec3& v2 );
 		static AGVec3 cross( const AGVec3& v1, const AGVec3& v2 );
+		static AGVec3 unproject( const AGVec3& vec, const AGRect& viewport, const AGMatrix& world, const AGMatrix& view, const AGMatrix& proj ); 
 
 		static AGVec3 Up();
 		static AGVec3 Right();

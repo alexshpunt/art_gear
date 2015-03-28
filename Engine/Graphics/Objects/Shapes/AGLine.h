@@ -14,6 +14,7 @@ class AGLine : public AGShape
 		void setLine( const AGVec3& startPoint, const AGVec3& endPoint, const AGColor& color = AGColor( 1.0f ) );
 
 		void draw( AGSurface* surface ) override;
+		void setupShape() override; 
 };
 
 #endif 

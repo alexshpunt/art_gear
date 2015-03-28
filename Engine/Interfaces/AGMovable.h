@@ -111,7 +111,8 @@ class AGMovable
 		void setLookAt( const AGVec3& dir );
 		
 	protected:
-		virtual void handleChanges( Changes changes ) = 0;
+		//TODO: Сделать чисто вирутальной и реализовать во всех дочерних классах 
+		virtual void handleChanges( Changes changes ){}
 
 	private:
 		AGMovablePrivate* p; 

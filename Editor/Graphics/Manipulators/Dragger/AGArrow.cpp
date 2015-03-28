@@ -9,40 +9,40 @@ AGArrow::AGArrow( ArrowAxis axis  )
 	m_axis = axis; 
 	m_isSelected = false; 
 
-	D3DXVECTOR4 color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
-	D3DXVECTOR4 yellow( 1.0f, 1.0f, 0.0f, 1.0f );
+	AGColor color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
+	AGColor yellow( 1.0f, 1.0f, 0.0f, 1.0f );
 	float k = 0.05f;
 	float height = 4.0f;
 	float radius = 0.2f;
 	float d = 0.025f;
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ D3DXVECTOR3( k * radius * 0            , k * height, k * radius * 0 ),             color }, //0 
-		{ D3DXVECTOR3( k * radius * 1            , k * height, k * radius * 0 ),             color }, //1 
-		{ D3DXVECTOR3( k * radius * 0.951057     , k * height, k * radius * 0.309017 ),      color }, //2 
-		{ D3DXVECTOR3( k * radius * 0.809017     , k * height, k * radius * 0.587785 ),      color }, //3 
-		{ D3DXVECTOR3( k * radius * 0.587785     , k * height, k * radius * 0.809017 ),      color }, //4 
-		{ D3DXVECTOR3( k * radius * 0.309017     , k * height, k * radius * 0.951057 ),      color }, //5 
-		{ D3DXVECTOR3( k * radius * -4.37114e-008, k * height, k * radius * 1 ),             color }, //6 
-		{ D3DXVECTOR3( k * radius * -0.309017    , k * height, k * radius * 0.951056 ),      color }, //7 
-		{ D3DXVECTOR3( k * radius * -0.587785    , k * height, k * radius * 0.809017 ),      color }, //8 
-		{ D3DXVECTOR3( k * radius * -0.809017    , k * height, k * radius * 0.587785 ),      color }, //9 
-		{ D3DXVECTOR3( k * radius * -0.951057    , k * height, k * radius * 0.309017 ),      color }, //10 
-		{ D3DXVECTOR3( k * radius * -1           , k * height, k * radius * -3.25841e-007 ), color }, //11 
-		{ D3DXVECTOR3( k * radius * -0.951056    , k * height, k * radius * -0.309017 ),     color }, //12 
-		{ D3DXVECTOR3( k * radius * -0.809017    , k * height, k * radius * -0.587786 ),     color }, //13 
-		{ D3DXVECTOR3( k * radius * -0.587785    , k * height, k * radius * -0.809017 ),     color }, //14 
-		{ D3DXVECTOR3( k * radius * -0.309016    , k * height, k * radius * -0.951057 ),     color }, //15 
-		{ D3DXVECTOR3( k * radius * 9.65599e-007 , k * height, k * radius * -1 ),            color }, //16 
-		{ D3DXVECTOR3( k * radius * 0.309018     , k * height, k * radius * -0.951056 ),     color }, //17 
-		{ D3DXVECTOR3( k * radius * 0.587786     , k * height, k * radius * -0.809016 ),     color }, //18 
-		{ D3DXVECTOR3( k * radius * 0.809018     , k * height, k * radius * -0.587784 ),     color }, //19 
-		{ D3DXVECTOR3( k * radius * 0.951057     , k * height, k * radius * -0.309016 ),     color }, //20 
-		{ D3DXVECTOR3( k * radius * 0, k * height * 1.3, k * radius * 0 ), color }, //21 
-		{ D3DXVECTOR3( 0.0f                      , k * height, k * radius * 0 ),       color }, //22 
-		{ D3DXVECTOR3( 0.0f                      , 0               , k * radius * 0 ),       color }, //23 
-		{ D3DXVECTOR3( 0.0f                      , k * height, k * radius * 0 ),      yellow }, //24
-		{ D3DXVECTOR3( 0.0f                      , 0               , k * radius * 0 ),      yellow }, //25
+		{ AGVec3( k * radius * 0            , k * height, k * radius * 0 ),             color }, //0 
+		{ AGVec3( k * radius * 1            , k * height, k * radius * 0 ),             color }, //1 
+		{ AGVec3( k * radius * 0.951057     , k * height, k * radius * 0.309017 ),      color }, //2 
+		{ AGVec3( k * radius * 0.809017     , k * height, k * radius * 0.587785 ),      color }, //3 
+		{ AGVec3( k * radius * 0.587785     , k * height, k * radius * 0.809017 ),      color }, //4 
+		{ AGVec3( k * radius * 0.309017     , k * height, k * radius * 0.951057 ),      color }, //5 
+		{ AGVec3( k * radius * -4.37114e-008, k * height, k * radius * 1 ),             color }, //6 
+		{ AGVec3( k * radius * -0.309017    , k * height, k * radius * 0.951056 ),      color }, //7 
+		{ AGVec3( k * radius * -0.587785    , k * height, k * radius * 0.809017 ),      color }, //8 
+		{ AGVec3( k * radius * -0.809017    , k * height, k * radius * 0.587785 ),      color }, //9 
+		{ AGVec3( k * radius * -0.951057    , k * height, k * radius * 0.309017 ),      color }, //10 
+		{ AGVec3( k * radius * -1           , k * height, k * radius * -3.25841e-007 ), color }, //11 
+		{ AGVec3( k * radius * -0.951056    , k * height, k * radius * -0.309017 ),     color }, //12 
+		{ AGVec3( k * radius * -0.809017    , k * height, k * radius * -0.587786 ),     color }, //13 
+		{ AGVec3( k * radius * -0.587785    , k * height, k * radius * -0.809017 ),     color }, //14 
+		{ AGVec3( k * radius * -0.309016    , k * height, k * radius * -0.951057 ),     color }, //15 
+		{ AGVec3( k * radius * 9.65599e-007 , k * height, k * radius * -1 ),            color }, //16 
+		{ AGVec3( k * radius * 0.309018     , k * height, k * radius * -0.951056 ),     color }, //17 
+		{ AGVec3( k * radius * 0.587786     , k * height, k * radius * -0.809016 ),     color }, //18 
+		{ AGVec3( k * radius * 0.809018     , k * height, k * radius * -0.587784 ),     color }, //19 
+		{ AGVec3( k * radius * 0.951057     , k * height, k * radius * -0.309016 ),     color }, //20 
+		{ AGVec3( k * radius * 0, k * height * 1.3, k * radius * 0 ), color }, //21 
+		{ AGVec3( 0.0f                      , k * height, k * radius * 0 ),       color }, //22 
+		{ AGVec3( 0.0f                      , 0               , k * radius * 0 ),       color }, //23 
+		{ AGVec3( 0.0f                      , k * height, k * radius * 0 ),      yellow }, //24
+		{ AGVec3( 0.0f                      , 0               , k * radius * 0 ),      yellow }, //25
 	};
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 26 ), AGBufferType::Vertex );
@@ -102,7 +102,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 		m_indices.push_back( indices[ i ] );
 	}
 
-	m_boundingBox = new AGBoundingBox( D3DXVECTOR3( -0.01f, 0.0f, -0.01f ), D3DXVECTOR3( 0.01f, k * height, 0.01f ) );
+	m_boundingBox = new AGBoundingBox( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
 }
 
 AGArrow::~AGArrow()
@@ -119,11 +119,11 @@ void AGArrow::draw( AGSurface* surface )
 
 	if( m_axis == X_AXIS )
 	{
-		setLocalAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f ) );	
+		setLocalAngle( AGDegrees( 0.0f ), AGDegrees( 0.0f ), AGDegrees( -90.0f ) );	
 	}
 	else if( m_axis == Z_AXIS )
 	{
-		setLocalAngle( D3DXToRadian( 90.0f ), 0.0f, 0.0f );	
+		setLocalAngle( AGDegrees( 90.0f ), AGDegrees( 0.0f ), AGDegrees( 0.0f ) );	
 	} 
 
 	int curTick = GetTickCount(); 
@@ -144,28 +144,27 @@ void AGArrow::draw( AGSurface* surface )
 	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 }
 
-float AGArrow::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
+float AGArrow::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 {
 	float retDist = -1.0f;
 	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
-		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
 
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance ); 
 			}
 		}
 	}
@@ -183,9 +182,9 @@ float AGArrow::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
 	return retDist; 
 }
 
-D3DXVECTOR3 AGArrow::getAxis()
+AGVec3 AGArrow::getAxis()
 {
-	return D3DXVECTOR3( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+	return AGVec3( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
 }
 
 

@@ -79,7 +79,7 @@ class AGELightPrivate
 
 		AGLine* line;	
 
-		D3DXVECTOR3 dir; 
+		AGVec3 dir; 
 
 		bool isSelected; 
 };
@@ -87,11 +87,11 @@ class AGELightPrivate
 AGELight::AGELight()
 {
 	m_p = new AGELightPrivate; 
-	m_p->posCone = new AGConeShape( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ), 0.05f, 0.1f );
-	m_p->hotspotCone = new AGConeShape( D3DXVECTOR4( 0.8f, 0.72f, 0.18f, 1.0f ), 0.5f, 1.0f );
-	m_p->falloffCone = new AGConeShape( D3DXVECTOR4( 0.52f, 0.48f, 0.18f, 1.0f ), 0.52f, 1.0f );
+	m_p->posCone = new AGConeShape( 0.05f, 0.1f );
+	m_p->hotspotCone = new AGConeShape( 0.5f, 1.0f, AGColor( 0.8f, 0.72f, 0.18f, 1.0f ) );
+	m_p->falloffCone = new AGConeShape( 0.52f, 1.0f, AGColor( 0.52f, 0.48f, 0.18f, 1.0f ) );
 
-	m_p->dir = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
+	m_p->dir = AGVec3( 0.0f, 1.0f, 0.0f );
 
 	m_p->hotspotCone->setLookAt( m_p->dir );
 	m_p->falloffCone->setLookAt( m_p->dir );
@@ -174,7 +174,7 @@ void AGELight::draw(AGSurface* surface)
 	}
 }
 
-float AGELight::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGELight::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 {
 	return m_p->posBox->intersect( rayOrigin, rayDir );
 }

@@ -65,7 +65,7 @@ class AGShader
 
 		void setMap( int slot, AGTexture2D* texture, AGSurface* surface ); 
 
-		void setWorldMatrix( D3DXMATRIX world );
+		void setWorldMatrix( const AGMatrix& world );
 
 	private:
 		std::list< AGSurface* > m_surfaces; 

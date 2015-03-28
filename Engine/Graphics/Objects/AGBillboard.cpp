@@ -28,7 +28,7 @@ class AGBillboardPrivate
 		AGResPtr resPtr;
 		AGTexture2D* texture;  
 
-		D3DXVECTOR3 pos;
+		AGVec3 pos;
 		D3DXVECTOR2 size; 
 
 };
@@ -37,7 +37,7 @@ AGBillboard::AGBillboard()
 {
 		m_p = new AGBillboardPrivate; 
 
-		m_p->pos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+		m_p->pos = AGVec3( 0.0f, 0.0f, 0.0f );
 		m_p->size = D3DXVECTOR2( 0.5f, 0.5f ); 
 	
 		m_p->vbo = nullptr; 

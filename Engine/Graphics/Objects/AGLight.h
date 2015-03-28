@@ -35,11 +35,11 @@ class AGLight : public AGMovable, public AGObject
 		AGLight();
 		~AGLight();
 
-		void setPos( D3DXVECTOR3 pos );
-		D3DXVECTOR3 getPos() const; 
+		void setPos( AGVec3 pos );
+		AGVec3 getPos() const; 
 
-		void setDirection( D3DXVECTOR3 dir );
-		D3DXVECTOR3 getDirection() const; 
+		void setDirection( AGVec3 dir );
+		AGVec3 getDirection() const; 
 
 		void setLightType( LightType type );
 		LightType getLightType() const; 

@@ -37,7 +37,7 @@ class AGRenderer : public AGComponent, public AGMovable
 		AGMesh* getMesh() const; 
 
 		void loadMeshFrom( const string& fileName ); 
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
 		void draw( AGSurface* surface ); 
 

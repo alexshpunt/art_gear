@@ -17,21 +17,21 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 	float side = 0.3f;
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1, k * radius * -0.03125 ), color }, //0 
-		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1, k * radius * 0.03125 ), color }, //1 
-		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1, k * radius * 0.03125 ), color }, //2 
-		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1, k * radius * -0.03125 ), color }, //3 
-		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //4 
-		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //5 
-		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //6 
-		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //7 
+		{ AGVec3( k * radius * -0.0315, k * height * 1, k * radius * -0.03125 ), color }, //0 
+		{ AGVec3( k * radius * 0.0315, k * height * 1, k * radius * 0.03125 ), color }, //1 
+		{ AGVec3( k * radius * -0.0315, k * height * 1, k * radius * 0.03125 ), color }, //2 
+		{ AGVec3( k * radius * 0.0315, k * height * 1, k * radius * -0.03125 ), color }, //3 
+		{ AGVec3( k * radius * -0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //4 
+		{ AGVec3( k * radius * 0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //5 
+		{ AGVec3( k * radius * 0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //6 
+		{ AGVec3( k * radius * -0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //7 
 
 		//Линия
-		{ D3DXVECTOR3( 0.0f, k * height * 1.063, 0.0f ), color }, //8
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), color }, //9
+		{ AGVec3( 0.0f, k * height * 1.063, 0.0f ), color }, //8
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), color }, //9
 
-		{ D3DXVECTOR3( 0.0f, k * height * 1.063, 0.0f ), yellow }, //10
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), yellow }, //11
+		{ AGVec3( 0.0f, k * height * 1.063, 0.0f ), yellow }, //10
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), yellow }, //11
 	};
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 12 ), AGBufferType::Vertex );
@@ -59,7 +59,7 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 
 	m_indexBuffer = new AGBuffer< int >( vector< int >( indices, indices + m_nIndices + 1 ), AGBufferType::Index );
 
-	m_boundingBox = new AGBoundingBox( D3DXVECTOR3( -0.01f, 0.0f, -0.01f ), D3DXVECTOR3( 0.01f, k * height, 0.01f ) );
+	m_boundingBox = new AGBoundingBox( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
 }
 
 AGCubeArrow::~AGCubeArrow()
@@ -75,9 +75,9 @@ void AGCubeArrow::draw( AGSurface* surface )
 	updatePos( camera );
 
 	D3DXMATRIX worldTextMat = getLocalMatrix();
-	D3DXVECTOR3 xAxis( 1.0f, 0.0f, 0.0f );
-	D3DXVECTOR3 yAxis( 0.0f, 1.0f, 0.0f );
-	D3DXVECTOR3 zAxis( 0.0f, 0.0f, 1.0f );
+	AGVec3 xAxis( 1.0f, 0.0f, 0.0f );
+	AGVec3 yAxis( 0.0f, 1.0f, 0.0f );
+	AGVec3 zAxis( 0.0f, 0.0f, 1.0f );
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
 
@@ -90,7 +90,7 @@ void AGCubeArrow::draw( AGSurface* surface )
 		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
 	}
 
-	D3DXVECTOR3 camEye = camera->getPos() - m_beginPos; 	
+	AGVec3 camEye = camera->getPos() - m_beginPos; 	
 
 	if( m_axis == X_AXIS )
 	{
@@ -165,15 +165,15 @@ void AGCubeArrow::draw( AGSurface* surface )
 	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 }
 
-float AGCubeArrow::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGCubeArrow::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 {
 	float retDist = -1.0f;
 	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
-		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
+		AGVec3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		AGVec3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
 		float dist, u, v; 
 
@@ -204,9 +204,9 @@ float AGCubeArrow::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 	return retDist; 
 }
 
-D3DXVECTOR3 AGCubeArrow::getAxis()
+AGVec3 AGCubeArrow::getAxis()
 {
-	D3DXVECTOR3 axis( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+	AGVec3 axis( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
 
 	axis.x *= m_axisDir.x != 0 ? m_axisDir.x : 1;
 	axis.y *= m_axisDir.y != 0 ? m_axisDir.y : 1; 

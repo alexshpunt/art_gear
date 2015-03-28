@@ -10,8 +10,8 @@ AGLight::AGLight()
 	setDiffuse( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) );
 	setAmbient( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) );
 	setAttitude( D3DXVECTOR4( 0.0f, 0.0f, 1.0f, 0.0f ) );
-	setDirection( D3DXVECTOR3( 0.0f, -1.0f, 0.0f ) );
-	setPos( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	setDirection( AGVec3( 0.0f, -1.0f, 0.0f ) );
+	setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
 
 	m_name = "Light";
 }
@@ -81,12 +81,12 @@ AGLight::SpotType AGLight::getSpotType() const
 	return (AGLight::SpotType)0; 
 }
 
-void AGLight::setDirection(D3DXVECTOR3 dir)
+void AGLight::setDirection(AGVec3 dir)
 {
 	m_desc.dir = D3DXVECTOR4( dir, 1.0f ); 
 }
 
-D3DXVECTOR3 AGLight::getDirection() const
+AGVec3 AGLight::getDirection() const
 {
 	return m_desc.dir;  
 }
@@ -126,12 +126,12 @@ D3DXVECTOR4 AGLight::getAttitude() const
 	return m_desc.attitude; 
 }
 
-void AGLight::setPos(D3DXVECTOR3 pos)
+void AGLight::setPos(AGVec3 pos)
 {
 	m_desc.pos = D3DXVECTOR4( pos, 1.0f );
 }
 
-D3DXVECTOR3 AGLight::getPos() const
+AGVec3 AGLight::getPos() const
 {
 	return m_desc.pos; 
 }

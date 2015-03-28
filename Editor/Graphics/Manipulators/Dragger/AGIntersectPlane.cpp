@@ -41,26 +41,26 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 	AGPrimitiveVertex vertices[] = 
 	{
 		//Unselected rect
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), firstColor  }, //0
-		{ D3DXVECTOR3( 0.0f, len, 0.0f  ), firstColor  }, //1
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), firstColor  }, //0
+		{ AGVec3( 0.0f, len, 0.0f  ), firstColor  }, //1
 
-		{ D3DXVECTOR3( 0.0f, len, 0.0f  ), secondColor }, //2
-		{ D3DXVECTOR3( len , len, 0.0f  ), secondColor }, //3
+		{ AGVec3( 0.0f, len, 0.0f  ), secondColor }, //2
+		{ AGVec3( len , len, 0.0f  ), secondColor }, //3
 			
-		{ D3DXVECTOR3( len , len, 0.0f  ), firstColor  }, //4
-		{ D3DXVECTOR3( len , 0.0f, 0.0f ), firstColor  }, //5
+		{ AGVec3( len , len, 0.0f  ), firstColor  }, //4
+		{ AGVec3( len , 0.0f, 0.0f ), firstColor  }, //5
 
-		{ D3DXVECTOR3( len , 0.0f, 0.0f ), secondColor }, //6	
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), secondColor }, //7	
+		{ AGVec3( len , 0.0f, 0.0f ), secondColor }, //6	
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), secondColor }, //7	
 
 		//Selected rect
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), yellow  }, //8
-		{ D3DXVECTOR3( len, len, 0.0f   ), yellow  }, //9
-		{ D3DXVECTOR3( 0.0f, len, 0.0f  ), yellow  }, //10
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), yellow  }, //8
+		{ AGVec3( len, len, 0.0f   ), yellow  }, //9
+		{ AGVec3( 0.0f, len, 0.0f  ), yellow  }, //10
 
-		{ D3DXVECTOR3( len , 0.0f, 0.0f ), yellow  }, //11
-		{ D3DXVECTOR3( len , len, 0.0f  ), yellow  }, //12
-		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), yellow  }, //13	
+		{ AGVec3( len , 0.0f, 0.0f ), yellow  }, //11
+		{ AGVec3( len , len, 0.0f  ), yellow  }, //12
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), yellow  }, //13	
 	};
 
 	for (int i = 0; i < 6; i++)
@@ -113,14 +113,14 @@ void AGIntersectPlane::draw( AGSurface* surface )
 	releaseBuffers();
 }
 
-float AGIntersectPlane::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGIntersectPlane::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 {
 	float retDist = -1.0f;
 	for( int i = 0; i < 3; i++ )
 	{
-		D3DXVECTOR3 vertex1 = m_vertices[ i ];
-		D3DXVECTOR3 vertex2 = m_vertices[ i + 1 ];
-		D3DXVECTOR3 vertex3 = m_vertices[ i + 2 ];
+		AGVec3 vertex1 = m_vertices[ i ];
+		AGVec3 vertex2 = m_vertices[ i + 1 ];
+		AGVec3 vertex3 = m_vertices[ i + 2 ];
 
 		float dist, u, v; 
 
@@ -141,15 +141,15 @@ float AGIntersectPlane::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 	return retDist; 
 }
 
-D3DXVECTOR3 AGIntersectPlane::getAxis()
+AGVec3 AGIntersectPlane::getAxis()
 {
 	if( m_axis == XY_AXIS )
-		return D3DXVECTOR3( 1.0f, 1.0f, 0.0f );
+		return AGVec3( 1.0f, 1.0f, 0.0f );
 	if( m_axis == XZ_AXIS )
-		return D3DXVECTOR3( 1.0f, 0.0f, 1.0f );
+		return AGVec3( 1.0f, 0.0f, 1.0f );
 	if( m_axis == YZ_AXIS )
-		return D3DXVECTOR3( 0.0f, 1.0f, 1.0f );
+		return AGVec3( 0.0f, 1.0f, 1.0f );
 
-	return D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	return AGVec3( 0.0f, 0.0f, 0.0f );
 }
 

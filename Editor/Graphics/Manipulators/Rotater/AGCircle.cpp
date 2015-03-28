@@ -20,54 +20,54 @@ AGCircle::AGCircle( CircleAxis axis)
 
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ D3DXVECTOR3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
-		{ D3DXVECTOR3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
-		{ D3DXVECTOR3( k * radius * 0.96379, k * height * 0.0150551, k * radius * 0.265509 ), color }, //2 
-		{ D3DXVECTOR3( k * radius * 0.997866, k * height * 0.0150551, k * radius * -1.22005e-009 ), color }, //3 
-		{ D3DXVECTOR3( k * radius * 0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //4 
-		{ D3DXVECTOR3( k * radius * 0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //5 
-		{ D3DXVECTOR3( k * radius * 0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //6 
-		{ D3DXVECTOR3( k * radius * 0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //7 
-		{ D3DXVECTOR3( k * radius * 0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //8 
-		{ D3DXVECTOR3( k * radius * 0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //9 
-		{ D3DXVECTOR3( k * radius * 0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //10 
-		{ D3DXVECTOR3( k * radius * 0.265509, k * height * 0.0150551, k * radius * 0.963791 ), color }, //11 
-		{ D3DXVECTOR3( k * radius * -2.89551e-008, k * height * 0.0150551, k * radius * 0.997866 ), color }, //12 
-		{ D3DXVECTOR3( k * radius * -5.60428e-008, k * height * 0.0150551, k * radius * 0.999525 ), color }, //13 
-		{ D3DXVECTOR3( k * radius * -0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //14 
-		{ D3DXVECTOR3( k * radius * -0.265509, k * height * 0.0150551, k * radius * 0.96379 ), color }, //15 
-		{ D3DXVECTOR3( k * radius * -0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //16 
-		{ D3DXVECTOR3( k * radius * -0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //17 
-		{ D3DXVECTOR3( k * radius * -0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //18 
-		{ D3DXVECTOR3( k * radius * -0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //19 
-		{ D3DXVECTOR3( k * radius * -0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //20 
-		{ D3DXVECTOR3( k * radius * -0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //21 
-		{ D3DXVECTOR3( k * radius * -0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //22 
-		{ D3DXVECTOR3( k * radius * -0.963791, k * height * 0.0150551, k * radius * 0.265509 ), color }, //23 
-		{ D3DXVECTOR3( k * radius * -0.997866, k * height * 0.0150551, k * radius * -7.89114e-008 ), color }, //24 
-		{ D3DXVECTOR3( k * radius * -0.999525, k * height * 0.0150551, k * radius * -9.37092e-008 ), color }, //25 
-		{ D3DXVECTOR3( k * radius * -0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //26 
-		{ D3DXVECTOR3( k * radius * -0.96379, k * height * 0.0150551, k * radius * -0.265509 ), color }, //27 
-		{ D3DXVECTOR3( k * radius * -0.861525, k * height * 0.0150551, k * radius * -0.503426 ), color }, //28 
-		{ D3DXVECTOR3( k * radius * -0.862942, k * height * 0.0150551, k * radius * -0.504254 ), color }, //29 
-		{ D3DXVECTOR3( k * radius * -0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //30 
-		{ D3DXVECTOR3( k * radius * -0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //31 
-		{ D3DXVECTOR3( k * radius * -0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //32 
-		{ D3DXVECTOR3( k * radius * -0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //33 
-		{ D3DXVECTOR3( k * radius * -0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //34 
-		{ D3DXVECTOR3( k * radius * -0.265509, k * height * 0.0150551, k * radius * -0.963791 ), color }, //35 
-		{ D3DXVECTOR3( k * radius * -7.93746e-009, k * height * 0.0150551, k * radius * -0.997866 ), color }, //36 
-		{ D3DXVECTOR3( k * radius * 3.05268e-008, k * height * 0.0150551, k * radius * -0.999525 ), color }, //37 
-		{ D3DXVECTOR3( k * radius * 0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //38 
-		{ D3DXVECTOR3( k * radius * 0.265509, k * height * 0.0150551, k * radius * -0.96379 ), color }, //39 
-		{ D3DXVECTOR3( k * radius * 0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //40 
-		{ D3DXVECTOR3( k * radius * 0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //41 
-		{ D3DXVECTOR3( k * radius * 0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //42 
-		{ D3DXVECTOR3( k * radius * 0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //43 
-		{ D3DXVECTOR3( k * radius * 0.861525, k * height * 0.0150551, k * radius * -0.503425 ), color }, //44 
-		{ D3DXVECTOR3( k * radius * 0.862942, k * height * 0.0150551, k * radius * -0.504253 ), color }, //45 
-		{ D3DXVECTOR3( k * radius * 0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //46 
-		{ D3DXVECTOR3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
+		{ AGVec3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
+		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
+		{ AGVec3( k * radius * 0.96379, k * height * 0.0150551, k * radius * 0.265509 ), color }, //2 
+		{ AGVec3( k * radius * 0.997866, k * height * 0.0150551, k * radius * -1.22005e-009 ), color }, //3 
+		{ AGVec3( k * radius * 0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //4 
+		{ AGVec3( k * radius * 0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //5 
+		{ AGVec3( k * radius * 0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //6 
+		{ AGVec3( k * radius * 0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //7 
+		{ AGVec3( k * radius * 0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //8 
+		{ AGVec3( k * radius * 0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //9 
+		{ AGVec3( k * radius * 0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //10 
+		{ AGVec3( k * radius * 0.265509, k * height * 0.0150551, k * radius * 0.963791 ), color }, //11 
+		{ AGVec3( k * radius * -2.89551e-008, k * height * 0.0150551, k * radius * 0.997866 ), color }, //12 
+		{ AGVec3( k * radius * -5.60428e-008, k * height * 0.0150551, k * radius * 0.999525 ), color }, //13 
+		{ AGVec3( k * radius * -0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //14 
+		{ AGVec3( k * radius * -0.265509, k * height * 0.0150551, k * radius * 0.96379 ), color }, //15 
+		{ AGVec3( k * radius * -0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //16 
+		{ AGVec3( k * radius * -0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //17 
+		{ AGVec3( k * radius * -0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //18 
+		{ AGVec3( k * radius * -0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //19 
+		{ AGVec3( k * radius * -0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //20 
+		{ AGVec3( k * radius * -0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //21 
+		{ AGVec3( k * radius * -0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //22 
+		{ AGVec3( k * radius * -0.963791, k * height * 0.0150551, k * radius * 0.265509 ), color }, //23 
+		{ AGVec3( k * radius * -0.997866, k * height * 0.0150551, k * radius * -7.89114e-008 ), color }, //24 
+		{ AGVec3( k * radius * -0.999525, k * height * 0.0150551, k * radius * -9.37092e-008 ), color }, //25 
+		{ AGVec3( k * radius * -0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //26 
+		{ AGVec3( k * radius * -0.96379, k * height * 0.0150551, k * radius * -0.265509 ), color }, //27 
+		{ AGVec3( k * radius * -0.861525, k * height * 0.0150551, k * radius * -0.503426 ), color }, //28 
+		{ AGVec3( k * radius * -0.862942, k * height * 0.0150551, k * radius * -0.504254 ), color }, //29 
+		{ AGVec3( k * radius * -0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //30 
+		{ AGVec3( k * radius * -0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //31 
+		{ AGVec3( k * radius * -0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //32 
+		{ AGVec3( k * radius * -0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //33 
+		{ AGVec3( k * radius * -0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //34 
+		{ AGVec3( k * radius * -0.265509, k * height * 0.0150551, k * radius * -0.963791 ), color }, //35 
+		{ AGVec3( k * radius * -7.93746e-009, k * height * 0.0150551, k * radius * -0.997866 ), color }, //36 
+		{ AGVec3( k * radius * 3.05268e-008, k * height * 0.0150551, k * radius * -0.999525 ), color }, //37 
+		{ AGVec3( k * radius * 0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //38 
+		{ AGVec3( k * radius * 0.265509, k * height * 0.0150551, k * radius * -0.96379 ), color }, //39 
+		{ AGVec3( k * radius * 0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //40 
+		{ AGVec3( k * radius * 0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //41 
+		{ AGVec3( k * radius * 0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //42 
+		{ AGVec3( k * radius * 0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //43 
+		{ AGVec3( k * radius * 0.861525, k * height * 0.0150551, k * radius * -0.503425 ), color }, //44 
+		{ AGVec3( k * radius * 0.862942, k * height * 0.0150551, k * radius * -0.504253 ), color }, //45 
+		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //46 
+		{ AGVec3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
 	};
 
 	int verticesCount = sizeof( vertices ) / sizeof( AGPrimitiveVertex );
@@ -83,154 +83,154 @@ AGCircle::AGCircle( CircleAxis axis)
 
 	AGPrimitiveVertex selectedVertices[] = 
 	{
-		{ D3DXVECTOR3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
-		{ D3DXVECTOR3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
-		{ D3DXVECTOR3( k * radius * 0.96379, k * height * 0.0150551, k * radius * 0.265509 ), color }, //2 
-		{ D3DXVECTOR3( k * radius * 0.997866, k * height * 0.0150551, k * radius * -1.22005e-009 ), color }, //3 
-		{ D3DXVECTOR3( k * radius * 0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //4 
-		{ D3DXVECTOR3( k * radius * 0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //5 
-		{ D3DXVECTOR3( k * radius * 0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //6 
-		{ D3DXVECTOR3( k * radius * 0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //7 
-		{ D3DXVECTOR3( k * radius * 0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //8 
-		{ D3DXVECTOR3( k * radius * 0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //9 
-		{ D3DXVECTOR3( k * radius * 0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //10 
-		{ D3DXVECTOR3( k * radius * 0.265509, k * height * 0.0150551, k * radius * 0.963791 ), color }, //11 
-		{ D3DXVECTOR3( k * radius * -2.89551e-008, k * height * 0.0150551, k * radius * 0.997866 ), color }, //12 
-		{ D3DXVECTOR3( k * radius * -5.60428e-008, k * height * 0.0150551, k * radius * 0.999525 ), color }, //13 
-		{ D3DXVECTOR3( k * radius * -0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //14 
-		{ D3DXVECTOR3( k * radius * -0.265509, k * height * 0.0150551, k * radius * 0.96379 ), color }, //15 
-		{ D3DXVECTOR3( k * radius * -0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //16 
-		{ D3DXVECTOR3( k * radius * -0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //17 
-		{ D3DXVECTOR3( k * radius * -0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //18 
-		{ D3DXVECTOR3( k * radius * -0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //19 
-		{ D3DXVECTOR3( k * radius * -0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //20 
-		{ D3DXVECTOR3( k * radius * -0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //21 
-		{ D3DXVECTOR3( k * radius * -0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //22 
-		{ D3DXVECTOR3( k * radius * -0.963791, k * height * 0.0150551, k * radius * 0.265509 ), color }, //23 
-		{ D3DXVECTOR3( k * radius * -0.997866, k * height * 0.0150551, k * radius * -7.89114e-008 ), color }, //24 
-		{ D3DXVECTOR3( k * radius * -0.999525, k * height * 0.0150551, k * radius * -9.37092e-008 ), color }, //25 
-		{ D3DXVECTOR3( k * radius * -0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //26 
-		{ D3DXVECTOR3( k * radius * -0.96379, k * height * 0.0150551, k * radius * -0.265509 ), color }, //27 
-		{ D3DXVECTOR3( k * radius * -0.861525, k * height * 0.0150551, k * radius * -0.503426 ), color }, //28 
-		{ D3DXVECTOR3( k * radius * -0.862942, k * height * 0.0150551, k * radius * -0.504254 ), color }, //29 
-		{ D3DXVECTOR3( k * radius * -0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //30 
-		{ D3DXVECTOR3( k * radius * -0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //31 
-		{ D3DXVECTOR3( k * radius * -0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //32 
-		{ D3DXVECTOR3( k * radius * -0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //33 
-		{ D3DXVECTOR3( k * radius * -0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //34 
-		{ D3DXVECTOR3( k * radius * -0.265509, k * height * 0.0150551, k * radius * -0.963791 ), color }, //35 
-		{ D3DXVECTOR3( k * radius * -7.93746e-009, k * height * 0.0150551, k * radius * -0.997866 ), color }, //36 
-		{ D3DXVECTOR3( k * radius * 3.05268e-008, k * height * 0.0150551, k * radius * -0.999525 ), color }, //37 
-		{ D3DXVECTOR3( k * radius * 0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //38 
-		{ D3DXVECTOR3( k * radius * 0.265509, k * height * 0.0150551, k * radius * -0.96379 ), color }, //39 
-		{ D3DXVECTOR3( k * radius * 0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //40 
-		{ D3DXVECTOR3( k * radius * 0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //41 
-		{ D3DXVECTOR3( k * radius * 0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //42 
-		{ D3DXVECTOR3( k * radius * 0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //43 
-		{ D3DXVECTOR3( k * radius * 0.861525, k * height * 0.0150551, k * radius * -0.503425 ), color }, //44 
-		{ D3DXVECTOR3( k * radius * 0.862942, k * height * 0.0150551, k * radius * -0.504253 ), color }, //45 
-		{ D3DXVECTOR3( k * radius * 0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //46 
-		{ D3DXVECTOR3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
+		{ AGVec3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
+		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
+		{ AGVec3( k * radius * 0.96379, k * height * 0.0150551, k * radius * 0.265509 ), color }, //2 
+		{ AGVec3( k * radius * 0.997866, k * height * 0.0150551, k * radius * -1.22005e-009 ), color }, //3 
+		{ AGVec3( k * radius * 0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //4 
+		{ AGVec3( k * radius * 0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //5 
+		{ AGVec3( k * radius * 0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //6 
+		{ AGVec3( k * radius * 0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //7 
+		{ AGVec3( k * radius * 0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //8 
+		{ AGVec3( k * radius * 0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //9 
+		{ AGVec3( k * radius * 0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //10 
+		{ AGVec3( k * radius * 0.265509, k * height * 0.0150551, k * radius * 0.963791 ), color }, //11 
+		{ AGVec3( k * radius * -2.89551e-008, k * height * 0.0150551, k * radius * 0.997866 ), color }, //12 
+		{ AGVec3( k * radius * -5.60428e-008, k * height * 0.0150551, k * radius * 0.999525 ), color }, //13 
+		{ AGVec3( k * radius * -0.265132, k * height * 0.0150551, k * radius * 0.962182 ), color }, //14 
+		{ AGVec3( k * radius * -0.265509, k * height * 0.0150551, k * radius * 0.96379 ), color }, //15 
+		{ AGVec3( k * radius * -0.503425, k * height * 0.0150551, k * radius * 0.861525 ), color }, //16 
+		{ AGVec3( k * radius * -0.504253, k * height * 0.0150551, k * radius * 0.862942 ), color }, //17 
+		{ AGVec3( k * radius * -0.705417, k * height * 0.0150551, k * radius * 0.705417 ), color }, //18 
+		{ AGVec3( k * radius * -0.706578, k * height * 0.0150551, k * radius * 0.706578 ), color }, //19 
+		{ AGVec3( k * radius * -0.861525, k * height * 0.0150551, k * radius * 0.503425 ), color }, //20 
+		{ AGVec3( k * radius * -0.862942, k * height * 0.0150551, k * radius * 0.504253 ), color }, //21 
+		{ AGVec3( k * radius * -0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //22 
+		{ AGVec3( k * radius * -0.963791, k * height * 0.0150551, k * radius * 0.265509 ), color }, //23 
+		{ AGVec3( k * radius * -0.997866, k * height * 0.0150551, k * radius * -7.89114e-008 ), color }, //24 
+		{ AGVec3( k * radius * -0.999525, k * height * 0.0150551, k * radius * -9.37092e-008 ), color }, //25 
+		{ AGVec3( k * radius * -0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //26 
+		{ AGVec3( k * radius * -0.96379, k * height * 0.0150551, k * radius * -0.265509 ), color }, //27 
+		{ AGVec3( k * radius * -0.861525, k * height * 0.0150551, k * radius * -0.503426 ), color }, //28 
+		{ AGVec3( k * radius * -0.862942, k * height * 0.0150551, k * radius * -0.504254 ), color }, //29 
+		{ AGVec3( k * radius * -0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //30 
+		{ AGVec3( k * radius * -0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //31 
+		{ AGVec3( k * radius * -0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //32 
+		{ AGVec3( k * radius * -0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //33 
+		{ AGVec3( k * radius * -0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //34 
+		{ AGVec3( k * radius * -0.265509, k * height * 0.0150551, k * radius * -0.963791 ), color }, //35 
+		{ AGVec3( k * radius * -7.93746e-009, k * height * 0.0150551, k * radius * -0.997866 ), color }, //36 
+		{ AGVec3( k * radius * 3.05268e-008, k * height * 0.0150551, k * radius * -0.999525 ), color }, //37 
+		{ AGVec3( k * radius * 0.265132, k * height * 0.0150551, k * radius * -0.962182 ), color }, //38 
+		{ AGVec3( k * radius * 0.265509, k * height * 0.0150551, k * radius * -0.96379 ), color }, //39 
+		{ AGVec3( k * radius * 0.503425, k * height * 0.0150551, k * radius * -0.861525 ), color }, //40 
+		{ AGVec3( k * radius * 0.504253, k * height * 0.0150551, k * radius * -0.862942 ), color }, //41 
+		{ AGVec3( k * radius * 0.705417, k * height * 0.0150551, k * radius * -0.705417 ), color }, //42 
+		{ AGVec3( k * radius * 0.706578, k * height * 0.0150551, k * radius * -0.706578 ), color }, //43 
+		{ AGVec3( k * radius * 0.861525, k * height * 0.0150551, k * radius * -0.503425 ), color }, //44 
+		{ AGVec3( k * radius * 0.862942, k * height * 0.0150551, k * radius * -0.504253 ), color }, //45 
+		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * -0.265132 ), color }, //46 
+		{ AGVec3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
 	};
 
 	AGPrimitiveVertex boundingVertices[] = 
 	{
-		{ D3DXVECTOR3( k * radius * 1.01514, k * height * 0.015, k * radius * 6.6136e-010 ), color }, //0 
-		{ D3DXVECTOR3( k * radius * 0.949646, k * height * 0.015, k * radius * 0.261678 ), color }, //1 
-		{ D3DXVECTOR3( k * radius * 0.978843, k * height * 0.015, k * radius * 0.269655 ), color }, //2 
-		{ D3DXVECTOR3( k * radius * 0.984865, k * height * 0.015, k * radius * -1.9727e-009 ), color }, //3 
-		{ D3DXVECTOR3( k * radius * 0.949646, k * height * -0.015, k * radius * 0.261678 ), color }, //4 
-		{ D3DXVECTOR3( k * radius * 0.984865, k * height * -0.015, k * radius * -6.6136e-010 ), color }, //5 
-		{ D3DXVECTOR3( k * radius * 0.978843, k * height * -0.015, k * radius * 0.269655 ), color }, //6 
-		{ D3DXVECTOR3( k * radius * 1.01514, k * height * -0.015, k * radius * 1.9727e-009 ), color }, //7 
-		{ D3DXVECTOR3( k * radius * 0.8503, k * height * 0.015, k * radius * 0.496866 ), color }, //8 
-		{ D3DXVECTOR3( k * radius * 0.87642, k * height * 0.015, k * radius * 0.512129 ), color }, //9 
-		{ D3DXVECTOR3( k * radius * 0.8503, k * height * -0.015, k * radius * 0.496866 ), color }, //10 
-		{ D3DXVECTOR3( k * radius * 0.87642, k * height * -0.015, k * radius * 0.512129 ), color }, //11 
-		{ D3DXVECTOR3( k * radius * 0.696226, k * height * 0.015, k * radius * 0.696226 ), color }, //12 
-		{ D3DXVECTOR3( k * radius * 0.717613, k * height * 0.015, k * radius * 0.717613 ), color }, //13 
-		{ D3DXVECTOR3( k * radius * 0.696226, k * height * -0.015, k * radius * 0.696226 ), color }, //14 
-		{ D3DXVECTOR3( k * radius * 0.717613, k * height * -0.015, k * radius * 0.717613 ), color }, //15 
-		{ D3DXVECTOR3( k * radius * 0.496866, k * height * 0.015, k * radius * 0.8503 ), color }, //16 
-		{ D3DXVECTOR3( k * radius * 0.512129, k * height * 0.015, k * radius * 0.87642 ), color }, //17 
-		{ D3DXVECTOR3( k * radius * 0.496866, k * height * -0.015, k * radius * 0.8503 ), color }, //18 
-		{ D3DXVECTOR3( k * radius * 0.512129, k * height * -0.015, k * radius * 0.87642 ), color }, //19 
-		{ D3DXVECTOR3( k * radius * 0.261677, k * height * 0.015, k * radius * 0.949646 ), color }, //20 
-		{ D3DXVECTOR3( k * radius * 0.269655, k * height * 0.015, k * radius * 0.978843 ), color }, //21 
-		{ D3DXVECTOR3( k * radius * 0.261677, k * height * -0.015, k * radius * 0.949646 ), color }, //22 
-		{ D3DXVECTOR3( k * radius * 0.269655, k * height * -0.015, k * radius * 0.978843 ), color }, //23 
-		{ D3DXVECTOR3( k * radius * -2.89799e-008, k * height * 0.015, k * radius * 0.984865 ), color }, //24 
-		{ D3DXVECTOR3( k * radius * -5.71316e-008, k * height * 0.015, k * radius * 1.01514 ), color }, //25 
-		{ D3DXVECTOR3( k * radius * -3.02912e-008, k * height * -0.015, k * radius * 0.984865 ), color }, //26 
-		{ D3DXVECTOR3( k * radius * -5.84429e-008, k * height * -0.015, k * radius * 1.01514 ), color }, //27 
-		{ D3DXVECTOR3( k * radius * -0.261678, k * height * 0.015, k * radius * 0.949646 ), color }, //28 
-		{ D3DXVECTOR3( k * radius * -0.269656, k * height * 0.015, k * radius * 0.978843 ), color }, //29 
-		{ D3DXVECTOR3( k * radius * -0.261678, k * height * -0.015, k * radius * 0.949646 ), color }, //30 
-		{ D3DXVECTOR3( k * radius * -0.269656, k * height * -0.015, k * radius * 0.978843 ), color }, //31 
-		{ D3DXVECTOR3( k * radius * -0.496866, k * height * 0.015, k * radius * 0.8503 ), color }, //32 
-		{ D3DXVECTOR3( k * radius * -0.512129, k * height * 0.015, k * radius * 0.87642 ), color }, //33 
-		{ D3DXVECTOR3( k * radius * -0.496866, k * height * -0.015, k * radius * 0.8503 ), color }, //34 
-		{ D3DXVECTOR3( k * radius * -0.512129, k * height * -0.015, k * radius * 0.87642 ), color }, //35 
-		{ D3DXVECTOR3( k * radius * -0.696227, k * height * 0.015, k * radius * 0.696226 ), color }, //36 
-		{ D3DXVECTOR3( k * radius * -0.717613, k * height * 0.015, k * radius * 0.717613 ), color }, //37 
-		{ D3DXVECTOR3( k * radius * -0.696227, k * height * -0.015, k * radius * 0.696226 ), color }, //38 
-		{ D3DXVECTOR3( k * radius * -0.717613, k * height * -0.015, k * radius * 0.717613 ), color }, //39 
-		{ D3DXVECTOR3( k * radius * -0.8503, k * height * 0.015, k * radius * 0.496866 ), color }, //40 
-		{ D3DXVECTOR3( k * radius * -0.87642, k * height * 0.015, k * radius * 0.512129 ), color }, //41 
-		{ D3DXVECTOR3( k * radius * -0.8503, k * height * -0.015, k * radius * 0.496866 ), color }, //42 
-		{ D3DXVECTOR3( k * radius * -0.87642, k * height * -0.015, k * radius * 0.512129 ), color }, //43 
-		{ D3DXVECTOR3( k * radius * -0.949646, k * height * 0.015, k * radius * 0.261677 ), color }, //44 
-		{ D3DXVECTOR3( k * radius * -0.978843, k * height * 0.015, k * radius * 0.269655 ), color }, //45 
-		{ D3DXVECTOR3( k * radius * -0.949646, k * height * -0.015, k * radius * 0.261677 ), color }, //46 
-		{ D3DXVECTOR3( k * radius * -0.978843, k * height * -0.015, k * radius * 0.269655 ), color }, //47 
-		{ D3DXVECTOR3( k * radius * -0.984865, k * height * 0.015, k * radius * -7.86518e-008 ), color }, //48 
-		{ D3DXVECTOR3( k * radius * -1.01514, k * height * 0.015, k * radius * -9.48824e-008 ), color }, //49 
-		{ D3DXVECTOR3( k * radius * -0.984865, k * height * -0.015, k * radius * -7.99632e-008 ), color }, //50 
-		{ D3DXVECTOR3( k * radius * -1.01514, k * height * -0.015, k * radius * -9.61937e-008 ), color }, //51 
-		{ D3DXVECTOR3( k * radius * -0.949646, k * height * 0.015, k * radius * -0.261678 ), color }, //52 
-		{ D3DXVECTOR3( k * radius * -0.978843, k * height * 0.015, k * radius * -0.269656 ), color }, //53 
-		{ D3DXVECTOR3( k * radius * -0.949646, k * height * -0.015, k * radius * -0.261678 ), color }, //54 
-		{ D3DXVECTOR3( k * radius * -0.978843, k * height * -0.015, k * radius * -0.269656 ), color }, //55 
-		{ D3DXVECTOR3( k * radius * -0.8503, k * height * 0.015, k * radius * -0.496866 ), color }, //56 
-		{ D3DXVECTOR3( k * radius * -0.876419, k * height * 0.015, k * radius * -0.512129 ), color }, //57 
-		{ D3DXVECTOR3( k * radius * -0.8503, k * height * -0.015, k * radius * -0.496866 ), color }, //58 
-		{ D3DXVECTOR3( k * radius * -0.876419, k * height * -0.015, k * radius * -0.512129 ), color }, //59 
-		{ D3DXVECTOR3( k * radius * -0.696226, k * height * 0.015, k * radius * -0.696227 ), color }, //60 
-		{ D3DXVECTOR3( k * radius * -0.717613, k * height * 0.015, k * radius * -0.717613 ), color }, //61 
-		{ D3DXVECTOR3( k * radius * -0.696226, k * height * -0.015, k * radius * -0.696227 ), color }, //62 
-		{ D3DXVECTOR3( k * radius * -0.717613, k * height * -0.015, k * radius * -0.717613 ), color }, //63 
-		{ D3DXVECTOR3( k * radius * -0.496866, k * height * 0.015, k * radius * -0.8503 ), color }, //64 
-		{ D3DXVECTOR3( k * radius * -0.512129, k * height * 0.015, k * radius * -0.87642 ), color }, //65 
-		{ D3DXVECTOR3( k * radius * -0.496866, k * height * -0.015, k * radius * -0.8503 ), color }, //66 
-		{ D3DXVECTOR3( k * radius * -0.512129, k * height * -0.015, k * radius * -0.87642 ), color }, //67 
-		{ D3DXVECTOR3( k * radius * -0.261677, k * height * 0.015, k * radius * -0.949646 ), color }, //68 
-		{ D3DXVECTOR3( k * radius * -0.269655, k * height * 0.015, k * radius * -0.978843 ), color }, //69 
-		{ D3DXVECTOR3( k * radius * -0.261677, k * height * -0.015, k * radius * -0.949646 ), color }, //70 
-		{ D3DXVECTOR3( k * radius * -0.269655, k * height * -0.015, k * radius * -0.978843 ), color }, //71 
-		{ D3DXVECTOR3( k * radius * -8.25166e-009, k * height * 0.015, k * radius * -0.984865 ), color }, //72 
-		{ D3DXVECTOR3( k * radius * 3.07901e-008, k * height * 0.015, k * radius * -1.01514 ), color }, //73 
-		{ D3DXVECTOR3( k * radius * -6.94032e-009, k * height * -0.015, k * radius * -0.984865 ), color }, //74 
-		{ D3DXVECTOR3( k * radius * 3.21014e-008, k * height * -0.015, k * radius * -1.01514 ), color }, //75 
-		{ D3DXVECTOR3( k * radius * 0.261678, k * height * 0.015, k * radius * -0.949646 ), color }, //76 
-		{ D3DXVECTOR3( k * radius * 0.269655, k * height * 0.015, k * radius * -0.978843 ), color }, //77 
-		{ D3DXVECTOR3( k * radius * 0.261678, k * height * -0.015, k * radius * -0.949646 ), color }, //78 
-		{ D3DXVECTOR3( k * radius * 0.269655, k * height * -0.015, k * radius * -0.978843 ), color }, //79 
-		{ D3DXVECTOR3( k * radius * 0.496866, k * height * 0.015, k * radius * -0.8503 ), color }, //80 
-		{ D3DXVECTOR3( k * radius * 0.512129, k * height * 0.015, k * radius * -0.87642 ), color }, //81 
-		{ D3DXVECTOR3( k * radius * 0.496866, k * height * -0.015, k * radius * -0.8503 ), color }, //82 
-		{ D3DXVECTOR3( k * radius * 0.512129, k * height * -0.015, k * radius * -0.87642 ), color }, //83 
-		{ D3DXVECTOR3( k * radius * 0.696226, k * height * 0.015, k * radius * -0.696226 ), color }, //84 
-		{ D3DXVECTOR3( k * radius * 0.717613, k * height * 0.015, k * radius * -0.717613 ), color }, //85 
-		{ D3DXVECTOR3( k * radius * 0.696226, k * height * -0.015, k * radius * -0.696226 ), color }, //86 
-		{ D3DXVECTOR3( k * radius * 0.717613, k * height * -0.015, k * radius * -0.717613 ), color }, //87 
-		{ D3DXVECTOR3( k * radius * 0.8503, k * height * 0.015, k * radius * -0.496866 ), color }, //88 
-		{ D3DXVECTOR3( k * radius * 0.87642, k * height * 0.015, k * radius * -0.512129 ), color }, //89 
-		{ D3DXVECTOR3( k * radius * 0.8503, k * height * -0.015, k * radius * -0.496866 ), color }, //90 
-		{ D3DXVECTOR3( k * radius * 0.87642, k * height * -0.015, k * radius * -0.512129 ), color }, //91 
-		{ D3DXVECTOR3( k * radius * 0.949646, k * height * 0.015, k * radius * -0.261677 ), color }, //92 
-		{ D3DXVECTOR3( k * radius * 0.978843, k * height * 0.015, k * radius * -0.269655 ), color }, //93 
-		{ D3DXVECTOR3( k * radius * 0.949646, k * height * -0.015, k * radius * -0.261677 ), color }, //94 
-		{ D3DXVECTOR3( k * radius * 0.978843, k * height * -0.015, k * radius * -0.269655 ), color }, //95 
+		{ AGVec3( k * radius * 1.01514, k * height * 0.015, k * radius * 6.6136e-010 ), color }, //0 
+		{ AGVec3( k * radius * 0.949646, k * height * 0.015, k * radius * 0.261678 ), color }, //1 
+		{ AGVec3( k * radius * 0.978843, k * height * 0.015, k * radius * 0.269655 ), color }, //2 
+		{ AGVec3( k * radius * 0.984865, k * height * 0.015, k * radius * -1.9727e-009 ), color }, //3 
+		{ AGVec3( k * radius * 0.949646, k * height * -0.015, k * radius * 0.261678 ), color }, //4 
+		{ AGVec3( k * radius * 0.984865, k * height * -0.015, k * radius * -6.6136e-010 ), color }, //5 
+		{ AGVec3( k * radius * 0.978843, k * height * -0.015, k * radius * 0.269655 ), color }, //6 
+		{ AGVec3( k * radius * 1.01514, k * height * -0.015, k * radius * 1.9727e-009 ), color }, //7 
+		{ AGVec3( k * radius * 0.8503, k * height * 0.015, k * radius * 0.496866 ), color }, //8 
+		{ AGVec3( k * radius * 0.87642, k * height * 0.015, k * radius * 0.512129 ), color }, //9 
+		{ AGVec3( k * radius * 0.8503, k * height * -0.015, k * radius * 0.496866 ), color }, //10 
+		{ AGVec3( k * radius * 0.87642, k * height * -0.015, k * radius * 0.512129 ), color }, //11 
+		{ AGVec3( k * radius * 0.696226, k * height * 0.015, k * radius * 0.696226 ), color }, //12 
+		{ AGVec3( k * radius * 0.717613, k * height * 0.015, k * radius * 0.717613 ), color }, //13 
+		{ AGVec3( k * radius * 0.696226, k * height * -0.015, k * radius * 0.696226 ), color }, //14 
+		{ AGVec3( k * radius * 0.717613, k * height * -0.015, k * radius * 0.717613 ), color }, //15 
+		{ AGVec3( k * radius * 0.496866, k * height * 0.015, k * radius * 0.8503 ), color }, //16 
+		{ AGVec3( k * radius * 0.512129, k * height * 0.015, k * radius * 0.87642 ), color }, //17 
+		{ AGVec3( k * radius * 0.496866, k * height * -0.015, k * radius * 0.8503 ), color }, //18 
+		{ AGVec3( k * radius * 0.512129, k * height * -0.015, k * radius * 0.87642 ), color }, //19 
+		{ AGVec3( k * radius * 0.261677, k * height * 0.015, k * radius * 0.949646 ), color }, //20 
+		{ AGVec3( k * radius * 0.269655, k * height * 0.015, k * radius * 0.978843 ), color }, //21 
+		{ AGVec3( k * radius * 0.261677, k * height * -0.015, k * radius * 0.949646 ), color }, //22 
+		{ AGVec3( k * radius * 0.269655, k * height * -0.015, k * radius * 0.978843 ), color }, //23 
+		{ AGVec3( k * radius * -2.89799e-008, k * height * 0.015, k * radius * 0.984865 ), color }, //24 
+		{ AGVec3( k * radius * -5.71316e-008, k * height * 0.015, k * radius * 1.01514 ), color }, //25 
+		{ AGVec3( k * radius * -3.02912e-008, k * height * -0.015, k * radius * 0.984865 ), color }, //26 
+		{ AGVec3( k * radius * -5.84429e-008, k * height * -0.015, k * radius * 1.01514 ), color }, //27 
+		{ AGVec3( k * radius * -0.261678, k * height * 0.015, k * radius * 0.949646 ), color }, //28 
+		{ AGVec3( k * radius * -0.269656, k * height * 0.015, k * radius * 0.978843 ), color }, //29 
+		{ AGVec3( k * radius * -0.261678, k * height * -0.015, k * radius * 0.949646 ), color }, //30 
+		{ AGVec3( k * radius * -0.269656, k * height * -0.015, k * radius * 0.978843 ), color }, //31 
+		{ AGVec3( k * radius * -0.496866, k * height * 0.015, k * radius * 0.8503 ), color }, //32 
+		{ AGVec3( k * radius * -0.512129, k * height * 0.015, k * radius * 0.87642 ), color }, //33 
+		{ AGVec3( k * radius * -0.496866, k * height * -0.015, k * radius * 0.8503 ), color }, //34 
+		{ AGVec3( k * radius * -0.512129, k * height * -0.015, k * radius * 0.87642 ), color }, //35 
+		{ AGVec3( k * radius * -0.696227, k * height * 0.015, k * radius * 0.696226 ), color }, //36 
+		{ AGVec3( k * radius * -0.717613, k * height * 0.015, k * radius * 0.717613 ), color }, //37 
+		{ AGVec3( k * radius * -0.696227, k * height * -0.015, k * radius * 0.696226 ), color }, //38 
+		{ AGVec3( k * radius * -0.717613, k * height * -0.015, k * radius * 0.717613 ), color }, //39 
+		{ AGVec3( k * radius * -0.8503, k * height * 0.015, k * radius * 0.496866 ), color }, //40 
+		{ AGVec3( k * radius * -0.87642, k * height * 0.015, k * radius * 0.512129 ), color }, //41 
+		{ AGVec3( k * radius * -0.8503, k * height * -0.015, k * radius * 0.496866 ), color }, //42 
+		{ AGVec3( k * radius * -0.87642, k * height * -0.015, k * radius * 0.512129 ), color }, //43 
+		{ AGVec3( k * radius * -0.949646, k * height * 0.015, k * radius * 0.261677 ), color }, //44 
+		{ AGVec3( k * radius * -0.978843, k * height * 0.015, k * radius * 0.269655 ), color }, //45 
+		{ AGVec3( k * radius * -0.949646, k * height * -0.015, k * radius * 0.261677 ), color }, //46 
+		{ AGVec3( k * radius * -0.978843, k * height * -0.015, k * radius * 0.269655 ), color }, //47 
+		{ AGVec3( k * radius * -0.984865, k * height * 0.015, k * radius * -7.86518e-008 ), color }, //48 
+		{ AGVec3( k * radius * -1.01514, k * height * 0.015, k * radius * -9.48824e-008 ), color }, //49 
+		{ AGVec3( k * radius * -0.984865, k * height * -0.015, k * radius * -7.99632e-008 ), color }, //50 
+		{ AGVec3( k * radius * -1.01514, k * height * -0.015, k * radius * -9.61937e-008 ), color }, //51 
+		{ AGVec3( k * radius * -0.949646, k * height * 0.015, k * radius * -0.261678 ), color }, //52 
+		{ AGVec3( k * radius * -0.978843, k * height * 0.015, k * radius * -0.269656 ), color }, //53 
+		{ AGVec3( k * radius * -0.949646, k * height * -0.015, k * radius * -0.261678 ), color }, //54 
+		{ AGVec3( k * radius * -0.978843, k * height * -0.015, k * radius * -0.269656 ), color }, //55 
+		{ AGVec3( k * radius * -0.8503, k * height * 0.015, k * radius * -0.496866 ), color }, //56 
+		{ AGVec3( k * radius * -0.876419, k * height * 0.015, k * radius * -0.512129 ), color }, //57 
+		{ AGVec3( k * radius * -0.8503, k * height * -0.015, k * radius * -0.496866 ), color }, //58 
+		{ AGVec3( k * radius * -0.876419, k * height * -0.015, k * radius * -0.512129 ), color }, //59 
+		{ AGVec3( k * radius * -0.696226, k * height * 0.015, k * radius * -0.696227 ), color }, //60 
+		{ AGVec3( k * radius * -0.717613, k * height * 0.015, k * radius * -0.717613 ), color }, //61 
+		{ AGVec3( k * radius * -0.696226, k * height * -0.015, k * radius * -0.696227 ), color }, //62 
+		{ AGVec3( k * radius * -0.717613, k * height * -0.015, k * radius * -0.717613 ), color }, //63 
+		{ AGVec3( k * radius * -0.496866, k * height * 0.015, k * radius * -0.8503 ), color }, //64 
+		{ AGVec3( k * radius * -0.512129, k * height * 0.015, k * radius * -0.87642 ), color }, //65 
+		{ AGVec3( k * radius * -0.496866, k * height * -0.015, k * radius * -0.8503 ), color }, //66 
+		{ AGVec3( k * radius * -0.512129, k * height * -0.015, k * radius * -0.87642 ), color }, //67 
+		{ AGVec3( k * radius * -0.261677, k * height * 0.015, k * radius * -0.949646 ), color }, //68 
+		{ AGVec3( k * radius * -0.269655, k * height * 0.015, k * radius * -0.978843 ), color }, //69 
+		{ AGVec3( k * radius * -0.261677, k * height * -0.015, k * radius * -0.949646 ), color }, //70 
+		{ AGVec3( k * radius * -0.269655, k * height * -0.015, k * radius * -0.978843 ), color }, //71 
+		{ AGVec3( k * radius * -8.25166e-009, k * height * 0.015, k * radius * -0.984865 ), color }, //72 
+		{ AGVec3( k * radius * 3.07901e-008, k * height * 0.015, k * radius * -1.01514 ), color }, //73 
+		{ AGVec3( k * radius * -6.94032e-009, k * height * -0.015, k * radius * -0.984865 ), color }, //74 
+		{ AGVec3( k * radius * 3.21014e-008, k * height * -0.015, k * radius * -1.01514 ), color }, //75 
+		{ AGVec3( k * radius * 0.261678, k * height * 0.015, k * radius * -0.949646 ), color }, //76 
+		{ AGVec3( k * radius * 0.269655, k * height * 0.015, k * radius * -0.978843 ), color }, //77 
+		{ AGVec3( k * radius * 0.261678, k * height * -0.015, k * radius * -0.949646 ), color }, //78 
+		{ AGVec3( k * radius * 0.269655, k * height * -0.015, k * radius * -0.978843 ), color }, //79 
+		{ AGVec3( k * radius * 0.496866, k * height * 0.015, k * radius * -0.8503 ), color }, //80 
+		{ AGVec3( k * radius * 0.512129, k * height * 0.015, k * radius * -0.87642 ), color }, //81 
+		{ AGVec3( k * radius * 0.496866, k * height * -0.015, k * radius * -0.8503 ), color }, //82 
+		{ AGVec3( k * radius * 0.512129, k * height * -0.015, k * radius * -0.87642 ), color }, //83 
+		{ AGVec3( k * radius * 0.696226, k * height * 0.015, k * radius * -0.696226 ), color }, //84 
+		{ AGVec3( k * radius * 0.717613, k * height * 0.015, k * radius * -0.717613 ), color }, //85 
+		{ AGVec3( k * radius * 0.696226, k * height * -0.015, k * radius * -0.696226 ), color }, //86 
+		{ AGVec3( k * radius * 0.717613, k * height * -0.015, k * radius * -0.717613 ), color }, //87 
+		{ AGVec3( k * radius * 0.8503, k * height * 0.015, k * radius * -0.496866 ), color }, //88 
+		{ AGVec3( k * radius * 0.87642, k * height * 0.015, k * radius * -0.512129 ), color }, //89 
+		{ AGVec3( k * radius * 0.8503, k * height * -0.015, k * radius * -0.496866 ), color }, //90 
+		{ AGVec3( k * radius * 0.87642, k * height * -0.015, k * radius * -0.512129 ), color }, //91 
+		{ AGVec3( k * radius * 0.949646, k * height * 0.015, k * radius * -0.261677 ), color }, //92 
+		{ AGVec3( k * radius * 0.978843, k * height * 0.015, k * radius * -0.269655 ), color }, //93 
+		{ AGVec3( k * radius * 0.949646, k * height * -0.015, k * radius * -0.261677 ), color }, //94 
+		{ AGVec3( k * radius * 0.978843, k * height * -0.015, k * radius * -0.269655 ), color }, //95 
 	};
 
 	verticesCount = sizeof( boundingVertices ) / sizeof( AGPrimitiveVertex );
@@ -420,11 +420,11 @@ void AGCircle::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera(); 
 	ID3D10Device* device = surface->getDevice(); 
 
-	D3DXVECTOR3 camEye = camera->getPos(); 
-	D3DXVECTOR3 dir = camEye - m_beginPos; 
+	AGVec3 camEye = camera->getPos(); 
+	AGVec3 dir = camEye - m_beginPos; 
 	D3DXVec3Normalize( &dir, &dir );
 	dir = camEye - dir * 1.0f; 
-	D3DXVECTOR3 pos = dir; 
+	AGVec3 pos = dir; 
 
 	setLocalPos( pos.x, pos.y, pos.z );
 
@@ -495,20 +495,20 @@ void AGCircle::draw( AGSurface* surface )
 
 }
 
-float AGCircle::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
+float AGCircle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 {
 	float retDist = -1.0f;
 	int nIndices = m_indices.size() - 2;  
 
-	D3DXVECTOR3 vertex1;
-	D3DXVECTOR3 vertex2;
-	D3DXVECTOR3 vertex3;
+	AGVec3 vertex1;
+	AGVec3 vertex2;
+	AGVec3 vertex3;
 
 	for( int i = 0; i < nIndices; i++ )
 	{
-		D3DXVECTOR3 v1 = m_vertices[ m_indices[ i ] ].pos;
-		D3DXVECTOR3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		D3DXVECTOR3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
 		float dist, u, v; 
 
@@ -531,14 +531,14 @@ float AGCircle::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 
 	if( retDist > 0.0f )
 	{
-		D3DXVECTOR3 midleVec = ( vertex1 + vertex2 + vertex3 ) / 3.0f;
-		D3DXVECTOR3 closestVec = m_tangents[ 0 ] - midleVec; 
+		AGVec3 midleVec = ( vertex1 + vertex2 + vertex3 ) / 3.0f;
+		AGVec3 closestVec = m_tangents[ 0 ] - midleVec; 
 		float closestDist = D3DXVec3LengthSq( &closestVec );
 		m_tangent = m_tangents[ 0 ];
 
 		for( int i = 0; i < m_tangents.size(); i++ )
 		{
-			D3DXVECTOR3 vec = m_tangents[ i ] - midleVec; 
+			AGVec3 vec = m_tangents[ i ] - midleVec; 
 			float dist = D3DXVec3LengthSq( &vec );
 
 			if( dist < closestDist )
@@ -553,12 +553,12 @@ float AGCircle::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 	return retDist; 
 }
 
-D3DXVECTOR3 AGCircle::getAxis()
+AGVec3 AGCircle::getAxis()
 {
-	return D3DXVECTOR3( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+	return AGVec3( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
 }
 
-D3DXVECTOR3 AGCircle::getTangent()
+AGVec3 AGCircle::getTangent()
 {
 	return m_tangent;
 }
