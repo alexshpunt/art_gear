@@ -13,7 +13,7 @@ using namespace std;
 
 AGBoundingBox::AGBoundingBox( AGVec3 v1, AGVec3 v2 )
 {
-	D3DXVECTOR4 clr( 1.0f, 1.0f, 1.0f, 1.0f );
+	AGColor clr( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	AGPrimitiveVertex vertices[] = 
 	{
@@ -122,23 +122,20 @@ void AGBoundingBox::draw( AGSurface* surface )
 {
 	ID3D10Device* device = surface->getDevice(); 
 
-	m_shader->applySurface( surface );
+	m_shader->apply( surface );
 	m_shader->setWorldMatrix( getLocalMatrix() ); 	
 
 	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 
-	ID3D10Buffer* indexBuffer = m_indexBuffer->applyTo( device ); 
-	ID3D10Buffer* vertexBuffer = m_vertexBuffer->applyTo( device ); 
+	assert( m_indexBuffer );
+	assert( m_vertexBuffer );
 
-	device->IASetIndexBuffer( indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
+	m_indexBuffer->apply( surface ); 
+	m_vertexBuffer->apply( surface ); 
 
 	AGInputLayout* layout = AGGraphics::getInstance().getInputLayout( device );
-
+	assert( layout );
 	device->IASetInputLayout( layout->colorVertexInputLayout );
-	UINT stride = sizeof( AGPrimitiveVertex );
-
-	UINT offset = 0; 
-	device->IASetVertexBuffers( 0, 1, &vertexBuffer, &stride, &offset );
 
 	while( m_shader->applyNextPass() )
 	{
@@ -155,22 +152,21 @@ float AGBoundingBox::intersect( AGVec3 rayOrigin, AGVec3 rayDir )
 	float retDist = -1.0f; 
 	for( int i = 0; i < 34; i++ )
 	{
-		AGVec3 vertex1 = m_vertices[ m_indices[ i ] ];
-		AGVec3 vertex2 = m_vertices[ m_indices[ i + 1 ] ];
-		AGVec3 vertex3 = m_vertices[ m_indices[ i + 2 ] ];
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ];
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ];
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ];
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
 
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance ); 
 			}
 		}
 	}

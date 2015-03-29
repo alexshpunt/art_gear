@@ -50,7 +50,7 @@ AGMesh* AGRenderer::getMesh() const
 	return (AGMesh*)m_mesh.getData(); 
 }
 
-float AGRenderer::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
+float AGRenderer::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	AGMesh* mesh = (AGMesh*)m_mesh.getData();
 

@@ -3,13 +3,10 @@
 #include <Engine/Managers/AGResourceManager.h>
 #include "Engine/Utils/AGConversion.h"
 
-AGEDaylightShape::AGEDaylightShape( float radius, float height, const AGColor& color )
+AGEDaylightShape::AGEDaylightShape( float radius, float height, const AGColor& color ) : AGShape( color )
 {
-	m_shader = AGResourceManager::getInstance().getShader( L"shape" );
-	m_vertexBuffer = nullptr; 
 	setSize( radius, height );
-	setColor( color );
-	setup(); 
+	setupShape();
 }
 
 AGEDaylightShape::~AGEDaylightShape()
@@ -18,32 +15,13 @@ AGEDaylightShape::~AGEDaylightShape()
 
 void AGEDaylightShape::draw(AGSurface* surface)
 {
-	AGCamera* camera = surface->getCamera(); 
-	ID3D10Device* device = surface->getDevice(); 
-
-	m_shader->applySurface( surface );
-
-	m_shader->setWorldMatrix( getResultMatrix() );
-
-	ID3D10Buffer* vbo = m_vertexBuffer->applyTo( device );
-
-	if( vbo )
-	{
-		UINT stride = sizeof( AGPrimitiveVertex );
-		UINT offset = 0; 
-		device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
-	}
-	else 
-	{
-		return; 
-	}
+	AGShape::prepareDraw( surface );
 
 	while( m_shader->applyNextPass() )
 	{
-		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 		for( int i = 0; i < m_vertices.size() - 2; i++ )
 		{
-			device->Draw( 2, i );
+			surface->draw( 2, i );
 		}
 	}
 }
@@ -83,16 +61,6 @@ const AGSize& AGEDaylightShape::getSize() const
 	return m_size; 
 }
 
-void AGEDaylightShape::setColor( float r, float g, float b, float a )
-{
-	m_color = AGColor( r, g, b, a );
-}
-
-void AGEDaylightShape::setColor( int r, int g, int b, int a )
-{
-	m_color = AGColor( r, g, b, a );
-}
-
 void AGEDaylightShape::setColor(const AGColor& color)
 {
 	m_color = color; 
@@ -103,7 +71,7 @@ const AGColor& AGEDaylightShape::getColor() const
 	return m_color; 
 }
 
-void AGEDaylightShape::setup()
+void AGEDaylightShape::setupShape()
 {
 	if( m_vertexBuffer )
 	{
@@ -121,11 +89,7 @@ void AGEDaylightShape::setup()
 
 	float step = AGMath::Pi / 6.0f; 
 	vector< AGVec2 > points; 
-	for( float angle = 0; angle < AGMath::PiX2; angle += step )
-	{
-		points.push_back( AGVec2( m_size.getWidth() * cos( angle ), m_size.getWidth() * sin( angle ) ) ); 
-	}
-
+	AGMath::generateCircle2D( m_size.getWidth(), step, points ); 
 	int pointsSize = points.size();
 
 	AGVec2 centerPoint( 0.0f, 0.0f );
@@ -139,7 +103,7 @@ void AGEDaylightShape::setup()
 		tVert.pos.x = points[ i ].x; 
 		tVert.pos.y = 0; 
 		tVert.pos.z = points[ i ].y; 
-		tVert.color = D3DXVECTOR4( m_color.getRedF(), m_color.getGreenF(), m_color.getBlueF(), m_color.getAlphaF() ); 
+		tVert.color = m_color; 
 		m_vertices.push_back( tVert );
 
 		if( i % divider == 0 )

@@ -113,9 +113,9 @@ AGELight::AGELight()
 	m_p->daylightShape = new AGEDaylightShape( 0.2f, 0.5f, AGColor( 0.8f, 0.72f, 0.18f ) );
 	m_p->daylightShape->setLookAt( m_p->dir ) ;
 
-	m_p->posCone->setWorldPos( 0.0, 0.0f, 0.0f ); 
+	m_p->posCone->setWorldPos( AGVec3::Zero() ); 
 
-	m_p->line = new AGLine( m_p->posCone->getWorldPos(), m_p->posCone->getWorldPos() + m_p->dir, D3DXVECTOR4( 0.0f, 0.0f, 1.0f, 1.0f ) );
+	m_p->line = new AGLine( m_p->posCone->getWorldPos(), m_p->posCone->getWorldPos() + m_p->dir, AGColor( 0.0f, 0.0f, 1.0f, 1.0f ) );
 
 	m_p->light = new AGLight;
 	AGGraphics::getInstance().addLight( m_p->light );
@@ -174,7 +174,7 @@ void AGELight::draw(AGSurface* surface)
 	}
 }
 
-float AGELight::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
+float AGELight::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	return m_p->posBox->intersect( rayOrigin, rayDir );
 }

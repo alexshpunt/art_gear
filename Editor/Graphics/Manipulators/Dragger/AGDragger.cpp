@@ -127,25 +127,25 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 		AGVec3 axisY( 0.0f, axis.y, 0.0f );
 		AGVec3 axisZ( 0.0f, 0.0f, axis.z );
 
-		D3DXMATRIX rotMatrix = m_selectedObject->getWorldRotMatrix(); 
+		AGMatrix rotMatrix = m_selectedObject->getWorldRotMatrix(); 
 
 		if( system == AGEStateManager::Local )
 		{
-			D3DXVec3TransformCoord( &axisX, &axisX, &rotMatrix );
-			D3DXVec3TransformCoord( &axisY, &axisY, &rotMatrix );
-			D3DXVec3TransformCoord( &axisZ, &axisZ, &rotMatrix );
+			axisX *= rotMatrix; 
+			axisY *= rotMatrix;
+			axisZ *= rotMatrix; 
 		}
 		
-		float cosX = D3DXVec3Dot( &axisX, &m_rayDelta );
-		float cosY = D3DXVec3Dot( &axisY, &m_rayDelta );
-		float cosZ = D3DXVec3Dot( &axisZ, &m_rayDelta );
+		float cosX = AGVec3::dot( axisX, m_rayDelta );
+		float cosY = AGVec3::dot( axisY, m_rayDelta );
+		float cosZ = AGVec3::dot( axisZ, m_rayDelta );
 
 		for( int i = 0; i < 6; i++ )
 		{
 			AGVec3 worldPos = gizmos[ i ]->getBeginPos(); 
 			AGVec3 lookDir = worldPos - cameraEye; 
 
-			float len = D3DXVec3LengthSq( &lookDir );
+			float len = lookDir.getSqrLength(); 
 		
 			gizmos[ i ]->translateBeginPos( AGVec3( axisX.x, axisX.y, axisX.z ) * cosX * len );
 			gizmos[ i ]->translateBeginPos( AGVec3( axisY.x, axisY.y, axisY.z ) * cosY * len );
@@ -193,9 +193,9 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 	{
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateObjRays( system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
-		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
+		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{

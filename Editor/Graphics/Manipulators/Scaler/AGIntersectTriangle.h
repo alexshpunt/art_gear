@@ -22,9 +22,7 @@ class AGIntersectTriangle : public AGGizmo
 
 		AGVec3 getAxis();
 	private:
-		std::map< ID3D10Device* , ID3D10DepthStencilState* > m_depthState; 
 		TriangleAxis m_axis;
-		AGVec3 m_vertices[ 9 ]; 
 
 		AGArrow* m_arrow1; 
 		AGArrow* m_arrow2; 

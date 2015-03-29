@@ -22,10 +22,6 @@ class AGAxises : public AGPrimitive
 
 		AGVec3 getAxis(); 
 	private:
-		int m_nIndices; 
-		
-		AGShader* m_shader; 
-
 		AGGameObject* m_object; 
 };
 

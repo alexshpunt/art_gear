@@ -44,7 +44,7 @@ struct AGSimpleVertex
 struct AGBillboardVertex
 {
 	AGVec3 pos;
-	AGVec2 size; 
+	AGSize size; 
 };
 
 #endif 

@@ -30,7 +30,7 @@ class AGCameraPrivate
 			pos     = AGVec3::Zero(); 
 
 			horSpeed = vertSpeed = 0; 
-			angleX = angleY = 0.0f;
+			angleX = angleY = AGRadians( 0.0f );
 
 			zoom = 5.0;
 		}
@@ -45,8 +45,8 @@ class AGCameraPrivate
 		int   layer;
 
 		float targetDistance; 
-		float angleX;
-		float angleY; 
+		AGRadians angleX;
+		AGRadians angleY; 
 
 		AGVec3 target;
 		AGVec3 up;
@@ -277,24 +277,24 @@ void AGCamera::update()
 	{
 		if( alt )
 		{
-			p->angleY += dAngleY;
-			p->angleX += dAngleX;
+			p->angleY += AGRadians( dAngleY );
+			p->angleX += AGRadians( dAngleX );
 
-			float critAngle = D3DXToRadian( 89.8f );
+			float critAngle = AGMath::toRadians( 89.8f );
 
 			if( p->angleX > critAngle )
 			{
-				p->angleX = critAngle;
+				p->angleX = AGRadians( critAngle );
 			}
 			else if( p->angleX < -critAngle )
 			{
-				p->angleX = -critAngle;
+				p->angleX = AGRadians( -critAngle );
 			}
 
 			AGVec3 v( 0.0f, 0.0f, p->targetDistance );
 
-			v *= AGMatrix::RotationY( AGRadians( p->angleX ) );; 
-			v *= AGMatrix::RotationX( AGRadians( p->angleY ) );;
+			v *= AGMatrix::RotationY( p->angleX ); 
+			v *= AGMatrix::RotationX( p->angleY );
 
 			p->pos = p->target - v; 
 			AGEStateManager::getInstance().setRotating( true );
@@ -303,12 +303,12 @@ void AGCamera::update()
 		{
 			AGVec3 right( 1.0, 0.0f, 0.0f );
 			AGVec3 up( 0.0f, 1.0, 0.0f );
-			AGMatrix rotMatRight = AGMatrix::RotationX( AGRadians( p->angleY ) );
+			AGMatrix rotMatRight = AGMatrix::RotationX( p->angleY );
 
 			right *= rotMatRight;
 			up *= rotMatRight; 
 
-			up *= AGMatrix::RotationY( AGRadians( p->angleX ) );;
+			up *= AGMatrix::RotationY( p->angleX );
 			
 
 			p->target -= right * dAngleY; 
@@ -320,18 +320,18 @@ void AGCamera::update()
 	}
 	else if( rmb )
 	{
-		p->angleY += dAngleY;
-		p->angleX += dAngleX;
+		p->angleY += AGRadians( dAngleY );
+		p->angleX += AGRadians( dAngleX );
 
 		float critAngle = AGMath::toRadians( 89.8f );
 
 		if( p->angleX > critAngle )
 		{
-			p->angleX = critAngle;
+			p->angleX = AGRadians( critAngle );
 		}
 		else if( p->angleX < -critAngle )
 		{
-			p->angleX = -critAngle;
+			p->angleX = AGRadians( -critAngle );
 		}
 		AGVec3 v = AGVec3::Forward();
 
@@ -432,6 +432,32 @@ void AGCamera::setType(AGCameraType type)
 AGCamera::AGCameraType AGCamera::getType() const
 {
 	return p->type; 
+}
+
+void AGCamera::rotate( AGRadians angleX, AGRadians angleY)
+{
+	p->angleY = angleY;
+	p->angleX = angleX;
+
+	AGRadians critAngle = AGDegrees( 89.8f ).toRadians();
+
+	if( p->angleX > critAngle )
+	{
+		p->angleX = AGRadians( critAngle );
+	}
+	else if( p->angleX < -critAngle )
+	{
+		p->angleX = AGRadians( -critAngle );
+	}
+	AGVec3 v( 0.0f, 0.0f, 1.0f );
+	v *= AGMatrix::Rotation( p->angleY, p->angleX, AGRadians( 0.0f ) );
+
+	p->target = p->pos + v; 
+}
+
+void AGCamera::rotate(AGDegrees angleX, AGDegrees angleY)
+{
+	rotate( angleX.toRadians(), angleY.toRadians() );
 }
 
 void AGCamera::translateInDirection( float z)

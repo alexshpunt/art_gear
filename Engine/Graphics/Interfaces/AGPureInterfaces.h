@@ -1,6 +1,10 @@
 #ifndef AG_PUREINTERFACES_H
 #define AG_PUREINTERFACES_H
 
+#include <vector>
+
+#include "Engine/Managers/AGInputManager.h"
+
 #include "Engine/Math/AGMath.h"
 
 class AGSurface; 
@@ -10,9 +14,15 @@ class AGSurface;
 class AGDrawable
 {
 	public:
+		virtual ~AGDrawable(){}
+
 		virtual void draw( AGSurface* surface ) = 0;
 		//Если возвращаемое значение < 0, значит, что луч не коснулся сетки примитива, иначе это дистанция 
-		virtual float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ){ return -1.0f; }
+		virtual float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ); 
+
+	protected:
+		std::vector< int > m_indices;
+		std::vector< AGVec3 > m_vertices; 
 };
 
 //Данный интерфейс позволяет классу совершать более сложную обработку событий мыши

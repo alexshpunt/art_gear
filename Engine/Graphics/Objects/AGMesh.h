@@ -7,10 +7,10 @@
 #include <d3dx10.h>
 #include <d3d10.h>
 
-#include "Graphics/Interfaces/AGMovable.h"
 #include "Graphics/AGGraphics.h"
 
 #include "Engine/Interfaces/AGResource.h"
+#include "Engine/Interfaces/AGMovable.h"
 
 using namespace std;
 

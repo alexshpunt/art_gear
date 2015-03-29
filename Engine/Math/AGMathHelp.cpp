@@ -41,7 +41,7 @@ namespace AGMath
 		}
 	}
 
-	AGMath::IntersectResult intersectTriangle(const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace = true )
+	AGMath::IntersectResult intersectTriangle(const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace )
 	{
 		IntersectResult res; 
 		double det, invDet; 
@@ -127,3 +127,33 @@ namespace AGMath
 
 }
 
+AGEulerAngles& AGEulerAngles::operator+=(const AGEulerAngles& a)
+{
+	x += a.x; 
+	y += a.y;
+	z += a.z;
+
+	return *this; 
+}
+
+bool AGEulerAngles::operator==(const AGEulerAngles& a)
+{
+	return AGMath::isEqual( x, a.x ) && AGMath::isEqual( y, a.y ) && AGMath::isEqual( z, a.z );
+}
+
+AGEulerAngles& AGEulerAngles::operator=(const AGEulerAngles& copy)
+{
+	AGEulerAngles a( copy );
+	*this = a; 
+	return *this; 
+}
+
+AGEulerAngles operator+( const AGEulerAngles& a1, const AGEulerAngles& a2 )
+{
+	return AGEulerAngles( a1.x + a2.x, a1.y + a2.y, a1.z + a2.z );
+}
+
+AGEulerAngles operator-( const AGEulerAngles& a1, const AGEulerAngles& a2 )
+{
+	return AGEulerAngles( a1.x - a2.x, a1.y - a2.y, a1.z - a2.z );
+}

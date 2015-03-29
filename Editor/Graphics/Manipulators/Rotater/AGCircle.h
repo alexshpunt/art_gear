@@ -23,13 +23,10 @@ class AGCircle : public AGGizmo
 		ID3D10EffectVectorVariable* m_cameraPosVar; 
 		ID3D10EffectScalarVariable* m_fadingVar;
 
-		int m_nIndices; 
 		int m_nBoundIndices; 
 		CircleAxis m_axis; 
 		ID3D10DepthStencilState* m_depthState; 
 		ID3DX10Font* m_font; 
-		vector< AGPrimitiveVertex > m_vertices;
-		vector< int > m_indices; 
 		vector< AGVec3 > m_tangents; 
 		AGVec3 m_tangent; 
 		

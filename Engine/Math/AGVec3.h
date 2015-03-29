@@ -35,9 +35,11 @@ class AGVec3
 		bool operator==( const AGVec3& var );
 		AGVec3& operator=( const AGVec3& var );
 
-		AGVec3 operator+( const AGVec3& var );
+		AGVec3 operator+() const;
+		friend AGVec3 operator+( const AGVec3& v1, const AGVec3& v2 );
 		AGVec3& operator+=( const AGVec3& var );
 
+		AGVec3 operator-() const;
 		friend AGVec3 operator-( const AGVec3& v1, const AGVec3& v2 );
 		AGVec3 operator-( const AGVec3& var );
 		AGVec3 operator-(); 

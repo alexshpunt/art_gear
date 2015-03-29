@@ -210,22 +210,21 @@ float AGBoxShape::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 	float retDist = -1.0f; 
 	for( int i = 0; i < 34; i++ )
 	{
-		AGVec3 vertex1 = p->vertices[ p->indices[ i ] ];
-		AGVec3 vertex2 = p->vertices[ p->indices[ i + 1 ] ];
-		AGVec3 vertex3 = p->vertices[ p->indices[ i + 2 ] ];
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ];
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ];
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ];
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
 
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance ); 
 			}
 		}
 	}

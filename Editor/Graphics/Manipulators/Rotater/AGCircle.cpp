@@ -11,8 +11,8 @@ AGCircle::AGCircle( CircleAxis axis)
 	m_axis = axis; 
 	m_isSelected = false; 
 
-	D3DXVECTOR4 color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
-	D3DXVECTOR4 yellow( 1.0f, 1.0f, 0.0f, 1.0f );
+	AGColor color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
+	AGColor yellow( 1.0f, 1.0f, 0.0f, 1.0f );
 	float k = 0.15f;
 	float height = 1.0f;
 	float radius = 1.0f;
@@ -237,7 +237,7 @@ AGCircle::AGCircle( CircleAxis axis)
 
 	for( int i = 0 ; i < verticesCount; i++ )
 	{
-		m_vertices.push_back( boundingVertices[ i ] );
+		m_vertices.push_back( boundingVertices[ i ].pos );
 	}
 
 	int selectedVerticesCount = sizeof( selectedVertices ) / sizeof( AGPrimitiveVertex );
@@ -399,15 +399,12 @@ AGCircle::AGCircle( CircleAxis axis)
 		0, 7, 0, 95, 93, 
 	};
 
-	m_nIndices = sizeof( indices ) / sizeof( indices[ 0 ] );
+	int indexCount = sizeof( indices ) / sizeof( indices[ 0 ] );
 	m_nBoundIndices = sizeof( boundIndices ) / sizeof( indices[ 0 ] );
 
-	for( int i = 0; i < m_nBoundIndices; i++ )
-	{
-		m_indices.push_back( boundIndices[ i ] );
-	}
+	m_indices = vector< int >( indices, indices + indexCount + 1 ); 
 
-	m_indexBuffer = new AGBuffer< int >( vector< int >( indices, indices + m_nIndices + 1 ), AGBufferType::Index ); 
+	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index ); 
 }
 
 AGCircle::~AGCircle()
@@ -420,82 +417,57 @@ void AGCircle::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera(); 
 	ID3D10Device* device = surface->getDevice(); 
 
+	assert( camera );
+	assert( device ); 
+
 	AGVec3 camEye = camera->getPos(); 
-	AGVec3 dir = camEye - m_beginPos; 
-	D3DXVec3Normalize( &dir, &dir );
+	AGVec3 dir = ( camEye - m_beginPos ).normilized(); 
 	dir = camEye - dir * 1.0f; 
-	AGVec3 pos = dir; 
 
-	setLocalPos( pos.x, pos.y, pos.z );
-
-	D3DXMATRIX worldTextMat = getLocalMatrix();
+	setLocalPos( dir );
 
 	if( m_axis == X_AXIS )
 	{
-		setLocalAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f ) );	
+		setLocalAngle( AGDegrees( 0.0f ), AGDegrees( 0.0f ), AGDegrees( -90.0f ) );	
 	}
 	else if( m_axis == Z_AXIS )
 	{
-		setLocalAngle( D3DXToRadian( 90.0f ), 0.0f, 0.0f );	
+		setLocalAngle( AGDegrees( 90.0f ), AGDegrees( 0.0f ), AGDegrees( 0.0f ) );	
 	} 
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
 
+	m_shader->apply( surface );
 	m_shader->setWorldMatrix( system == AGEStateManager::World ? getLocalMatrix() : getResultMatrix() );
 
 	AGInputLayout* inputLayout = AGGraphics::getInstance().getInputLayout( device );
-
-	if( !inputLayout )
-	{
-		AGError() << "Cant get input layout for device " << AGCurFileFunctionLineSnippet; 
-		return; 
-	}
-
+	assert( inputLayout );
 	device->IASetInputLayout( inputLayout->colorVertexInputLayout );
 
-	ID3D10Buffer* ibo = m_indexBuffer->applyTo( device );
-	
-	if( !ibo )
-	{
-		AGError() << "Cant apply index buffer to device " << AGCurFileFunctionLineSnippet; 
-		return; 
-	}
-
-	device->IASetIndexBuffer( ibo, DXGI_FORMAT_R32_UINT, 0 );
-
-	UINT stride = sizeof( AGPrimitiveVertex );
-	UINT offset = 0; 
-	
-	ID3D10Buffer* vbo;
+	assert( m_indexBuffer );
+	m_indexBuffer->apply( surface );
 
 	if( m_isSelected )
 	{
-		vbo = m_additionalVB->applyTo( device ); 
+		assert( m_additionalVB );
+		m_additionalVB->apply( surface ); 
 	}
 	else 
 	{
-		vbo = m_vertexBuffer->applyTo( device );
-	}
-	
-	if( !vbo )
-	{
-		AGError() << "Cant apply vertex buffer to device " << AGCurFileFunctionLineSnippet; 
-		return; 
+		assert( m_vertexBuffer );
+		m_vertexBuffer->apply( surface );
 	}
 
-	device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
-
-	m_shader->applySurface( surface );
+	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 
 	while( m_shader->applyNextPass() )
 	{
-		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
-		device->DrawIndexed( m_nIndices, 0, 0 );
+		surface->drawIndexed( m_indices.size(), 0, 0 );
 	}
 
 }
 
-float AGCircle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
+float AGCircle::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	float retDist = -1.0f;
 	int nIndices = m_indices.size() - 2;  
@@ -506,30 +478,30 @@ float AGCircle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 
 	for( int i = 0; i < nIndices; i++ )
 	{
-		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
-		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ];
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ];
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ];
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) );
 
-		bool res = D3DXIntersectTri( &v1, &v2, &v3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance );	
 			}
 			vertex1 = v1;
 			vertex2 = v2;
 			vertex3 = v3;
 		}
 	}
-
-	if( retDist > 0.0f )
+	
+	//TODO: Переделать под AGLAL 
+	/*if( retDist > 0.0f )
 	{
 		AGVec3 midleVec = ( vertex1 + vertex2 + vertex3 ) / 3.0f;
 		AGVec3 closestVec = m_tangents[ 0 ] - midleVec; 
@@ -548,7 +520,7 @@ float AGCircle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
 				closestDist = dist; 
 			}
 		}
-	}
+	}*/
 
 	return retDist; 
 }

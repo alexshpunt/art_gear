@@ -19,7 +19,7 @@ class AGConeShapePrivate
 		std::vector< int > indices; 
 };
 
-AGConeShape::AGConeShape( float radius = 1.0f, float height = 1.0f, const AGColor& color = AGColor( 1.0f ) ) : AGShape( color )
+AGConeShape::AGConeShape( float radius, float height, const AGColor& color ) : AGShape( color )
 {
 	p = new AGConeShapePrivate; 
 

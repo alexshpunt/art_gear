@@ -38,7 +38,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 		{ AGVec3( k * radius * 0.587786     , k * height, k * radius * -0.809016 ),     color }, //18 
 		{ AGVec3( k * radius * 0.809018     , k * height, k * radius * -0.587784 ),     color }, //19 
 		{ AGVec3( k * radius * 0.951057     , k * height, k * radius * -0.309016 ),     color }, //20 
-		{ AGVec3( k * radius * 0, k * height * 1.3, k * radius * 0 ), color }, //21 
+		{ AGVec3( k * radius * 0            , k * height * 1.3, k * radius * 0 ), color }, //21 
 		{ AGVec3( 0.0f                      , k * height, k * radius * 0 ),       color }, //22 
 		{ AGVec3( 0.0f                      , 0               , k * radius * 0 ),       color }, //23 
 		{ AGVec3( 0.0f                      , k * height, k * radius * 0 ),      yellow }, //24
@@ -49,7 +49,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 
 	for( int i = 0 ; i < 25; i++ )
 	{
-		m_vertices.push_back( vertices[ i ] );
+		m_vertices.push_back( vertices[ i ].pos );
 	}
 
 	int indices[] = 
@@ -93,14 +93,11 @@ AGArrow::AGArrow( ArrowAxis axis  )
 		21, 20, 21, 1, 21, 
 	};
 
-	m_nIndices = sizeof( indices ) / sizeof( indices[ 0 ] );
+	int indexCount = sizeof( indices ) / sizeof( indices[ 0 ] );
 
-	m_indexBuffer = new AGBuffer< int >( vector< int >( indices, indices + m_nIndices + 1 ), AGBufferType::Index ); 
+	m_indices = vector< int >( indices, indices + indexCount + 1 ); 
 
-	for( int i = 0; i < m_nIndices; i++ )
-	{
-		m_indices.push_back( indices[ i ] );
-	}
+	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index ); 
 
 	m_boundingBox = new AGBoundingBox( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
 }
@@ -133,7 +130,7 @@ void AGArrow::draw( AGSurface* surface )
 	while( m_shader->applyNextPass() )
 	{
 		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-		device->DrawIndexed( m_nIndices, 0, 0 );
+		device->DrawIndexed( m_indices.size(), 0, 0 );
 		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 		if( m_isSelected )
 			device->Draw( 2, 24 );
@@ -146,28 +143,7 @@ void AGArrow::draw( AGSurface* surface )
 
 float AGArrow::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 {
-	float retDist = -1.0f;
-	int nIndices = m_indices.size() - 2;  
-	for( int i = 0; i < nIndices; i++ )
-	{
-		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
-		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
-
-		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
-
-		if( res.hit )
-		{
-			if( retDist < 0 )
-			{
-				retDist = res.distance; 
-			}
-			else 
-			{
-				retDist = min( retDist, res.distance ); 
-			}
-		}
-	}
+	float retDist = AGDrawable::intersect( rayOrigin, rayDir );
 
 	float boundBoxDist = m_boundingBox->intersect( rayOrigin, rayDir );
 

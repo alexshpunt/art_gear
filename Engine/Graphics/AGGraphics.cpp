@@ -48,22 +48,23 @@ void AGGraphics::update()
 
 		if( AGInput().isButtonDown( "MMB" ) && surface == m_focusSurface )
 		{
-			AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
+			//Deprecated for now
+			/*AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
 			AGPoint2 mousePos( winSize.getWidth() / 2.0f, winSize.getHeight() / 2.0f ); 
 			AGCamera* camera = getTopCamera(); 
 			if( !camera )
 			{
 				return; 
 			}
-			D3DXMATRIX matProj = camera->getProjMatrix(); 
+			AGMatrixmatProj = camera->getProjMatrix(); 
 
 			AGVec3 v; 
 			v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
 			v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
 			v.z = 1.0f; 
 
-			D3DXMATRIX mat; 
-			D3DXMATRIX matView = camera->getViewMatrix(); 
+			AGMatrixmat; 
+			AGMatrixmatView = camera->getViewMatrix(); 
 			AGVec3 rayOrigin, rayDir; 
 
 			D3DXMatrixInverse( &mat, NULL, &matView );
@@ -76,7 +77,7 @@ void AGGraphics::update()
 			rayOrigin.y = mat._42;
 			rayOrigin.z = mat._43; 
 
-			D3DXMATRIX matInverce;
+			AGMatrixmatInverce;
 
 			float minDist = -1.0f; 
 			AGRenderer* nearestObj = nullptr; 
@@ -84,7 +85,7 @@ void AGGraphics::update()
 			for( AGRenderer* renderer : m_renderers )
 			{
 				AGMesh* mesh = renderer->getMesh();
-				D3DXMATRIX matWorld;
+				AGMatrixmatWorld;
 				if( !mesh )
 				{
 					D3DXMatrixIdentity( &matWorld );
@@ -121,7 +122,7 @@ void AGGraphics::update()
 			if( nearestObj )
 			{
 				surface->getCamera()->setTargetDistance( minDist );
-			}
+			}*/
 		}
 
 		for( AGRenderer* renderer : m_renderers )
@@ -404,9 +405,9 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	{
 		return; 
 	}
-	D3DXMATRIX matProj = camera->getProjMatrix(); 
+	AGMatrix matProj = camera->getProjMatrix(); 
 
-	D3DXMATRIX matView = camera->getViewMatrix(); 
+	AGMatrix matView = camera->getViewMatrix(); 
 
 	float minDist = -1.0f; 
 	AGRenderer* nearestObj = nullptr; 
@@ -425,24 +426,19 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	for( AGRenderer* renderer : m_renderers )
 	{
 		AGMesh* mesh = renderer->getMesh();
-		D3DXMATRIX matWorld;
-		D3DXMatrixIdentity( &matWorld );
-		if( !mesh )
-		{
-			D3DXMatrixIdentity( &matWorld );
-		}
-		else
+		AGMatrix matWorld;
+		if( mesh )
 		{
 			matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
 		}
 		AGGameObject* obj = renderer->getObject(); 
 		AGVec3 pos = obj->getLocalPos(); 
-		D3DXMatrixTranslation( &matWorld, pos.x, pos.y, pos.z );
+		matWorld.setTranslate( pos );
 
-		D3DXVec3Unproject( &nearPoint, &nearPoint, &viewport, &matProj, &matView, &matWorld );
-		D3DXVec3Unproject( &farPoint, &farPoint, &viewport, &matProj, &matView, &matWorld );
+		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+		AGVec3 fp = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
 
-		AGVec3 dir = farPoint - nearPoint; 
+		AGVec3 dir = (fp - np).normilized(); 
 
 		float dist = renderer->intersect( nearPoint, dir );
 		renderer->setSelected( false );
@@ -517,17 +513,7 @@ void AGGraphics::removeCamera(AGCamera* camera)
 
 AGCamera* AGGraphics::getTopCamera() const
 {
-	int layer = m_cameras[ 0 ]->getLayer();
 	AGCamera* topCamera = m_cameras[ 0 ];
-
-	for( AGCamera* camera : m_cameras )
-	{
-		if( camera->getLayer() > layer )
-		{
-			topCamera = camera;
-			layer = camera->getLayer();
-		}
-	} 
 	return topCamera; 
 }
 

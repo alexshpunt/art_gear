@@ -92,26 +92,21 @@ void AGSubMesh::loadFrom( ifstream& in )
 
 void AGSubMesh::draw( AGSurface* surface )
 {
-	UINT stride = sizeof( AGVertex );
-	UINT offset = 0; 
-
 	ID3D10Device* device = surface->getDevice();
 
-	ID3D10Buffer* vbo;
-	ID3D10Buffer* ibo; 
+	assert( m_vertexBufffer );
+	assert( m_indexBuffer );
 
-	vbo = m_vertexBufffer->applyTo( device );
-	ibo = m_indexBuffer->applyTo( device );
+	m_vertexBufffer->apply( surface );
+	m_indexBuffer->apply( surface );
 
-	device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
-	device->IASetIndexBuffer( ibo, DXGI_FORMAT_R32_UINT, 0 );
-
+	assert( m_material );
 	AGShader* shader = m_material->getShader();
-	
+	assert( shader );
 	m_material->apply(); 
 	 
 	shader->setWorldMatrix( m_mesh->getResultMatrix() );
-	shader->applySurface( surface );
+	shader->apply( surface );
 
 	AGRasterizeState* state = AGGraphics::getInstance().getRasterizeState( surface->getDevice() ); 
 
@@ -143,9 +138,6 @@ void AGSubMesh::draw( AGSurface* surface )
 	}	
 
 	device->RSSetState( state->solid );
-
-	/*vbo->Release();
-	ibo->Release();*/
 }
 
 float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
@@ -154,22 +146,21 @@ float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
-		AGVec3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
-		AGVec3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		AGVec3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
+		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
 
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance ); 
 			}
 		}
 	}

@@ -6,8 +6,9 @@
 #define EPSILON_FOR_DOUBLE 0.0000001
 #define EPSILON_FOR_FLOAT 0.0001f
 
+#include "AGVec3.h"
+
 class AGVec2; 
-class AGVec3; 
 
 namespace AGMath 
 {
@@ -125,7 +126,7 @@ struct AGRadians;
 
 struct AGDegrees
 {
-	explicit AGDegrees( float degrees ) : value( degrees ){}
+	explicit AGDegrees( float degrees = 0.0f ) : value( degrees ){}
 	AGDegrees( const AGDegrees& degrees ) : value( degrees.value ){} 
 
 	AGRadians toRadians();
@@ -171,7 +172,7 @@ inline AGDegrees operator-( const AGDegrees& r1, const AGDegrees& r2 )
 
 struct AGRadians
 {
-	explicit AGRadians( float radian ) : value( radian ){}
+	explicit AGRadians( float radian = 0.0f ) : value( radian ){}
 	AGRadians( const AGRadians& radians ) : value( radians.value ){}
 
 	AGDegrees toDegrees();
@@ -222,42 +223,17 @@ struct AGEulerAngles
 	explicit AGEulerAngles( AGDegrees inX, AGDegrees inY, AGDegrees inZ ) : x( inX.toRadians() ), y( inY.toRadians() ), z( inZ.toRadians() ){}
 	AGEulerAngles( const AGEulerAngles& copy ) : x( copy.x ), y( copy.y ), z( copy.z ){}
 
-	AGEulerAngles& operator=( const AGEulerAngles& copy )
-	{
-		AGEulerAngles a( copy );
-		*this = a; 
-		return *this; 
-	}
-	bool operator==( const AGEulerAngles& a )
-	{
-		return AGMath::isEqual( x, a.x ) && AGMath::isEqual( y, a.y ) && AGMath::isEqual( z, a.z );
-	}
+	AGEulerAngles& operator=( const AGEulerAngles& copy );
+	bool operator==( const AGEulerAngles& a );
 
 	friend AGEulerAngles operator+( const AGEulerAngles& a1, const AGEulerAngles& a2 );
-	AGEulerAngles& operator+=( const AGEulerAngles& a )
-	{
-		x += a.x; 
-		y += a.y;
-		z += a.z;
-
-		return *this; 
-	}
+	AGEulerAngles& operator+=( const AGEulerAngles& a );
 
 	friend AGEulerAngles operator-( const AGEulerAngles& a1, const AGEulerAngles& a2 );
 	AGEulerAngles& operator-=( const AGEulerAngles& a );
 
 	AGRadians x, y, z; 
 };
-
-AGEulerAngles operator+( const AGEulerAngles& a1, const AGEulerAngles& a2 )
-{
-	return AGEulerAngles( a1.x + a2.x, a1.y + a2.y, a1.z + a2.z );
-}
-
-AGEulerAngles operator-( const AGEulerAngles& a1, const AGEulerAngles& a2 )
-{
-	return AGEulerAngles( a1.x - a2.x, a1.y - a2.y, a1.z - a2.z );
-}
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////

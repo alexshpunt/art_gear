@@ -63,8 +63,10 @@ class AGCamera
 		void updateProj();
 		void updateOrtho();   
 
-		void translateInDirection( float z );
+		void rotate( AGRadians angleX, AGRadians angleY ); 
+		void rotate( AGDegrees angleX, AGDegrees angleY ); 
 
+		void translateInDirection( float z );
 	protected:
 		AGCameraPrivate* p; 
 };

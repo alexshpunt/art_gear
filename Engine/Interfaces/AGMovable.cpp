@@ -534,11 +534,6 @@ const AGMatrix& AGMovable::getResultMatrix()
 	return p->matrix; 
 }
 
-void AGMovable::handleChanges( Changes changes )
-{
-
-}
-
 void AGMovable::setLookAt(const AGVec3& dir)
 {
 	float cosA = AGVec3::dot( dir, p->up ); 

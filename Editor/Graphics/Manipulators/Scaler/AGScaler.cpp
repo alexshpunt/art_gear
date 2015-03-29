@@ -61,13 +61,11 @@ bool AGScaler::mouseClickEvent( AGMouseButton btn, AGSurface* surface)
 
 	for( int i = 0; i < 7; i++ )
 	{
-		D3DXMATRIX matInverce;
-
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateObjRays( system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
-		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
+		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -127,7 +125,7 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		calculateObjRays( system == AGEStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
 
 		AGVec3 axis = m_selectedObject->getAxis();
 
@@ -139,15 +137,15 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 		AGVec3 axisY( 0.0f, axis.y, 0.0f );
 		AGVec3 axisZ( 0.0f, 0.0f, axis.z );
 
-		D3DXMATRIX rotMatrix = m_selectedObject->getWorldRotMatrix(); 
+		AGMatrix rotMatrix = m_selectedObject->getWorldRotMatrix(); 
 
-		D3DXVec3TransformCoord( &axisX, &axisX, &rotMatrix );
-		D3DXVec3TransformCoord( &axisY, &axisY, &rotMatrix );
-		D3DXVec3TransformCoord( &axisZ, &axisZ, &rotMatrix );
+		axisX *= rotMatrix;
+		axisY *= rotMatrix;
+		axisZ *= rotMatrix; 
 
-		float cosX = D3DXVec3Dot( &axisX, &m_rayDelta );
-		float cosY = D3DXVec3Dot( &axisY, &m_rayDelta );
-		float cosZ = D3DXVec3Dot( &axisZ, &m_rayDelta );
+		float cosX = AGVec3::dot( axisX, m_rayDelta );
+		float cosY = AGVec3::dot( axisY, m_rayDelta );
+		float cosZ = AGVec3::dot( axisZ, m_rayDelta );
 
 		float maxVel = absMax( absMax( m_rayDelta.x, m_rayDelta.y ), m_rayDelta.z );
 		maxVel *= 1.2f; 
@@ -212,11 +210,11 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 	for( int i = 0; i < 7; i++ )
 	{
 		AGGizmo* gizmo = gizmos[ i ];
-		gizmo->setWorldScale( 1.0f, 1.0f, 1.0f );
+		gizmo->setWorldScale( AGVec3( 1.0f, 1.0f, 1.0f ) );
 
-		calculateObjRays( system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
-		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
+		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -276,14 +274,14 @@ void AGScaler::draw( AGSurface* surface )
 	};
 
 	AGVec3 gizmoPos; 
-	AGVec3 gizmoAngle; 
+	AGEulerAngles gizmoAngle; 
 
 	if( m_object )
 	{
 		AGVec3 pos = m_object->getLocalPos(); 
 		AGVec3 angle = m_object->getLocalRot(); 
 		gizmoPos = AGVec3( pos.x, pos.y, pos.z );
-		gizmoAngle = AGVec3( angle.x, angle.y, angle.z );
+		gizmoAngle = AGEulerAngles( AGRadians( angle.x ), AGRadians( angle.y ), AGRadians( angle.z ) );
 	}
 	else
 	{

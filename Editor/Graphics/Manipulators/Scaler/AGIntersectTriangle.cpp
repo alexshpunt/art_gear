@@ -10,12 +10,12 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 {
 	m_axis = axis; 
 
-	D3DXVECTOR4 red  ( 0.798431372, 0.0f, 0.0f, 1.0f );
-	D3DXVECTOR4 green( 0.0f, 0.6117647058, 0.0f, 1.0f );
-	D3DXVECTOR4 blue ( 0.0f, 0.0f, 0.76470588233, 1.0f );
+	AGColor red  ( 0.798431372, 0.0f, 0.0f, 1.0f );
+	AGColor green( 0.0f, 0.6117647058, 0.0f, 1.0f );
+	AGColor blue ( 0.0f, 0.0f, 0.76470588233, 1.0f );
 
-	D3DXVECTOR4 firstColor;
-	D3DXVECTOR4 secondColor;
+	AGColor firstColor;
+	AGColor secondColor;
 
 	switch( axis )
 	{
@@ -35,8 +35,8 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 
 	float len = 0.15f;
 
-	D3DXVECTOR4 yellowTransp( red.x, green.y, 0.0f, 0.4f );
-	D3DXVECTOR4 yellow( 1.0f, 1.0f, 0.0f, 1.f );
+	AGColor yellowTransp( red.getRedF(), green.getGreenF(), 0.0f, 0.4f );
+	AGColor yellow( 1.0f, 1.0f, 0.0f, 1.f );
 
 	if( m_axis == XYZ_AXIS )
 	{
@@ -98,7 +98,7 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 
 		for (int i = 0; i < 9; i++)
 		{
-			m_vertices[ i ] = vertices[ 18+i ].pos; 
+			m_vertices.push_back( vertices[ 18+i ].pos ); 
 		}
 		
 		m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( 
@@ -140,7 +140,7 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 
 		for (int i = 0; i < 6; i++)
 		{
-			m_vertices[ i ] = vertices[ 12+i ].pos; 
+			m_vertices.push_back( vertices[ 12+i ].pos ); 
 		}
 
 		m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( 
@@ -173,39 +173,39 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 
 	if( system == AGEStateManager::Local )
 	{
-		D3DXMATRIX rotMatrix = getWorldRotMatrix(); 
+		AGMatrix rotMatrix = getWorldRotMatrix(); 
 
-		D3DXVec3TransformCoord( &xAxis, &xAxis, &rotMatrix );
-		D3DXVec3TransformCoord( &yAxis, &yAxis, &rotMatrix );
-		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
+		xAxis *= rotMatrix;
+		yAxis *= rotMatrix;
+		zAxis *= rotMatrix; 
 	}
 
 	AGVec3 camEye = camera->getPos() - m_beginPos; 
 
-	float cosX = D3DXVec3Dot( &xAxis, &camEye );
-	float cosY = D3DXVec3Dot( &yAxis, &camEye );
-	float cosZ = D3DXVec3Dot( &zAxis, &camEye );
+	float cosX = AGVec3::dot( xAxis, camEye );
+	float cosY = AGVec3::dot( yAxis, camEye );
+	float cosZ = AGVec3::dot( zAxis, camEye );
 
 	if( m_axis == XY_AXIS )
 	{
 		cosX = cosX >= 0.0f ? 0.0f : -1.0f;
 		cosY = cosY >= 0.0f ? 0.0f : -1.0f;
 
-		setLocalAngle( D3DXToRadian( 180.0f * cosY ), D3DXToRadian( 180.0f * cosX ), D3DXToRadian( 0.0f  ) );
+		setLocalAngle( AGDegrees( 180.0f * cosY ), AGDegrees( 180.0f * cosX ), AGDegrees( 0.0f  ) );
 	}
 	else if( m_axis == XZ_AXIS )
 	{
 		cosX = cosX >= 0.0f ? 0.0f : -1.0f;
 		cosZ = cosZ > 0.0f ? 1.0f : cosZ < 0.0f ? -1.0f : 0.0f;
 
-		setLocalAngle( D3DXToRadian( ( cosX < 0.0f ? -1.0f : 1.0f ) * 90.0f * cosZ  ), D3DXToRadian( 180.0f * cosX ), D3DXToRadian( 0.0f ) );
+		setLocalAngle(AGDegrees( ( cosX < 0.0f ? -1.0f : 1.0f ) * 90.0f * cosZ  ), AGDegrees( 180.0f * cosX ), AGDegrees( 0.0f ) );
 	}
 	else if( m_axis == YZ_AXIS )
 	{
 		cosY = cosY >= 0.0f ? 0.0f : -1.0f;
 		cosZ = cosZ > 0.0f ? 1.0f : cosZ < 0.0f ? -1.0f : 0.0f;
 
-		setLocalAngle( D3DXToRadian( -180.0f * cosY ), D3DXToRadian( -90.0f * cosZ ), 0.0f );
+		setLocalAngle( AGDegrees( -180.0f * cosY ), AGDegrees( -90.0f * cosZ ), AGDegrees( 0.0f ) );
 	}	
 	else if( m_axis == XYZ_AXIS )
 	{
@@ -218,11 +218,11 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 			cosX = cosX > 0.0f ? 0.0f : cosX; 
 			cosZ = cosZ > 0.0f ? 0.0f : cosZ; 
 
-			setLocalAngle( D3DXToRadian( -90.0f * cosY ), D3DXToRadian( 90.0f * ( cosX + cosZ ) ), D3DXToRadian( 0.0f ) );	
+			setLocalAngle( AGDegrees( -90.0f * cosY ), AGDegrees( 90.0f * ( cosX + cosZ ) ), AGDegrees( 0.0f ) );	
 		}
 		else if( cosX * cosZ < 0.0f )
 		{
-			setLocalAngle( D3DXToRadian( -90.0f * cosY ), D3DXToRadian( 90.0f * cosX ), D3DXToRadian( 0.0f ) );
+			setLocalAngle( AGDegrees( -90.0f * cosY ), AGDegrees( 90.0f * cosX ), AGDegrees( 0.0f ) );
 		}
 	}
 
@@ -256,32 +256,29 @@ void AGIntersectTriangle::draw( AGSurface* surface )
 			}
 		}
 	}
-
-	releaseBuffers(); 
 }
 
-float AGIntersectTriangle::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
+float AGIntersectTriangle::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 {
 	float retDist = -1.0f;
 	int high = ( m_axis == XYZ_AXIS ) ? 3 : 2; 
 	for( int i = 0; i < high; i++ )
 	{
-		AGVec3 vertex1 = m_vertices[ 3*i ];
-		AGVec3 vertex2 = m_vertices[ 3*i + 1 ];
-		AGVec3 vertex3 = m_vertices[ 3*i + 2 ];
+		AGVec3 v1 = m_vertices[ 3*i ];
+		AGVec3 v2 = m_vertices[ 3*i + 1 ];
+		AGVec3 v3 = m_vertices[ 3*i + 2 ];
 
-		float dist, u, v; 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
 
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
+		if( res.hit )
 		{
 			if( retDist < 0 )
 			{
-				retDist = dist; 
+				retDist = res.distance; 
 			}
 			else 
 			{
-				retDist = min( retDist, dist );	
+				retDist = min( retDist, res.distance ); 
 			}
 		}
 	}

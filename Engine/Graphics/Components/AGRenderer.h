@@ -6,10 +6,10 @@
 #include <string>
 
 #include "Objects/AGComponent.h"
-#include "Graphics/Interfaces/AGMovable.h"
 #include "Graphics/Interfaces/AGPureInterfaces.h"
 #include "Graphics/Objects/AGBoundingBox.h"
 #include "Engine/Interfaces/AGResource.h"
+#include "Engine/Interfaces/AGMovable.h"
 
 using namespace std;
 

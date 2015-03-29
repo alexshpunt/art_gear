@@ -94,13 +94,14 @@ AGVec3& AGVec3::operator=(const AGVec3& var)
 	return *this; 
 }
 
-AGVec3 AGVec3::operator+(const AGVec3& var)
+AGVec3 AGVec3::operator+() const
 {
-	AGVec3 vec3( *this );
-	vec3.x += var.x;
-	vec3.y += var.y;
-	vec3.z += var.z; 
-	return vec3; 
+	return AGVec3( x, y, z );
+}
+
+AGVec3 operator+( const AGVec3& v1, const AGVec3& v2 )
+{
+	return AGVec3( v1.x + v2.x, v1.y + v2.y, v1.z + v2.z );
 }
 
 AGVec3& AGVec3::operator+=(const AGVec3& var)
@@ -111,11 +112,15 @@ AGVec3& AGVec3::operator+=(const AGVec3& var)
 	return *this; 
 }
 
+AGVec3 AGVec3::operator-() const
+{
+	return AGVec3( -x, -y, -z );
+}
+
 AGVec3 operator-( const AGVec3& v1, const AGVec3& v2 )
 {
 	return AGVec3( v1.x - v2.x, v1.y - v2.y, v1.z - v2.z );
 }
-
 
 AGVec3 AGVec3::operator-(const AGVec3& var)
 {
@@ -221,6 +226,7 @@ AGVec3 AGVec3::unproject( const AGVec3& vec, const AGRect& viewport, const AGMat
 
 	return tmp; 
 }
+
 
 
 

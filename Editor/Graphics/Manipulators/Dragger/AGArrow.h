@@ -20,13 +20,8 @@ class AGArrow : public AGGizmo
 
 		AGVec3 getAxis(); 
 	private:
-		int m_nIndices; 
 		ArrowAxis m_axis; 
-		ID3D10DepthStencilState* m_depthState; 
-		ID3DX10Font* m_font; 
 		AGBoundingBox* m_boundingBox;
-		vector< AGPrimitiveVertex > m_vertices;
-		vector< int > m_indices; 
 };
 
 #endif 

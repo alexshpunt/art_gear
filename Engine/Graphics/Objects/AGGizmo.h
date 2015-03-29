@@ -30,7 +30,6 @@ class AGGizmo : public AGPrimitive
 	protected:
 		virtual void updatePos( AGCamera* camera ); 
 		virtual void setupBuffers( AGSurface* surface );
-		void releaseBuffers(); 
 
 		AGVec3 m_beginPos; 
 		float m_distance; 

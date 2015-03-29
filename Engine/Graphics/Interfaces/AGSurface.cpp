@@ -116,22 +116,22 @@ void AGSurface::setCameraMode(AGSurfaceCameraMode cameraMode)
 	switch( m_surfaceCameraMode )
 	{
 		case Back:
-			m_camera->rotate( 0, 180 );
+			m_camera->rotate( AGDegrees( 0.0f ), AGDegrees( 180 ) );
 		break; 
 		case Front:
-			m_camera->rotate( 0, 0 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 0 ) );
 		break;
 		case Left:
-			m_camera->rotate( 0, 90 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 90 ) );
 		break;
 		case Right:
-			m_camera->rotate( 0, -90 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( -90 ) );
 		break;
 		case Top:
-			m_camera->rotate( 90, 0 );
+			m_camera->rotate( AGDegrees( 90 ), AGDegrees( 0 ) );
 		break;
 		case Bottom:
-			m_camera->rotate( -90, 0 );
+			m_camera->rotate( AGDegrees( -90 ), AGDegrees( 0 ) );
 		break; 
 	}
 

@@ -5,7 +5,7 @@
 #include "Engine/Math/AGMath.h"
 #include "Engine/Graphics/Interfaces/AGSurface.h"
 #include "Engine/Graphics/Objects/AGCamera.h"
-#include "Engine/Graphics/Interfaces/AGMovable.h"
+#include "Engine/Interfaces/AGMovable.h"
 
 #include <Engine/Managers/AGResourceManager.h>
 
@@ -57,36 +57,25 @@ void AGAxises::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera();
 	ID3D10Device* device = surface->getDevice();
 
+	assert( camera );
+	assert( device );
+
 	AGVec3 camEye = camera->getPos(); 
 	AGVec3 objPos = m_object->getLocalPos(); 
 	AGVec3 objPivot = m_object->getPivot();
 	AGVec3 at( objPos.x, objPos.y, objPos.z ); 
 	AGVec3 camAt = camera->getTarget(); 
-	AGVec3 dir = camEye - at; 
-	D3DXVec3Normalize( &dir, &dir );
+	AGVec3 dir = ( camEye - at ).normilized();
 	dir = camEye - dir * 1.5f; 
 	setLocalPos( dir );
 
-	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-
-	m_shader->setWorldMatrix( system == AGEStateManager::World ? getLocalMatrix() : getResultMatrix() );
-
 	AGInputLayout* inputLayout = AGGraphics::getInstance().getInputLayout( device );
-
-	if( !inputLayout )
-	{
-		AGError() << "Cant get input layout for device " << AGCurFileFunctionLineSnippet; 
-		return; 
-	}
-
+	assert( inputLayout );
 	device->IASetInputLayout( inputLayout->colorVertexInputLayout );
 
-	UINT stride = sizeof( AGPrimitiveVertex );
-	UINT offset = 0; 
-	device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
-	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
-
-	m_shader->applySurface( surface );
+	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
+	m_shader->setWorldMatrix( system == AGEStateManager::World ? getLocalMatrix() : getResultMatrix() );
+	m_shader->apply( surface );
 	m_vertexBuffer->apply( surface );
 
 	while( m_shader->applyNextPass() )
@@ -95,8 +84,6 @@ void AGAxises::draw( AGSurface* surface )
 		device->Draw( 2, 2 );
 		device->Draw( 2, 4 );
 	}
-
-	vbo->Release(); 
 }
 
 float AGAxises::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)

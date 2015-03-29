@@ -60,7 +60,7 @@ class AGShader
 		AGShader( const std::wstring& shaderName ); 
 		virtual ~AGShader(); 
 
-		void applySurface( AGSurface* surface );
+		void apply( AGSurface* surface );
 		bool applyNextPass(); 
 
 		void setMap( int slot, AGTexture2D* texture, AGSurface* surface ); 

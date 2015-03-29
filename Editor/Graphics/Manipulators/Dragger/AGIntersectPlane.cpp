@@ -11,12 +11,12 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 {
 	m_axis = axis; 
 
-	D3DXVECTOR4 red  ( 0.798431372, 0.0f, 0.0f, 1.0f );
-	D3DXVECTOR4 green( 0.0f, 0.6117647058, 0.0f, 1.0f );
-	D3DXVECTOR4 blue ( 0.0f, 0.0f, 0.76470588233, 1.0f );
+	AGColor red  ( 0.798431372, 0.0f, 0.0f, 1.0f );
+	AGColor green( 0.0f, 0.6117647058, 0.0f, 1.0f );
+	AGColor blue ( 0.0f, 0.0f, 0.76470588233, 1.0f );
 
-	D3DXVECTOR4 firstColor;
-	D3DXVECTOR4 secondColor;
+	AGColor firstColor;
+	AGColor secondColor;
 	
 	switch( axis )
 	{
@@ -36,7 +36,7 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 
 	float len = 0.1f;
 
-	D3DXVECTOR4 yellow( red.x, green.y, 0.0f, 0.4f );
+	AGColor yellow( red.getRedF(), green.getGreenF(), 0.0f, 0.4f );
 
 	AGPrimitiveVertex vertices[] = 
 	{
@@ -86,10 +86,10 @@ void AGIntersectPlane::draw( AGSurface* surface )
 	switch( m_axis )
 	{
 		case XZ_AXIS:
-			setLocalAngle( D3DXToRadian( -90.0f ), D3DXToRadian( 0.0f ), D3DXToRadian( -90.0f  ) );
+			setLocalAngle( AGDegrees( -90.0f ), AGDegrees( 0.0f ), AGDegrees( -90.0f  ) );
 		break;
 		case YZ_AXIS:
-			setLocalAngle( 0.0f, D3DXToRadian( -90.0f ), 0.0f );
+			setLocalAngle( AGDegrees( 0.0f ), AGDegrees( -90.0f ), AGDegrees( 0.0f ) );
 		break; 
 	}
 
@@ -109,36 +109,6 @@ void AGIntersectPlane::draw( AGSurface* surface )
 			device->Draw( 6, 8 );
 		}
 	}
-
-	releaseBuffers();
-}
-
-float AGIntersectPlane::intersect(AGVec3 rayOrigin, AGVec3 rayDir)
-{
-	float retDist = -1.0f;
-	for( int i = 0; i < 3; i++ )
-	{
-		AGVec3 vertex1 = m_vertices[ i ];
-		AGVec3 vertex2 = m_vertices[ i + 1 ];
-		AGVec3 vertex3 = m_vertices[ i + 2 ];
-
-		float dist, u, v; 
-
-		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
-		if( res )
-		{
-			if( retDist < 0 )
-			{
-				retDist = dist; 
-			}
-			else 
-			{
-				retDist = min( retDist, dist );	
-			}
-		}
-	}
-
-	return retDist; 
 }
 
 AGVec3 AGIntersectPlane::getAxis()

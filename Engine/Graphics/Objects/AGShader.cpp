@@ -140,7 +140,7 @@ AGShader::~AGShader()
 
 }
 
-void AGShader::applySurface(AGSurface* surface)
+void AGShader::apply(AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
@@ -160,14 +160,12 @@ void AGShader::applySurface(AGSurface* surface)
 
 	if( effect->cameraPos )
 	{
-		effect->cameraPos->SetRawValue( &camera->getPos(), 0, sizeof( AGVec3 ) );
+		AGVec3 camPos = camera->getPos(); 
+		effect->cameraPos->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
 	}
 
-	/*effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
-	effect->projMatrix->SetMatrix( camera->getProjMatrix() );*/
-
-	effect->viewMatrix->SetMatrix( camera->getVM() );
-	effect->projMatrix->SetMatrix( camera->getPM() );
+	effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
+	effect->projMatrix->SetMatrix( camera->getProjMatrix() );
 
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_curTechnique->GetDesc( &techDesc );
