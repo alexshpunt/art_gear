@@ -335,9 +335,24 @@ void AGCamera::update()
 		}
 		AGVec3 v = AGVec3::Forward();
 
-		v*= AGMatrix::Rotation( AGRadians( p->angleY ), AGRadians( p->angleX ), AGRadians( 0.0f ) ); 
+		if( p->angleX > 0.1f )
+		{
+			AGDebug() << "c";
+		}
+
+		v *= AGMatrix::Rotation( p->angleY, p->angleX, AGRadians( 0.0f ) ); 
 
 		p->target = p->pos + v; 
+
+		//AGDebug() << p->angleX << p->angleY;
+
+		/*D3DXVECTOR3 dv( 0.0f, 0.0f, 1.0f );
+		D3DXMATRIX rotMat; 
+		D3DXMatrixRotationYawPitchRoll( &rotMat, p->angleY, p->angleX, 0.0f );
+		D3DXVec3TransformCoord( &dv, &dv, &rotMat );
+
+		AGDebug() << "1" << v.x << " " << v.y << " " << v.z; 
+		AGDebug() << "2" << dv.x << " " << dv.y << " " << dv.z; */
 
 		AGEStateManager::getInstance().setRotating( true );
 	}

@@ -14,7 +14,7 @@ class AGMatrix
 		AGMatrix( float e );
 		AGMatrix( float* data );
 		AGMatrix( const AGMatrix& copy );
-		
+		~AGMatrix(); 
 		///////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////
@@ -39,8 +39,8 @@ class AGMatrix
 		static AGMatrix Rotation( const AGVec3& axis, AGRadians angle );
 		static AGMatrix Rotation( const AGVec3& axis, AGDegrees angle );
 
-		static AGMatrix Rotation( AGRadians x, AGRadians y, AGRadians z );
-		static AGMatrix Rotation( AGDegrees x, AGDegrees y, AGDegrees z  );
+		static AGMatrix Rotation( AGRadians yaw, AGRadians pitch, AGRadians roll );
+		static AGMatrix Rotation( AGDegrees yaw, AGDegrees pitch, AGDegrees roll  );
 
 		static AGMatrix Translation( const AGVec3& transl );
 
@@ -79,8 +79,8 @@ class AGMatrix
 		void setRotate( const AGVec3& axis, AGRadians angle );
 		void setRotate( const AGVec3& axis, AGDegrees angle );
 
-		void setRotate( AGRadians x, AGRadians y, AGRadians z );
-		void setRotate( AGDegrees x, AGDegrees y, AGDegrees z );
+		void setRotate( AGRadians yaw, AGRadians pitch, AGRadians roll );
+		void setRotate( AGDegrees yaw, AGDegrees pitch, AGDegrees roll );
 		void setTranslate( const AGVec3& transl );
 		void setScale( const AGVec3& scale ); 
 
@@ -207,17 +207,17 @@ inline AGMatrix AGMatrix::Rotation(const AGVec3& axis, AGDegrees angle)
 	return m;
 }
 
-inline AGMatrix AGMatrix::Rotation(AGRadians x, AGRadians y, AGRadians z)
+inline AGMatrix AGMatrix::Rotation(AGRadians yaw, AGRadians pitch, AGRadians roll)
 {
 	AGMatrix m;
-	m.setRotate( x, y, z );
+	m.setRotate( yaw, pitch, roll );
 	return m;
 }
 
-inline AGMatrix AGMatrix::Rotation(AGDegrees x, AGDegrees y, AGDegrees z)
+inline AGMatrix AGMatrix::Rotation(AGDegrees yaw, AGDegrees pitch, AGDegrees roll)
 {
 	AGMatrix m;
-	m.setRotate( x, y, z );
+	m.setRotate( yaw, pitch, roll );
 	return m;
 }
 

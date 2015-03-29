@@ -11,7 +11,7 @@ AGVec3::AGVec3()
 
 AGVec3::AGVec3(float value)
 {
-	x =y = z = value; 
+	x = y = z = value; 
 }
 
 

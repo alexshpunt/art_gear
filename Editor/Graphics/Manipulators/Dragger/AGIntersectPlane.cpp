@@ -65,7 +65,7 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 
 	for (int i = 0; i < 6; i++)
 	{
-		m_vertices[ i ] = vertices[ 8 + i ].pos; 
+		m_vertices.push_back( vertices[ 8 + i ].pos ); 
 	}
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 14 ), AGBufferType::Vertex );

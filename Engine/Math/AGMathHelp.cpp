@@ -143,8 +143,9 @@ bool AGEulerAngles::operator==(const AGEulerAngles& a)
 
 AGEulerAngles& AGEulerAngles::operator=(const AGEulerAngles& copy)
 {
-	AGEulerAngles a( copy );
-	*this = a; 
+	x = copy.x;
+	y = copy.y;
+	z = copy.y; 
 	return *this; 
 }
 

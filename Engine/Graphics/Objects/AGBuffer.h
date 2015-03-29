@@ -102,7 +102,7 @@ void AGBuffer<T>::apply(AGSurface* surface)
 	}
 	else if( m_type == Vertex )
 	{
-		UINT stride = sizeof( AGPrimitiveVertex );
+		UINT stride = sizeof( T );
 		UINT offset = 0; 
 		surface->getDevice()->IASetVertexBuffers( 0, 1, &iter->second, &stride, &offset );
 	}

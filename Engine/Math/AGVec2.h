@@ -35,6 +35,8 @@ class AGVec2
 
 		AGVec2 operator/( float var );
 		AGVec2& operator/=( float var );
+
+		operator float*(); 
 };
 
 #endif 

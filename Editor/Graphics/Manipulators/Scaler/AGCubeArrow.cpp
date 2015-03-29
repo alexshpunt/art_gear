@@ -57,7 +57,7 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 
 	int indexCount = sizeof( indices ) / sizeof( int );
 
-	m_indices = vector< int >( indices, indices + indexCount + 1 );
+	m_indices = vector< int >( indices, indices + indexCount );
 
 	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index );
 
@@ -66,7 +66,8 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 
 AGCubeArrow::~AGCubeArrow()
 {
-
+	delete m_boundingBox;
+	delete m_indexBuffer;
 }
 
 void AGCubeArrow::draw( AGSurface* surface )

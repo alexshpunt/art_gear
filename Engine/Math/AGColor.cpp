@@ -12,6 +12,11 @@ class AGColorPrivate
 	///*i - integer value ; *f - floatValue
 	///////////////////////////////////////////////////////////////////////////
 	public:
+		AGColorPrivate()
+		{
+			rf = gf = bf = af = 0.0f;
+			ri = gi = bi = ai = 0; 
+		}
 		void setRF( float r )
 		{
 			rf = r; 
@@ -33,7 +38,7 @@ class AGColorPrivate
 		void setAF( float a )
 		{
 			af = a;
-			af = a * 255; 
+			ai = a * 255; 
 		}
 
 		void setFloat( float r, float g, float b, float a )
@@ -89,7 +94,8 @@ AGColor::AGColor()
 AGColor::AGColor(const AGColor& color)
 {
 	p = new AGColorPrivate; 
-	p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
+	if( color.p )
+		p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -255,12 +261,13 @@ int AGColor::getAlpha() const
 
 AGColor& AGColor::operator=(AGColor color)
 {
+	p = new AGColorPrivate; 
 	p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
 	return *this; 
 }
 
-AGColor::operator float*() const
+/*AGColor::operator float*() const
 {
 	float color[] = { p->rf, p->gf, p->bf, p->af };
 	return color; 
-}
+}*/

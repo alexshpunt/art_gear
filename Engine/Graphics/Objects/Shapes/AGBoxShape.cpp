@@ -14,9 +14,6 @@ class AGBoxShapePrivate
 		float length; 
 		float width;
 		float height; 
-
-		int indices[ 36 ];
-		AGVec3 vertices[ 8 ];
 };
 
 AGBoxShape::AGBoxShape( float side, const AGColor& color ) : AGShape( color )
@@ -126,7 +123,7 @@ void AGBoxShape::setupShape()
 
 	for( int i = 0; i < 8; i++ )
 	{
-		p->vertices[ i ] = vertices[ i ].pos; 
+		m_vertices.push_back( vertices[ i ].pos ); 
 	}
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 8 ), AGBufferType::Vertex );
@@ -156,53 +153,55 @@ void AGBoxShape::setupShape()
 
 	m_indexBuffer = new AGBuffer< int >( indexVector, AGBufferType::Index );
 
-	p->indices[ 0 ] = 0;
-	p->indices[ 1 ] = 1;
-	p->indices[ 2 ] = 2; 
+	m_indices.resize( 36 );
 
-	p->indices[ 3 ] = 3; 
-	p->indices[ 4 ] = 0;
-	p->indices[ 5 ] = 2; 
+	m_indices[ 0 ] = 0;
+	m_indices[ 1 ] = 1;
+	m_indices[ 2 ] = 2; 
 
-	p->indices[ 6 ] = 3;
-	p->indices[ 7 ] = 2;
-	p->indices[ 8 ] = 6; 
+	m_indices[ 3 ] = 3; 
+	m_indices[ 4 ] = 0;
+	m_indices[ 5 ] = 2; 
 
-	p->indices[ 9 ]  = 7;
-	p->indices[ 10 ] = 3;
-	p->indices[ 11 ] = 6;
+	m_indices[ 6 ] = 3;
+	m_indices[ 7 ] = 2;
+	m_indices[ 8 ] = 6; 
 
-	p->indices[ 12 ] = 7;
-	p->indices[ 13 ] = 6;
-	p->indices[ 14 ] = 5; 
+	m_indices[ 9 ]  = 7;
+	m_indices[ 10 ] = 3;
+	m_indices[ 11 ] = 6;
 
-	p->indices[ 15 ] = 4;
-	p->indices[ 16 ] = 6;
-	p->indices[ 17 ] = 5; 
+	m_indices[ 12 ] = 7;
+	m_indices[ 13 ] = 6;
+	m_indices[ 14 ] = 5; 
 
-	p->indices[ 18 ] = 4;
-	p->indices[ 19 ] = 5;
-	p->indices[ 20 ] = 1; 
+	m_indices[ 15 ] = 4;
+	m_indices[ 16 ] = 6;
+	m_indices[ 17 ] = 5; 
 
-	p->indices[ 21 ] = 0;
-	p->indices[ 22 ] = 5;
-	p->indices[ 23 ] = 1; 
+	m_indices[ 18 ] = 4;
+	m_indices[ 19 ] = 5;
+	m_indices[ 20 ] = 1; 
 
-	p->indices[ 24 ] = 1;
-	p->indices[ 25 ] = 5;
-	p->indices[ 26 ] = 6;
+	m_indices[ 21 ] = 0;
+	m_indices[ 22 ] = 5;
+	m_indices[ 23 ] = 1; 
 
-	p->indices[ 27 ] = 2;
-	p->indices[ 28 ] = 1;
-	p->indices[ 29 ] = 6; 
+	m_indices[ 24 ] = 1;
+	m_indices[ 25 ] = 5;
+	m_indices[ 26 ] = 6;
 
-	p->indices[ 30 ] = 4;
-	p->indices[ 31 ] = 0;
-	p->indices[ 32 ] = 3; 
+	m_indices[ 27 ] = 2;
+	m_indices[ 28 ] = 1;
+	m_indices[ 29 ] = 6; 
 
-	p->indices[ 33 ] = 7;
-	p->indices[ 34 ] = 0;
-	p->indices[ 35 ] = 3; 
+	m_indices[ 30 ] = 4;
+	m_indices[ 31 ] = 0;
+	m_indices[ 32 ] = 3; 
+
+	m_indices[ 33 ] = 7;
+	m_indices[ 34 ] = 0;
+	m_indices[ 35 ] = 3; 
 }
 
 float AGBoxShape::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )

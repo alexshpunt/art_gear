@@ -47,7 +47,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 26 ), AGBufferType::Vertex );
 
-	for( int i = 0 ; i < 25; i++ )
+	for( int i = 0 ; i < 26; i++ )
 	{
 		m_vertices.push_back( vertices[ i ].pos );
 	}
@@ -95,7 +95,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 
 	int indexCount = sizeof( indices ) / sizeof( indices[ 0 ] );
 
-	m_indices = vector< int >( indices, indices + indexCount + 1 ); 
+	m_indices = vector< int >( indices, indices + indexCount ); 
 
 	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index ); 
 

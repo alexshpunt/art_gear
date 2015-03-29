@@ -135,6 +135,7 @@ struct AGDegrees
 		return value; 
 	}
 
+	AGDegrees operator+() const{ return AGDegrees( value ); }
 	AGDegrees& operator=( const AGDegrees& degrees ){ value = degrees.value; return *this; }
 	bool operator==( const AGDegrees& d ) { return AGMath::isEqual( value, d.value ); }
 	bool operator==( float var ) { return AGMath::isEqual( value, var ); }
@@ -146,6 +147,7 @@ struct AGDegrees
 		return *this; 
 	}
 
+	AGDegrees operator-() const{ return AGDegrees( -value ); }
 	friend AGDegrees operator-( const AGDegrees& r1, const AGDegrees& r2 );
 	AGDegrees& operator-=( const AGDegrees& d )
 	{
@@ -186,6 +188,7 @@ struct AGRadians
 	bool operator==( const AGRadians& r ) { return AGMath::isEqual( value, r.value ); }
 	bool operator==( float var ) { return AGMath::isEqual( value, var ); }
 
+	AGRadians operator+() const{ return AGRadians( value ); }
 	friend AGRadians operator+( const AGRadians& r1, const AGRadians& r2 );
 	AGRadians& operator+=( const AGRadians& r )
 	{
@@ -193,6 +196,7 @@ struct AGRadians
 		return *this; 
 	}
 
+	AGRadians operator-() const{ return AGRadians( -value ); } 
 	friend AGRadians operator-( const AGRadians& r1, const AGRadians& r2 );
 	AGRadians& operator-=( const AGRadians& r )
 	{

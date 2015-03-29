@@ -6,6 +6,8 @@
 
 #include <Engine/Graphics/AGGraphics.h>
 
+#include <exception>
+
 AGCircle::AGCircle( CircleAxis axis)
 {
 	m_axis = axis; 
@@ -72,7 +74,7 @@ AGCircle::AGCircle( CircleAxis axis)
 
 	int verticesCount = sizeof( vertices ) / sizeof( AGPrimitiveVertex );
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + verticesCount + 1 ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + verticesCount ), AGBufferType::Vertex );
 
 	for( int i = 0; i < verticesCount; i++ )
 	{
@@ -243,7 +245,7 @@ AGCircle::AGCircle( CircleAxis axis)
 	int selectedVerticesCount = sizeof( selectedVertices ) / sizeof( AGPrimitiveVertex );
 
 	m_additionalVB = new AGBuffer< AGPrimitiveVertex >( 
-		vector< AGPrimitiveVertex >( selectedVertices, selectedVertices + selectedVerticesCount + 1 ), AGBufferType::Vertex );
+		vector< AGPrimitiveVertex >( selectedVertices, selectedVertices + selectedVerticesCount ), AGBufferType::Vertex );
 
 	int indices[] = 
 	{
@@ -402,7 +404,7 @@ AGCircle::AGCircle( CircleAxis axis)
 	int indexCount = sizeof( indices ) / sizeof( indices[ 0 ] );
 	m_nBoundIndices = sizeof( boundIndices ) / sizeof( indices[ 0 ] );
 
-	m_indices = vector< int >( indices, indices + indexCount + 1 ); 
+	m_indices = vector< int >( indices, indices + indexCount ); 
 
 	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index ); 
 }

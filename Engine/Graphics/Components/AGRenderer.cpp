@@ -79,7 +79,7 @@ void AGRenderer::draw( AGSurface* surface )
 	{
 		mesh->draw( surface );
 	}
-	else 
+	else
 	{
 		m_boundingBox->draw( surface ); 
 	}

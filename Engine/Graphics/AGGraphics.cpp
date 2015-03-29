@@ -44,7 +44,7 @@ void AGGraphics::update()
 		if( surface == m_focusSurface )
 		{
 			surface->getCamera()->update(); 
-		}
+		} 
 
 		if( AGInput().isButtonDown( "MMB" ) && surface == m_focusSurface )
 		{
@@ -130,6 +130,8 @@ void AGGraphics::update()
 			renderer->draw( surface );
 		}
 
+		/*
+
 		for( AGDrawable* drawable : m_drawables )
 		{
 			drawable->draw( surface );
@@ -138,13 +140,13 @@ void AGGraphics::update()
 		for( AGClickable* clickable : m_clickableObjects )
 		{
 			clickable->draw( surface ); 
-		}
+		}*/
 
 		surface->present(); 
 
 		surface->getDevice()->RSSetState( m_rasterizeStates[ surface->getDevice() ]->solid ); 
 				
-		for( AGManipulator* manipulator : m_manipulators )
+		/*for( AGManipulator* manipulator : m_manipulators )
 		{
 			manipulator->draw( surface );
 		}
@@ -153,17 +155,17 @@ void AGGraphics::update()
 		{
 			if( renderer->isSelected() )
 				renderer->getMesh()->getBoundingBox()->draw( surface );
-		}
+		}*/
 		
 		if( surface == m_focusSurface )
 			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), m_focusSurface );
 
 		surface->getDevice()->OMSetDepthStencilState( m_depthState.at( surface->getId() ), 0 );
 
-		if( m_console && AGEStateManager::getInstance().isConsoleMode() )
+		/*if( m_console && AGEStateManager::getInstance().isConsoleMode() )
 		{
 			m_console->draw( surface );
-		}
+		}*/
 
 		surface->swapChainPresent();
 	}

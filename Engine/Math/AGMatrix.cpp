@@ -140,6 +140,11 @@ AGMatrix::AGMatrix(float* data)
 	memcpy_s( p->data, sizeof( p->data ), data, sizeof( p->data ) );
 }
 
+AGMatrix::~AGMatrix()
+{
+	delete p; 
+}
+
 void AGMatrix::setData(float* data)
 {
 	memcpy_s( p->data, sizeof( p->data ), data, sizeof( p->data ) );
@@ -376,7 +381,7 @@ void AGMatrix::setRotateZ(AGRadians angle)
 
 void AGMatrix::setRotateZ(AGDegrees angle)
 {
-
+	setRotateZ( angle.toRadians() );
 }
 
 void AGMatrix::setRotate( const AGVec3& axis, AGRadians angle )
@@ -400,9 +405,9 @@ void AGMatrix::setRotate( const AGVec3& axis, AGRadians angle )
 	p->data[ 2 ][ 2 ] = cosA + ( 1 - cosA ) * ( normal.z * normal.z ); 
 }
 
-void AGMatrix::setRotate(AGRadians x, AGRadians y, AGRadians z)
+void AGMatrix::setRotate(AGRadians yaw, AGRadians pitch, AGRadians roll)
 {
-	*this = AGMatrix::RotationZ( z ) * AGMatrix::RotationX( x ) * AGMatrix::RotationY( y ); 
+	*this = AGMatrix::RotationZ( roll ) * AGMatrix::RotationX( pitch ) * AGMatrix::RotationY( yaw ); 
 }
 
 void AGMatrix::setRotate(const AGVec3& axis, AGDegrees angle)
@@ -410,9 +415,9 @@ void AGMatrix::setRotate(const AGVec3& axis, AGDegrees angle)
 	setRotate( axis, angle.toRadians() );
 }
 
-void AGMatrix::setRotate(AGDegrees x, AGDegrees y, AGDegrees z)
+void AGMatrix::setRotate(AGDegrees yaw, AGDegrees pitch, AGDegrees roll)
 {
-	setRotate( x.toRadians(), y.toRadians(), z.toRadians() );
+	setRotate( yaw.toRadians(), pitch.toRadians(), roll.toRadians() );
 }
 
 void AGMatrix::setTranslate(const AGVec3& transl)
@@ -433,6 +438,7 @@ AGMatrix::operator float *() const
 {
 	return p->data[ 0 ];
 }
+
 
 
 

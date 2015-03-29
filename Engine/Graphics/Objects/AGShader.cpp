@@ -206,10 +206,15 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 
 void AGShader::setWorldMatrix(const AGMatrix& world)
 {
+	AGMatrix id; 
+
+	D3DXMATRIX matrix; 
+	D3DXMatrixIdentity( &matrix );
+
 	for( AGSurface* surface : m_surfaces )
 	{
 		AGEffect* effect = m_effects.at( surface );
-		effect->worldMatrix->SetMatrix( world );
+		effect->worldMatrix->SetMatrix( matrix );
 	}
 }
 

@@ -21,12 +21,12 @@ AGAxises::AGAxises()
 
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ AGVec3( 0.0f, 0.0f, 0.0f ), red },
-		{ AGVec3( len, 0.0f, 0.0f ), red },
-		{ AGVec3( 0.0f, 0.0f, 0.0f ), green },
-		{ AGVec3( 0.0f, len, 0.0f ), green },
-		{ AGVec3( 0.0f, 0.0f, 0.0f ), blue },
-		{ AGVec3( 0.0f, 0.0f, len ), blue },
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), red },  //0
+		{ AGVec3( len, 0.0f, 0.0f ), red },   //1
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), green },//2
+		{ AGVec3( 0.0f, len, 0.0f ), green }, //3
+		{ AGVec3( 0.0f, 0.0f, 0.0f ), blue }, //4
+		{ AGVec3( 0.0f, 0.0f, len ), blue },  //5
 	};
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 6 ), AGBufferType::Vertex );

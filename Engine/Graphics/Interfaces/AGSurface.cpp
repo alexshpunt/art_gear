@@ -17,7 +17,7 @@
 struct SurfaceVertex
 {
 	AGVec3 pos;
-	D3DXVECTOR2 uv; 
+	AGVec2 uv; 
 };
 
 AGSurface::AGSurface()
@@ -236,8 +236,6 @@ void AGSurface::resizeSurface(float width, float height )
 		m_camera->setAspectRatio( width / height );
 
 	m_size = AGSize( width, height );
-
-	//AGGraphics::getInstance().update();
 }
 
 const AGSize& AGSurface::getSize() const
@@ -297,13 +295,13 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 
 	SurfaceVertex vertices[] =
 	{
-		AGVec3( -1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 0.0f ), //1
-		AGVec3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //2
-		AGVec3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//3
+		AGVec3( -1.0f,  1.0f, 1.0f ), AGVec2( 0.0f, 0.0f ), //1
+		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //2
+		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //3
 
-		AGVec3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //4
-		AGVec3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 1.0f ), //5
-		AGVec3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//6
+		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //4
+		AGVec3(  1.0f, -1.0f, 1.0f ), AGVec2( 1.0f, 1.0f ), //5
+		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //6
 	};
 
 	D3D10_BUFFER_DESC bufferDesc;
@@ -519,7 +517,7 @@ void AGSurface::present()
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_technique->GetDesc( &techDesc );
 
-	if( m_surfaceMode == Shaded )
+	/*if( m_surfaceMode == Shaded )
 	{
 		AGVec3 camPos = m_camera->getPos(); 
 		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
@@ -541,7 +539,7 @@ void AGSurface::present()
 			}
 		}
 	}
-	else 
+	else */
 	{
 		for( UINT p = 0; p < techDesc.Passes; ++p )
 		{

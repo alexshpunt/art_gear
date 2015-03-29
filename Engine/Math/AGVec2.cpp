@@ -128,4 +128,10 @@ AGVec2& AGVec2::operator/=(float var)
 	return *this; 
 }
 
+AGVec2::operator float*()
+{
+	return (float*)this; 
+}
+
+
 

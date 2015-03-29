@@ -17,11 +17,11 @@ struct AGInputLayout
 
 struct AGVertex 
 {
-	AGVec3 pos;
-	AGVec3 normal;
-	AGVec3 binormal;
-	AGVec3 tangent; 
-	AGVec2 uv; 
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 normal;
+	D3DXVECTOR3 binormal;
+	D3DXVECTOR3 tangent; 
+	D3DXVECTOR2 uv; 
 };
 
 struct AGColorVertex 
