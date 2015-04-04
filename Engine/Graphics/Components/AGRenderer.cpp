@@ -9,7 +9,7 @@
 
 AGRenderer::AGRenderer(AGGameObject* object) : AGComponent( object )
 {
-	m_boundingBox = new AGBoundingBox( AGVec3( 1.0f, 1.0f, 1.0f ), AGVec3( 0.0f, 0.0f, 0.0f ) );
+	m_boundingBox = new AGBoundingBox( D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 	m_isSelected = false; 
 	AGGraphics::getInstance().addRenderer( this ); 
 }
@@ -50,7 +50,7 @@ AGMesh* AGRenderer::getMesh() const
 	return (AGMesh*)m_mesh.getData(); 
 }
 
-float AGRenderer::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
+float AGRenderer::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 {
 	AGMesh* mesh = (AGMesh*)m_mesh.getData();
 
@@ -79,7 +79,7 @@ void AGRenderer::draw( AGSurface* surface )
 	{
 		mesh->draw( surface );
 	}
-	else
+	else 
 	{
 		m_boundingBox->draw( surface ); 
 	}

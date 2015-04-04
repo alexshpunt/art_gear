@@ -8,7 +8,7 @@
 
 AGShape::AGShape(const AGColor& color)
 {
-	setColor( color );
+	m_color = color; 
 
 	m_shader = AGResourceManager::getInstance().getShader( L"shape" );
 
@@ -42,17 +42,23 @@ void AGShape::prepareDraw(AGSurface* surface)
 
 	assert( camera );
 	assert( device );
-	assert( m_shader ); 
 
-	m_shader->apply( surface );
+	assert( m_shader ); 
+	m_shader->applySurface( surface );
 	m_shader->setWorldMatrix( getResultMatrix() );
 
 	assert( m_vertexBuffer );
+	m_vertexBuffer->apply( surface );
 
 	if( m_indexBuffer )
 	{
 		m_indexBuffer->apply( surface );
 	}
+
+	AGInputLayout* inputLayout = AGGraphics::getInstance().getInputLayout( device );
+	assert( inputLayout );
+
+	device->IASetInputLayout( inputLayout->colorVertexInputLayout );
 
 	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 }

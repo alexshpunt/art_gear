@@ -2,100 +2,29 @@
 
 #include "AGMath.h"
 
-///////////////////////////////////////////////////////////////////////////
-///Class that helps to transform INT color representation to normalized 
-///FLOAT representation, and also store data of 2 types( int and float )
-///////////////////////////////////////////////////////////////////////////
-class AGColorPrivate 
+enum Colors{ R, G, B, A };
+
+float clrToFloat( int clr )
 {
-	///////////////////////////////////////////////////////////////////////////
-	///*i - integer value ; *f - floatValue
-	///////////////////////////////////////////////////////////////////////////
-	public:
-		AGColorPrivate()
-		{
-			rf = gf = bf = af = 0.0f;
-			ri = gi = bi = ai = 0; 
-		}
-		void setRF( float r )
-		{
-			rf = r; 
-			ri = r * 255; 
-		}
-		
-		void setGF( float g )
-		{
-			gf = g;
-			gi = g * 255;
-		}
+	return clr / 255.0f; 
+}
 
-		void setBF( float b )
-		{
-			bf = b;
-			bi = b * 255; 
-		}
-
-		void setAF( float a )
-		{
-			af = a;
-			ai = a * 255; 
-		}
-
-		void setFloat( float r, float g, float b, float a )
-		{
-			setRF( r );
-			setGF( g );
-			setBF( b );
-			setAF( a ); 
-		}
-
-		void setRI( int r )
-		{
-			ri = r;
-			rf = r / 255.0f; 
-		}
-
-		void setGI( int g )
-		{
-			gi = g;
-			gf = g / 255.0f; 
-		}
-
-		void setBI( int b )
-		{
-			bi = b;
-			bf = b / 255.0f; 
-		}
-
-		void setAI( int a )
-		{
-			ai = a;
-			af = a / 255.0f; 
-		}
-
-		void setInt( int r, int g, int b, int a )
-		{
-			setRI( r );
-			setGI( g );
-			setBI( b );
-			setAI( a );
-		}
-
-		int ri, gi, bi, ai;
-		float rf, gf, bf, af; 
-};
+int clrToInt( float clr )
+{
+	return clr * 255.0f; 
+}
 
 AGColor::AGColor()
 {
-	p = new AGColorPrivate; 
-	p->setInt( 255, 255, 255, 255 );
+	m_r = m_g = m_b = m_a = 0.0f; 
 }
 
 AGColor::AGColor(const AGColor& color)
-{
-	p = new AGColorPrivate; 
-	if( color.p )
-		p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
+{	
+	m_r = color.m_r;
+	m_g = color.m_g;
+	m_b = color.m_b;
+	m_a = color.m_a; 
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -104,20 +33,27 @@ AGColor::AGColor(const AGColor& color)
 
 AGColor::AGColor(int color)
 {
-	p = new AGColorPrivate; 
-	p->setInt( color, color, color, 255 ); 
+	m_r = AGMath::clamp( clrToFloat( color ), 0.0f, 1.0f );
+	m_g = AGMath::clamp( clrToFloat( color ), 0.0f, 1.0f );
+	m_b = AGMath::clamp( clrToFloat( color ), 0.0f, 1.0f );
+	m_a = 1.0f; 
 }
 
 AGColor::AGColor(int r, int g, int b)
 {
-	p = new AGColorPrivate; 
-	p->setInt( r, g, b, 255 );
+	m_r = AGMath::clamp( clrToFloat( r ), 0.0f, 1.0f );
+	m_g = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f );
+	m_b = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f );
+	m_a = 1.0f; 
 }
 
 AGColor::AGColor(int r, int g, int b, int a)
 {
-	p = new AGColorPrivate; 
-	p->setInt( r, g, b, a );
+	m_r = AGMath::clamp( clrToFloat( r ), 0.0f, 1.0f );
+	m_g = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f );
+	m_b = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f );
+	m_a = AGMath::clamp( clrToFloat( a ), 0.0f, 1.0f ); 
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -126,20 +62,26 @@ AGColor::AGColor(int r, int g, int b, int a)
 
 AGColor::AGColor(float color)
 {
-	p = new AGColorPrivate; 
-	p->setFloat( color, color, color, 1.0f );
+	m_r = AGMath::clamp( color, 0.0f, 1.0f );
+	m_g = AGMath::clamp( color, 0.0f, 1.0f );
+	m_b = AGMath::clamp( color, 0.0f, 1.0f ); 
+	m_a = 1.0f; 
 }
 
 AGColor::AGColor(float r, float g, float b )
 {
-	p = new AGColorPrivate; 
-	p->setFloat( r, g, b, 1.0f );
+	m_r = AGMath::clamp( r, 0.0f, 1.0f );
+	m_g = AGMath::clamp( g, 0.0f, 1.0f );
+	m_b = AGMath::clamp( b, 0.0f, 1.0f ); 
+	m_a = 1.0f;  
 }
 
 AGColor::AGColor(float r, float g, float b, float a)
 {
-	p = new AGColorPrivate; 
-	p->setFloat( r, g, b, a );
+	m_r = AGMath::clamp( r, 0.0f, 1.0f );
+	m_g = AGMath::clamp( g, 0.0f, 1.0f );
+	m_b = AGMath::clamp( b, 0.0f, 1.0f ); 
+	m_a = AGMath::clamp( a, 0.0f, 1.0f );  
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -148,7 +90,7 @@ AGColor::AGColor(float r, float g, float b, float a)
 
 AGColor::~AGColor()
 {
-	delete p;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -157,62 +99,74 @@ AGColor::~AGColor()
 
 void AGColor::setRed(int r)
 {
-	p->setRI( r );
+	m_r = AGMath::clamp( clrToFloat( r ), 0.0f, 1.0f );
 }
 
 void AGColor::setRed(float r)
 {
-	p->setRF( r );
+	m_r = AGMath::clamp( r, 0.0f, 1.0f );
 }
 
 void AGColor::setGreen(int g)
 {
-	p->setGI( g );
+	m_r = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f );
 }
 
 void AGColor::setGreen(float g)
 {
-	p->setGF( g );
+	m_r = AGMath::clamp( g, 0.0f, 1.0f );
 }
 
 void AGColor::setBlue(int b)
 {
-	p->setBI( b );
+	m_r = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f );
 }
 
 void AGColor::setBlue(float b)
 {
-	p->setBF( b );
+	m_r = AGMath::clamp( b, 0.0f, 1.0f );
 }
 
 void AGColor::setAlpha(int a)
 {
-	p->setAI( a );
+	m_r = AGMath::clamp( clrToFloat( a ), 0.0f, 1.0f );
 }
 
 void AGColor::setAlpha(float a)
 {
-	p->setAF( a );
+	m_r = AGMath::clamp( a, 0.0f, 1.0f );
 }
 
 void AGColor::setColor(int r, int g, int b)
 {
-	p->setInt( r, g, b, 255 );
+	m_r = AGMath::clamp( clrToFloat( r ), 0.0f, 1.0f ); 
+	m_g = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f ); 
+	m_b = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f ); 
+	m_a = 1.0f;
 }
 
 void AGColor::setColor(int r, int b, int g, int a)
 {
-	p->setInt( r, g, b, a );
+	m_r = AGMath::clamp( clrToFloat( r ), 0.0f, 1.0f ); 
+	m_g = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f ); 
+	m_b = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f ); 
+	m_a = AGMath::clamp( clrToFloat( a ), 0.0f, 1.0f );
 }
 
 void AGColor::setColor(float r, float g, float b)
 {
-	p->setFloat( r, g, b, 1.0f );
+	m_r = AGMath::clamp( r, 0.0f, 1.0f ); 
+	m_g = AGMath::clamp( g, 0.0f, 1.0f ); 
+	m_b = AGMath::clamp( b, 0.0f, 1.0f ); 
+	m_a = 1.0f;
 }
 
 void AGColor::setColor(float r, float b, float g, float a)
 {
-	p->setFloat( r, g, b, a );
+	m_r = AGMath::clamp( r, 0.0f, 1.0f ); 
+	m_g = AGMath::clamp( g, 0.0f, 1.0f ); 
+	m_b = AGMath::clamp( b, 0.0f, 1.0f ); 
+	m_a = AGMath::clamp( a, 0.0f, 1.0f );
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -221,53 +175,54 @@ void AGColor::setColor(float r, float b, float g, float a)
 
 float AGColor::getRedF() const
 {
-	return p->rf; 
+	return m_r; 
 }
 
 float AGColor::getGreenF() const
 {
-	return p->gf; 
+	return m_g; 
 }
 
 float AGColor::getBlueF() const
 {
-	return p->bf; 
+	return m_b;
 }
 
 float AGColor::getAlphaF() const
 {
-	return p->af; 
+	return m_a;
 }
 
 int AGColor::getRed() const
 {
-	return p->ri; 
+	return clrToInt( m_r );
 }
 
 int AGColor::getGreen() const
 {
-	return p->gi;
+	return clrToInt( m_g );
 }
 
 int AGColor::getBlue() const
 {
-	return p->bi;
+	return clrToInt( m_b );
 }
 
 int AGColor::getAlpha() const
 {
-	return p->ai;
+	return clrToInt( m_a );;
 }
 
 AGColor& AGColor::operator=(AGColor color)
 {
-	p = new AGColorPrivate; 
-	p->setInt( color.p->ri, color.p->gi, color.p->bi, color.p->ai );
+	m_r = color.m_r;
+	m_g = color.m_g;
+	m_b = color.m_b;
+	m_a = color.m_a; 
 	return *this; 
 }
 
-/*AGColor::operator float*() const
+AGColor::operator float*() const
 {
-	float color[] = { p->rf, p->gf, p->bf, p->af };
-	return color; 
-}*/
+	return (float*)this; 
+}

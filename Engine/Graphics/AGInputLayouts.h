@@ -4,8 +4,6 @@
 #include <d3dx10.h>
 #include <d3d10.h>
 
-#include "Engine/Math/AGMath.h"
-
 struct AGInputLayout
 {
 	ID3D10InputLayout* vertexInputLayout;
@@ -27,24 +25,24 @@ struct AGVertex
 struct AGColorVertex 
 {
 	AGVec3 pos;
-	AGVec3 color; 
+	AGColor color; 
 };
 
 struct AGTextureVertex 
 {
-	AGVec3 pos;
-	AGVec2 uv; 
+	D3DXVECTOR3 pos;
+	D3DXVECTOR2 uv; 
 };
 
 struct AGSimpleVertex 
 {
-	AGVec3 pos; 
+	D3DXVECTOR3 pos; 
 };
 
 struct AGBillboardVertex
 {
-	AGVec3 pos;
-	AGSize size; 
+	D3DXVECTOR3 pos;
+	D3DXVECTOR2 size; 
 };
 
 #endif 

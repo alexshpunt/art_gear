@@ -1,5 +1,8 @@
 #include "AGVec3.h"
 
+#include <d3d10.h>
+#include <d3dx10.h>
+
 #include <math.h>
 
 #include "AGMath.h"
@@ -213,6 +216,24 @@ AGVec3 AGVec3::operator-()
 
 AGVec3 AGVec3::unproject( const AGVec3& vec, const AGRect& viewport, const AGMatrix& world, const AGMatrix& view, const AGMatrix& proj )
 {
+	/*D3DXMATRIX dxWorld( world ); 
+	D3DXMATRIX dxView( view );
+	D3DXMATRIX dxProj( proj ); 
+
+	D3DXVECTOR3 dxV( vec ); 
+
+	D3D10_VIEWPORT vp;
+	vp.Height = viewport.getHeight();
+	vp.Width = viewport.getWidth();
+	vp.MaxDepth = 1.0f;
+	vp.MinDepth = 0.0f;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+
+	D3DXVec3Unproject( &dxV, &dxV, &vp, &dxProj, &dxView, &dxWorld ); */
+
+	//return AGVec3( dxV.x, dxV.y, dxV.z ); 
+
 	AGMatrix invMat = ( world * view *proj  ).inversed(); 
 
 	AGVec3 tmp;

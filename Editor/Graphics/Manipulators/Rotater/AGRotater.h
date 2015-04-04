@@ -30,13 +30,13 @@ class AGRotater : public AGManipulator
 
 		AGGizmo* m_selectedObject; 
 
-		AGVec3 m_v1;
-		AGVec3 m_v2; 
-		AGVec3 m_v3; 
+		D3DXVECTOR3 m_v1;
+		D3DXVECTOR3 m_v2; 
+		D3DXVECTOR3 m_v3; 
 
-		AGVec3 m_tangent; 
+		D3DXVECTOR3 m_tangent; 
 
-		AGVec3 m_angles; 
+		D3DXVECTOR3 m_angles; 
 };
 
 

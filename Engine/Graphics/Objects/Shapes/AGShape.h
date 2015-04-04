@@ -17,7 +17,7 @@ class AGShape : public AGPrimitive
 		virtual void setupShape() = 0; 
 	protected:
 		virtual void prepareDraw( AGSurface* surface ); 
-
+		AGBuffer< AGColorVertex >* m_vertexBuffer;
 		AGColor m_color; 
 };
 

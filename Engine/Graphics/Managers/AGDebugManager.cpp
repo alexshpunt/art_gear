@@ -35,6 +35,8 @@ void AGDebugManager::init()
 
 	m_p->devices.resize( surfaces.size() );
 
+	m_p->color = AGColor( 1.0f );
+
 	for( AGSurface* surface : surfaces )
 	{
 		D3DX10CreateFontIndirect( surface->getDevice(), &fontDesc, &m_p->devices.at( surface->getId() ) ); 

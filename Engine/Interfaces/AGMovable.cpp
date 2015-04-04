@@ -5,47 +5,70 @@ class AGMovablePrivate
 	public:
 		AGMovablePrivate()
 		{
-			localScale = AGVec3( 1.0f );
-			worldScale = AGVec3( 1.0f );
+			D3DXMatrixIdentity( &pivotMatrix );
+			D3DXMatrixIdentity( &translMatrix );
+			D3DXMatrixIdentity( &rotMatrix );
 
-			forward    = AGVec3::Forward();
-			up         = AGVec3::Up();
-			right      = AGVec3::Right(); 
+			D3DXMatrixIdentity( &local );
+			D3DXMatrixIdentity( &localTranslMatrix );
+			D3DXMatrixIdentity( &localScaleMatrix );
+			D3DXMatrixIdentity( &localRotMatrix );
+
+			D3DXMatrixIdentity( &world );
+			D3DXMatrixIdentity( &worldTranslMatrix );
+			D3DXMatrixIdentity( &worldScaleMatrix );
+			D3DXMatrixIdentity( &worldRotMatrix );
+
+			pivot      = AGVec3( 0.0f, 0.0f, 0.0f );
+			pos        = AGVec3( 0.0f, 0.0f, 0.0f );
+			rot        = AGVec3( 0.0f, 0.0f, 0.0f );
+
+			localPos   = AGVec3( 0.0f, 0.0f, 0.0f );
+			localAngle = AGVec3( 0.0f, 0.0f, 0.0f );
+			localScale = AGVec3( 1.0f, 1.0f, 1.0f );
+
+			worldPos   = AGVec3( 0.0f, 0.0f, 0.0f );
+			worldAngle = AGVec3( 0.0f, 0.0f, 0.0f );
+			worldScale = AGVec3( 1.0f, 1.0f, 1.0f );
+
+			forward    = AGVec3::getForward();
+			up         = AGVec3::getUp();
+			right      = AGVec3::getRight(); 
 
 			updateLocalMatrix = false; 
 			updateWorldMatrix = false; 
 		}
 		AGVec3 pivot; 
-		AGMatrix pivotMatrix; 
+		D3DXMATRIX pivotMatrix; 
 
 		AGVec3 forward;
 		AGVec3 up;
 		AGVec3 right; 
 
 		AGVec3 pos; 
-		AGMatrix translMatrix;
+		D3DXMATRIX translMatrix;
 		AGVec3 rot;
-		AGMatrix rotMatrix; 
+		D3DXMATRIX rotMatrix; 
 
 		AGVec3 localPos;
-		AGEulerAngles localAngle;
+		AGVec3 localAngle;
 		AGVec3 localScale; 
 
 		AGVec3 worldPos;
-		AGEulerAngles worldAngle;
+		AGVec3 worldAngle;
 		AGVec3 worldScale; 
 
-		AGMatrix localTranslMatrix;
-		AGMatrix localRotMatrix;
-		AGMatrix localScaleMatrix; 
+		D3DXMATRIX localTranslMatrix;
+		D3DXMATRIX localRotMatrix;
+		D3DXMATRIX localScaleMatrix; 
 
-		AGMatrix worldTranslMatrix;
-		AGMatrix worldRotMatrix;
-		AGMatrix worldScaleMatrix; 
+		D3DXMATRIX worldTranslMatrix;
+		D3DXMATRIX worldRotMatrix;
+		D3DXMATRIX worldScaleMatrix; 
 
-		AGMatrix local;
-		AGMatrix world;
-		AGMatrix matrix; 
+		D3DXMATRIX local;
+		D3DXMATRIX world;
+		D3DXMATRIX matrix; 
 
 		bool updateLocalMatrix; 
 		bool updateWorldMatrix; 
@@ -54,495 +77,484 @@ class AGMovablePrivate
 
 AGMovable::AGMovable()
 {
-	p = new AGMovablePrivate; 
+	m_p->p = new AGMovablePrivate; 
 }
 
 AGMovable::~AGMovable()
 {
-	delete p; 
+
 }
 
 void AGMovable::setPivot(const AGVec3& pivot)
 {
-	p->pivot = -pivot;
-	p->pivotMatrix = AGMatrix::Translation( pivot );
+	m_p->pivot = -pivot;
+	D3DXMatrixIdentity( &m_p->pivotMatrix );
+	D3DXMatrixTranslation( &m_p->pivotMatrix, m_p->pivot.x, m_p->pivot.y, m_p->pivot.z );
+}
+
+void AGMovable::setPivot(float x, float y, float z)
+{
+	setPivot( const AGVec3&( x, y, z ) );
 }
 
 const AGVec3& AGMovable::getPivot()
 {
-	return p->pivot; 
+	return m_p->pivot; 
 }
 
 void AGMovable::setLocalPos( const AGVec3& pos )
 {
-	p->updateLocalMatrix = true; 
-	p->localPos = pos; 
+	m_p->p->updateLocalMatrix = true; 
+	m_p->p->localPos = pos; 
 
-	p->localTranslMatrix.setTranslate( pos );
+	D3DXMatrixTranslation( &m_p->p.localTranslMatrix, m_p->localPos.x, m_p->localPos.y, m_p->localPos.z );
 
 	handleChanges( LocalTrans );
 }
 
+void AGMovable::setLocalPos(float x, float y, float z)
+{
+	m_p->localPos = const AGVec3&( x, y, z );
+	setLocalPos( m_p->localPos );
+}
+
 const AGVec3& AGMovable::getLocalPos() const
 {
-	return p->localPos; 
+	return m_p->localPos; 
 }
 
 void AGMovable::setWorldPos(const AGVec3& pos)
 {
 	/*m_p->updateWorldMatrix = true;
 	m_p->worldPos = pos;
-	//AGMatrixIdentity( &m_p->worldTranslMatrix );
-	AGMatrixTranslation( &m_p->worldTranslMatrix, m_p->worldPos.x, m_p->worldPos.y, m_p->worldPos.z );
+	//D3DXMatrixIdentity( &m_p->worldTranslMatrix );
+	D3DXMatrixTranslation( &m_p->worldTranslMatrix, m_p->worldPos.x, m_p->worldPos.y, m_p->worldPos.z );
 
 	//m_p->translMatrix *= m_p->worldTranslMatrix; 
 
 	handleChanges( WorldTrans );*/
 
 	//При учёте того, что у нас нет родителей TODO: Сделать зависимость 
-	p->updateLocalMatrix = true; 
-	p->localPos = pos; 
-	p->localTranslMatrix.setIdentity(); 
-	p->localTranslMatrix.setTranslate( pos );
+	m_p->updateLocalMatrix = true; 
+	m_p->localPos = pos; 
+
+	D3DXMatrixTranslation( &m_p->localTranslMatrix, m_p->localPos.x, m_p->localPos.y, m_p->localPos.z );
 
 	handleChanges( LocalTrans );
+}
+
+void AGMovable::setWorldPos(float x, float y, float z)
+{
+	m_p->worldPos = AGVec3( x, y ,z);
+	setWorldPos( m_p->worldPos ); 
 }
 
 const AGVec3& AGMovable::getWorldPos() const
 {
-	return p->worldPos; 
+	return m_p->worldPos; 
 }
 
 void AGMovable::translateLocal(const AGVec3& pos)
 {
-	p->localPos += pos; 
-	setLocalPos( p->localPos );
+	m_p->localPos += pos; 
+	setLocalPos( m_p->localPos );
+}
+
+void AGMovable::translateLocal(float x, float y, float z)
+{
+	m_p->localPos += AGVec3( x, y, z );
+	setLocalPos( m_p->localPos );
 }
 
 void AGMovable::translateWorld(const AGVec3& pos)
 {
-	p->worldPos += pos;
-	setWorldPos( p->worldPos );
+	m_p->worldPos += pos;
+	setWorldPos( m_p->worldPos );
 }
 
-void AGMovable::setLocalAngle(AGRadians x, AGRadians y, AGRadians z)
+void AGMovable::translateWorld(float x, float y, float z)
 {
-	p->updateWorldMatrix = true;
-	p->localAngle = AGEulerAngles( x, y, z );
-	p->localRotMatrix.setIdentity();
-	p->localRotMatrix.setRotate( x, y, z );
+	m_p->worldPos += AGVec3( x, y, z );
+	setWorldPos( m_p->worldPos );
+}
 
-	p->forward *= p->localRotMatrix; 
-	p->up *= p->localRotMatrix;
-	p->rotMatrix *= p->localRotMatrix; 
+void AGMovable::setLocalAngle( const AGVec3& angles )
+{
+	m_p->updateWorldMatrix = true;
+	m_p->localAngle = angles;
+	D3DXMatrixRotationYawPitchRoll( &m_p->localRotMatrix, angles.y, angles.x, angles.z );
+
+	D3DXVec3TransformCoord( &m_p->forward, &m_p->forward, &m_p->localRotMatrix );
+	D3DXVec3TransformCoord( &m_p->up, &m_p->up, &m_p->localRotMatrix );
+	D3DXVec3TransformCoord( &m_p->right, &m_p->right, &m_p->localRotMatrix );
 
 	handleChanges( LocalRot );
 }
 
-void AGMovable::setLocalAngle(AGDegrees x, AGDegrees y, AGDegrees z)
+void AGMovable::setLocalAngle( float x, float y, float z )
 {
-	setLocalAngle( x.toRadians(), y.toRadians(), z.toRadians() );
+	m_p->localAngle = const AGVec3&( x, y, z );
+	setLocalAngle( m_p->localAngle );
 }
 
-void AGMovable::setLocalAngle(const AGEulerAngles& angles)
+void AGMovable::setWorldAngle(const AGVec3& angle)
 {
-	p->localAngle = angles; 
-}
-
-void AGMovable::setWorldAngle(AGRadians x, AGRadians y, AGRadians z)
-{
-	p->updateWorldMatrix = true;
-	p->worldAngle = AGEulerAngles( x, y, z );
-	p->worldRotMatrix.setRotate( x, y, z );
+	m_p->updateWorldMatrix = true;
+	m_p->worldAngle = angle;
+	D3DXMatrixRotationYawPitchRoll( &m_p->worldRotMatrix, angle.y, angle.x, angle.z );
 	handleChanges( WorldRot );
 }
 
-void AGMovable::setWorldAngle(AGDegrees x, AGDegrees y, AGDegrees z)
+void AGMovable::setWorldAngle(float x, float y, float z)
 {
-	setWorldAngle( x.toRadians(), y.toRadians(), z.toRadians() );
+	m_p->worldAngle = const AGVec3&( x, y, z );
+	setWorldAngle( m_p->worldAngle );
 }
 
-void AGMovable::setWorldAngle(const AGEulerAngles& angles)
+const AGVec3& AGMovable::getWorldAngle() const
 {
-	p->worldAngle = angles; 
+	return m_p->worldAngle; 
 }
 
-const AGEulerAngles& AGMovable::getWorldAngle() const
+void AGMovable::rotateLocalAxis(const AGVec3& axis, float angle)
 {
-	return p->worldAngle; 
-}
-
-void AGMovable::rotateLocalAxis(const AGVec3& axis, AGRadians angle)
-{
-	AGMatrix rotMatrix; 
-	rotMatrix.setRotate( axis, angle );
-	p->localRotMatrix *= rotMatrix;
+	D3DXMATRIX rotMatrix; 
+	D3DXMatrixRotationAxis( &rotMatrix, &axis, angle );
+	m_p->localRotMatrix *= rotMatrix;
 	handleChanges( LocalRot );
 }
 
-void AGMovable::rotateLocalAxis(const AGVec3& axis, AGDegrees angle)
+void AGMovable::rotateLocalX(float angle)
 {
-	rotateLocalAxis( axis, angle.toRadians() ); 
-}
+	m_p->updateLocalMatrix = true; 
+	D3DXMATRIX rotX; 
 
-void AGMovable::rotateLocalX(AGRadians angle)
-{
-	p->updateLocalMatrix = true; 
-	AGMatrix rotX; 
-	rotX.setRotateX( angle );
-
-	p->localAngle.x += angle;
-	p->localRotMatrix = rotX * p->localRotMatrix; 
-
+	D3DXMatrixRotationX( &rotX, angle );
+	m_p->localAngle.x += angle;
+	m_p->localRotMatrix = rotX * m_p->localRotMatrix; 
 	handleChanges( LocalRot );
 }
 
-void AGMovable::rotateLocalX(AGDegrees angle)
+void AGMovable::rotateLocalY(float angle)
 {
-	rotateLocalX( angle.toRadians() );
-}
+	m_p->updateLocalMatrix = true; 
+	D3DXMATRIX rotY; 
 
-void AGMovable::rotateLocalY(AGRadians angle)
-{
-	p->updateLocalMatrix = true; 
-	AGMatrix rotY; 
-	rotY.setRotateY( angle );
-
-	p->localAngle.y += angle;
-	p->localRotMatrix = rotY * p->localRotMatrix; 
+	D3DXMatrixRotationY( &rotY, angle );
+	m_p->localAngle.y += angle;
+	m_p->localRotMatrix = rotY * m_p->localRotMatrix; 
 	handleChanges( LocalRot );
 }
 
-void AGMovable::rotateLocalY(AGDegrees angle)
+void AGMovable::rotateLocalZ(float angle)
 {
-	rotateLocalY( angle.toRadians() );
-}
+	m_p->updateLocalMatrix = true; 
+	D3DXMATRIX rotZ; 
 
-void AGMovable::rotateLocalZ(AGRadians angle)
-{
-	p->updateLocalMatrix = true; 
-	AGMatrix rotZ; 
-	rotZ.setRotateZ( angle );
-
-	p->localAngle.z += angle;
-	p->localRotMatrix = rotZ * p->localRotMatrix; 
+	D3DXMatrixRotationZ( &rotZ, angle );
+	m_p->localAngle.z += angle;
+	m_p->localRotMatrix = rotZ * m_p->localRotMatrix; 
 	handleChanges( LocalRot );
 }
 
-void AGMovable::rotateLocalZ(AGDegrees angle)
+void AGMovable::rotateLocal(const AGVec3& angle)
 {
-	rotateLocalZ( angle.toRadians() );
+	m_p->localAngle += angle;
+	setLocalAngle( m_p->localAngle );
 }
 
-void AGMovable::rotateLocal(AGRadians x, AGRadians y, AGRadians z)
+void AGMovable::rotateLocal(float x, float y, float z)
 {
-	p->localAngle += AGEulerAngles( x, y, z );
-	setLocalAngle( p->localAngle );
+	m_p->localAngle += const AGVec3&( x, y, z );
+	setLocalAngle( m_p->localAngle );
 }
 
-void AGMovable::rotateLocal(AGDegrees x, AGDegrees y, AGDegrees z)
+
+void AGMovable::rotateWorldAxis(const AGVec3& axis, float angle)
 {
-	rotateLocal( x.toRadians(), y.toRadians(), z.toRadians() );
+	D3DXMatrixRotationAxis( &m_p->worldRotMatrix, &axis, angle );
 }
 
-void AGMovable::rotateLocal(const AGEulerAngles& angles)
+void AGMovable::rotateAroundWorldX(float angle)
 {
-	rotateLocal( angles.x, angles.y, angles.z );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotX; 
 
-void AGMovable::rotateWorldAxis(const AGVec3& axis, AGRadians angle)
-{
-	p->worldRotMatrix.setIdentity(); 
-	p->worldRotMatrix.setRotate( axis, angle );
-}
+	const AGVec3& xAxis( 1.0f, 0.0f, 0.0f );
 
-void AGMovable::rotateWorldAxis(const AGVec3& axis, AGDegrees angle)
-{
-	rotateWorldAxis( axis, angle.toRadians() );
-}
+	D3DXMatrixRotationAxis( &rotX, &xAxis, angle );
 
-void AGMovable::rotateAroundWorldX(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotX; 
-	rotX.setRotate( AGVec3( 1.0f, 0.0f, 0.0f ), angle );
-
-	p->worldAngle.x += angle;
-	p->worldRotMatrix = p->worldRotMatrix * rotX; 
-
+	m_p->worldAngle.x += angle;
+	m_p->worldRotMatrix = m_p->worldRotMatrix * rotX; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateAroundWorldX(AGDegrees angle)
+void AGMovable::rotateAroundWorldY(float angle)
 {
-	rotateAroundWorldX( angle.toRadians() );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotY; 
 
-void AGMovable::rotateAroundWorldY(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotY; 
-	rotY.setRotate( AGVec3( 0.0f, 1.0f, 0.0f ), angle );
+	const AGVec3& yAxis( 0.0f, 1.0f, 0.0f );
 
-	p->worldAngle.y += angle;
-	p->worldRotMatrix = p->worldRotMatrix * rotY; 
+	D3DXMatrixRotationAxis( &rotY, &yAxis, angle );
 
+	m_p->worldAngle.y += angle;
+	m_p->worldRotMatrix = m_p->worldRotMatrix * rotY; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateAroundWorldY(AGDegrees angle)
+void AGMovable::rotateAroundWorldZ(float angle)
 {
-	rotateAroundWorldY( angle.toRadians() );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotZ; 
 
-void AGMovable::rotateAroundWorldZ(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotZ; 
-	rotZ.setRotate( AGVec3( 0.0f, 0.0f, 1.0f ), angle );
+	const AGVec3& zAxis( 0.0f, 0.0f, 1.0f );
 
-	p->worldAngle.z += angle;
-	p->worldRotMatrix = p->worldRotMatrix * rotZ; 
+	D3DXMatrixRotationAxis( &rotZ, &zAxis, angle );
 
+	m_p->worldAngle.z += angle;
+	m_p->worldRotMatrix = m_p->worldRotMatrix * rotZ; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateAroundWorldZ(AGDegrees angle)
+void AGMovable::rotateWorldX(float angle)
 {
-	rotateAroundWorldZ( angle.toRadians() );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotX; 
 
-void AGMovable::rotateWorldX(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotX; 
-	rotX.setRotateX( angle );
-
-	p->worldAngle.x += angle;
-	p->worldRotMatrix = rotX * p->worldRotMatrix; 
-
+	D3DXMatrixRotationY( &rotX, angle );
+	m_p->worldAngle.x += angle;
+	m_p->worldRotMatrix = rotX * m_p->worldRotMatrix; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateWorldX(AGDegrees angle)
+void AGMovable::rotateWorldY(float angle)
 {
-	rotateWorldX( angle.toRadians() );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotY; 
 
-void AGMovable::rotateWorldY(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotY; 
-	rotY.setRotateY( angle );
-
-	p->worldAngle.y += angle;
-	p->worldRotMatrix = rotY * p->worldRotMatrix; 
-
+	D3DXMatrixRotationY( &rotY, angle );
+	m_p->worldAngle.y += angle;
+	m_p->worldRotMatrix = rotY * m_p->worldRotMatrix; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateWorldY(AGDegrees angle)
+void AGMovable::rotateWorldZ(float angle)
 {
-	rotateWorldY( angle.toRadians() );
-}
+	m_p->updateWorldMatrix = true; 
+	D3DXMATRIX rotZ; 
 
-void AGMovable::rotateWorldZ(AGRadians angle)
-{
-	p->updateWorldMatrix = true; 
-	AGMatrix rotZ; 
-	rotZ.setRotateZ( angle );
-
-	p->worldAngle.z += angle;
-	p->worldRotMatrix = rotZ * p->worldRotMatrix; 
-
+	D3DXMatrixRotationZ( &rotZ, angle );
+	m_p->worldAngle.z += angle;
+	m_p->worldRotMatrix = rotZ * m_p->worldRotMatrix; 
 	handleChanges( WorldRot );
 }
 
-void AGMovable::rotateWorldZ(AGDegrees angle)
+void AGMovable::rotateWorld(const AGVec3& angle)
 {
-	rotateWorldZ( angle.toRadians() );
+	m_p->worldAngle += angle; 
+	setWorldAngle( m_p->worldAngle );
 }
 
-void AGMovable::rotateWorld(AGRadians x, AGRadians y, AGRadians z)
+void AGMovable::rotateWorld(float x, float y, float z)
 {
-	p->worldAngle += AGEulerAngles( x, y, z );
-	setWorldAngle( p->worldAngle );
+	m_p->worldAngle += const AGVec3&( x, y, z );
+	setWorldAngle( m_p->worldAngle );
 }
 
-void AGMovable::rotateWorld(AGDegrees x, AGDegrees y, AGDegrees z)
+const AGVec3& AGMovable::getLocalAngle() const
 {
-	rotateWorld( x.toRadians(), y.toRadians(), z.toRadians() );
-}
-
-const AGEulerAngles& AGMovable::getLocalAngle() const
-{
-	return p->localAngle;
+	return m_p->localAngle;
 }
 
 void AGMovable::setLocalScale( const AGVec3& scale )
 {
-	p->updateLocalMatrix = true; 
-	p->localScale = scale; 
-	p->localScaleMatrix.setIdentity();
-	p->localScaleMatrix.setScale( scale );
-
+	m_p->updateLocalMatrix = true; 
+	m_p->localScale = scale; 
+	D3DXMatrixIdentity( &m_p->localScaleMatrix );
+	D3DXMatrixScaling( &m_p->localScaleMatrix, scale.x, scale.y, scale.z );
 	handleChanges( LocalScale );
 }
 
+void AGMovable::setLocalScale( float x, float y, float z )
+{
+	m_p->localScale = const AGVec3&( x, y, z );
+	setLocalScale( m_p->localScale );
+}
 
 const AGVec3& AGMovable::getLocalScale() const
 {
-	return p->localScale; 
+	return m_p->localScale; 
 }
 
 void AGMovable::setWorldScale(const AGVec3& factor)
 {
-	p->updateWorldMatrix = true; 
-	p->worldScale = factor; 
-	p->worldScaleMatrix.setIdentity();
-	p->worldScaleMatrix.setScale( factor );
-
+	m_p->updateWorldMatrix = true; 
+	m_p->worldScale = factor; 
+	D3DXMatrixIdentity( &m_p->worldScaleMatrix );
+	D3DXMatrixScaling( &m_p->worldScaleMatrix, factor.x, factor.y, factor.z ); 
 	handleChanges( WorldScale );
 }	
 
+void AGMovable::setWorldScale(float x, float y, float z)
+{
+	m_p->worldScale = const AGVec3&( x, y, z );
+	setWorldScale( m_p->worldScale );
+}
 
 const AGVec3& AGMovable::getWorldScale() const
 {
-	return p->worldScale; 
+	return m_p->worldScale; 
 }
 
 void AGMovable::scaleLocal(const AGVec3& factor)
 {
-	p->localScale += factor;
-	setLocalScale( p->localScale );
+	m_p->localScale += factor;
+	setLocalScale( m_p->localScale );
+}
+
+void AGMovable::scaleLocal(float x, float y, float z)
+{
+	m_p->localScale += const AGVec3&( x, y, z );
+	setLocalScale( m_p->localScale );
 }
 
 void AGMovable::scaleWorld(const AGVec3& factor)
 {
-	p->worldScale += factor;
-	setWorldScale( p->worldScale );
+	m_p->worldScale += factor;
+	setWorldScale( m_p->worldScale );
 }
 
-void AGMovable::setLocalMatrix( const AGMatrix& world)
+void AGMovable::scaleWorld(float x, float y, float z)
 {
-	p->local = world; 
-	p->updateLocalMatrix = false; 
+	m_p->worldScale += const AGVec3&( x, y, z );
+	setWorldScale( m_p->worldScale );
+}
+
+void AGMovable::setLocalMatrix(D3DXMATRIX world)
+{
+	m_p->local = world; 
+	m_p->updateLocalMatrix = false; 
 	handleChanges( Local );
 }
 
-const AGMatrix& AGMovable::getLocalMatrix()
+D3DXMATRIX AGMovable::getLocalMatrix()
 {
-	if( p->updateLocalMatrix )
+	if( m_p->updateLocalMatrix )
 	{
-		p->local = p->localScaleMatrix * p->localRotMatrix * p->localTranslMatrix; 
+		m_p->local = m_p->localScaleMatrix * m_p->localRotMatrix * m_p->localTranslMatrix; 
 	}
-	return p->local;
+	return m_p->local;
 }
 
-void AGMovable::setLocalTranslMatrix(const AGMatrix& transl)
+void AGMovable::setLocalTranslMatrix(D3DXMATRIX transl)
 {
-	p->localTranslMatrix = transl;
+	m_p->localTranslMatrix = transl;
 	handleChanges( LocalTrans );
 }
 
-const AGMatrix& AGMovable::getLocalTranslMatrix()
+D3DXMATRIX AGMovable::getLocalTranslMatrix()
 {
-	return p->localTranslMatrix; 
+	return m_p->localTranslMatrix; 
 }
 
-void AGMovable::setLocalRotMatrix(const AGMatrix& rot)
+void AGMovable::setLocalRotMatrix(D3DXMATRIX rot)
 {
-	p->localRotMatrix = rot; 
+	m_p->localRotMatrix = rot; 
 	handleChanges( LocalRot );
 }
 
-const AGMatrix& AGMovable::getLocalRotMatrix()
+D3DXMATRIX AGMovable::getLocalRotMatrix()
 {
-	return p->localRotMatrix;
+	return m_p->localRotMatrix;
 }
 
-void AGMovable::setLocalScaleMatrix(const AGMatrix& scale)
+void AGMovable::setLocalScaleMatrix(D3DXMATRIX scale)
 {
-	p->localScaleMatrix = scale; 
+	m_p->localScaleMatrix = scale; 
 	handleChanges( LocalScale );
 }
 
-const AGMatrix& AGMovable::getLocalScaleMatrix()
+D3DXMATRIX AGMovable::getLocalScaleMatrix()
 {
-	return p->localScaleMatrix;
+	return m_p->localScaleMatrix;
 }
 
-void AGMovable::setWorldMatrix(const AGMatrix& world)
+void AGMovable::setWorldMatrix(D3DXMATRIX world)
 {
-	p->world = world; 
-	p->updateWorldMatrix = false; 
+	m_p->world = world; 
+	m_p->updateWorldMatrix = false; 
 	handleChanges( World );
 }
 
-const AGMatrix& AGMovable::getWorldMatrix()
+D3DXMATRIX AGMovable::getWorldMatrix()
 {
-	if( p->updateWorldMatrix )
+	if( m_p->updateWorldMatrix )
 	{
-		p->world = p->worldScaleMatrix * p->worldRotMatrix * p->worldTranslMatrix;
+		m_p->world = m_p->worldScaleMatrix * m_p->worldRotMatrix * m_p->worldTranslMatrix;
 	}
-	return p->world;
+	return m_p->world;
 }
 
-void AGMovable::setWorldTranslMatrix(const AGMatrix& transl)
+void AGMovable::setWorldTranslMatrix(D3DXMATRIX transl)
 {
-	p->worldTranslMatrix = transl; 
+	m_p->worldTranslMatrix = transl; 
 	handleChanges( WorldTrans );
 }
 
-const AGMatrix& AGMovable::getWorldTranslMatrix()
+D3DXMATRIX AGMovable::getWorldTranslMatrix()
 {
-	return p->worldTranslMatrix;
+	return m_p->worldTranslMatrix;
 }	
 
-void AGMovable::setWorldRotMatrix(const AGMatrix& rot)
+void AGMovable::setWorldRotMatrix(D3DXMATRIX rot)
 {
-	p->worldRotMatrix = rot; 
+	m_p->worldRotMatrix = rot; 
 	handleChanges( WorldRot );
 }
 
-const AGMatrix& AGMovable::getWorldRotMatrix()
+D3DXMATRIX AGMovable::getWorldRotMatrix()
 {
-	return p->worldRotMatrix;
+	return m_p->worldRotMatrix;
 }
 
-void AGMovable::setWorldScaleMatrix(const AGMatrix& scale)
+void AGMovable::setWorldScaleMatrix(D3DXMATRIX scale)
 {
-	p->worldScaleMatrix = scale; 
+	m_p->worldScaleMatrix = scale; 
 	handleChanges( WorldScale );
 }
 
-const AGMatrix& AGMovable::getWorldScaleMatrix()
+D3DXMATRIX AGMovable::getWorldScaleMatrix()
 {
-	return p->worldScaleMatrix; 
+	return m_p->worldScaleMatrix; 
 }
 
-void AGMovable::setResultMatrix(const AGMatrix& world)
+void AGMovable::setResultMatrix(D3DXMATRIX world)
 {
-	p->world = world;
+	m_p->world = world;
 }
 
-const AGMatrix& AGMovable::getResultMatrix()
+D3DXMATRIX AGMovable::getResultMatrix()
 {
-	if( p->updateResMatrix )
-		p->matrix = p->localScaleMatrix * p->localRotMatrix *  p->worldRotMatrix * p->worldScaleMatrix * p->localTranslMatrix * p->worldTranslMatrix; 
+	if( m_p->updateResMatrix )
+		m_p->matrix = m_p->localScaleMatrix * m_p->localRotMatrix *  m_p->worldRotMatrix * m_p->worldScaleMatrix * m_p->localTranslMatrix * m_p->worldTranslMatrix; 
 
-	return p->matrix; 
+	return m_p->matrix; 
+}
+
+void AGMovable::handleChanges( Changes changes )
+{
+
 }
 
 void AGMovable::setLookAt(const AGVec3& dir)
 {
-	float cosA = AGVec3::dot( dir, p->up ); 
+	float cosA = AGVec3::dot( dir, m_p->up ); 
 	float angle = acos( cosA );
 
-	AGVec3 axis = AGVec3::cross( dir, p->up );
+	AGVec3 axis = AGVec3::cross( dir, m_p->up );
 
-	p->localRotMatrix.setIdentity(); 
-	p->localRotMatrix.setRotate( axis, AGRadians( angle ) );
+
 
 	/*float cosA = D3DXVec3Dot( &dir, &m_p->up ); 
 	float angle = acos( cosA ); 
@@ -550,7 +562,7 @@ void AGMovable::setLookAt(const AGVec3& dir)
 	AGVec3 axis;
 	D3DXVec3Cross( &axis, &dir, &m_p->up ); 
 
-	AGMatrixRotationAxis( &m_p->localRotMatrix, &axis, angle ); 
+	D3DXMatrixRotationAxis( &m_p->localRotMatrix, &axis, angle ); 
 
 	m_p->up = dir; */
 }

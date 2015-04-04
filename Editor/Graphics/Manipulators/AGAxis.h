@@ -18,10 +18,14 @@ class AGAxises : public AGPrimitive
 		AGGameObject* getObject() const; 
 
 		void draw( AGSurface* surface );
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
-		AGVec3 getAxis(); 
+		D3DXVECTOR3 getAxis(); 
 	private:
+		int m_nIndices; 
+		
+		AGShader* m_shader; 
+
 		AGGameObject* m_object; 
 };
 

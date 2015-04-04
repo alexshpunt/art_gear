@@ -8,6 +8,8 @@
 #include "Graphics/Interfaces/AGSurface.h"
 #include "AGCamera.h"
 
+#include "Engine/Utils/AGConversion.h"
+
 #include "Engine/Graphics/Objects/AGShader.h"
 #include <Engine/Graphics/Objects/AGBuffer.h>
 
@@ -21,7 +23,7 @@ class AGSubMesh
 
 		void loadFrom( ifstream& in );
 		void draw( AGSurface* surface ); 
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 	private:
 		AGMesh* m_mesh;
 		vector< AGVertex > m_vertices; 
@@ -92,21 +94,26 @@ void AGSubMesh::loadFrom( ifstream& in )
 
 void AGSubMesh::draw( AGSurface* surface )
 {
+	UINT stride = sizeof( AGVertex );
+	UINT offset = 0; 
+
 	ID3D10Device* device = surface->getDevice();
 
-	assert( m_vertexBufffer );
-	assert( m_indexBuffer );
+	ID3D10Buffer* vbo;
+	ID3D10Buffer* ibo; 
 
-	m_vertexBufffer->apply( surface );
-	m_indexBuffer->apply( surface );
+	vbo = m_vertexBufffer->applyTo( device );
+	ibo = m_indexBuffer->applyTo( device );
 
-	assert( m_material );
+	device->IASetVertexBuffers( 0, 1, &vbo, &stride, &offset );
+	device->IASetIndexBuffer( ibo, DXGI_FORMAT_R32_UINT, 0 );
+
 	AGShader* shader = m_material->getShader();
-	assert( shader );
+	
 	m_material->apply(); 
 	 
 	shader->setWorldMatrix( m_mesh->getResultMatrix() );
-	shader->apply( surface );
+	shader->applySurface( surface );
 
 	AGRasterizeState* state = AGGraphics::getInstance().getRasterizeState( surface->getDevice() ); 
 
@@ -138,32 +145,41 @@ void AGSubMesh::draw( AGSurface* surface )
 	}	
 
 	device->RSSetState( state->solid );
+
+	/*vbo->Release();
+	ibo->Release();*/
 }
 
-float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
+float AGSubMesh::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 {
 	float retDist = -1.0f;
-	/*int nIndices = m_indices.size() - 2;  
+	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
-		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
-		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ].pos;
-		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
+		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
-		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
+		/*AGMath::IntersectResult intRes = AGMath::intersectTriangle( AGConversion::toAGVec3D( rayOrigin ), AGConversion::toAGVec3D( rayDir ), 
+			AGMath::Triangle( AGConversion::toAGVec3D( vertex1 ), AGConversion::toAGVec3D( vertex2 ), AGConversion::toAGVec3D( vertex3 ) ) );*/
 
-		if( res.hit )
+
+
+		float dist, u, v; 
+
+		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
+		if( res )
 		{
 			if( retDist < 0 )
 			{
-				retDist = res.distance; 
+				retDist = dist; 
 			}
 			else 
 			{
-				retDist = min( retDist, res.distance ); 
+				retDist = min( retDist, dist );	
 			}
 		}
-	}*/
+	}
 	return retDist; 
 }
 
@@ -201,8 +217,8 @@ AGMesh::AGMesh(const std::string &fileName)
 		subMesh->loadFrom( in );
 		m_subMeshes.push_back( subMesh );
 	}
-	AGVec3 v1;
-	AGVec3 v2; 
+	D3DXVECTOR3 v1;
+	D3DXVECTOR3 v2; 
 
 	READ( v1.x );
 	READ( v1.y );
@@ -247,7 +263,7 @@ bool AGMesh::isSelected() const
 	return m_isSelected;
 }
 
-float AGMesh::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
+float AGMesh::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
 {
 	float res = -1.0f; 
 	for( AGSubMesh* subMesh : m_subMeshes )

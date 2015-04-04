@@ -29,7 +29,7 @@ class AGSphereShapePrivate
 
 AGSphereShape::AGSphereShape( float radius, const AGColor& color ) : AGShape( color )
 {
-	m_p = new AGSphereShapePrivate; 
+	p = new AGSphereShapePrivate; 
 	setRadius( radius );
 
 	setupShape(); 
@@ -37,17 +37,17 @@ AGSphereShape::AGSphereShape( float radius, const AGColor& color ) : AGShape( co
 
 AGSphereShape::~AGSphereShape()
 {
-	delete m_p; 
+	delete p; 
 }
 
 void AGSphereShape::setRadius(float radius)
 {
-	m_p->radius = AGMath::checkIfLower( radius, 0.001f );
+	p->radius = AGMath::checkIfLower( radius, 0.001f );
 }
 
 float AGSphereShape::getRadius() const
 {
-	return m_p->radius; 
+	return p->radius; 
 }
 
 void AGSphereShape::draw(AGSurface* surface)
@@ -56,11 +56,11 @@ void AGSphereShape::draw(AGSurface* surface)
 
 	while( m_shader->applyNextPass() )
 	{
-		for( int i = 0; i < m_p->circleVerticesCount - 2; i++ )
+		for( int i = 0; i < p->circleVerticesCount - 2; i++ )
 		{
 			surface->draw( 2, i );
-			surface->draw( 2, m_p->circleVerticesCount + i );
-			surface->draw( 2, 2*m_p->circleVerticesCount + i );
+			surface->draw( 2, p->circleVerticesCount + i );
+			surface->draw( 2, 2*p->circleVerticesCount + i );
 		}
 	}
 }
@@ -74,36 +74,36 @@ void AGSphereShape::setupShape()
 	}
 
 	std::vector< AGVec2 > points; 
-	std::vector< AGPrimitiveVertex > vertices; 
-	AGMath::generateCircle2D( m_p->radius, AGMath::Pi / 12.0f , points );
+	std::vector< AGColorVertex > vertices; 
+	AGMath::generateCircle2D( p->radius, AGMath::Pi / 12.0f , points );
 
-	AGPrimitiveVertex vertex; 
-	vertex.color = m_p->color;
+	AGColorVertex vertex; 
+	vertex.color = m_color;
 
 	//XY Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = AGVec3( point );
+		vertex.pos = AGVec3( point.x, point.y, 0.0f );
 		vertices.push_back( vertex ); 
 	}
 
 	//XZ Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = AGVec3( point );
+		vertex.pos = AGVec3( point.x, 0.0f, point.y );
 		vertices.push_back( vertex ); 
 	}
 
 	//YZ Plane
 	for( AGVec2 point : points )
 	{
-		vertex.pos = AGVec3( point );
+		vertex.pos = AGVec3( 0.0f, point.x, point.y );
 		vertices.push_back( vertex ); 
 	}
 
-	m_p->verticesCount = vertices.size(); 
-	m_p->circleVerticesCount = points.size(); 
+	p->verticesCount = vertices.size(); 
+	p->circleVerticesCount = points.size(); 
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vertices, Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vertices, Vertex );
 }
 

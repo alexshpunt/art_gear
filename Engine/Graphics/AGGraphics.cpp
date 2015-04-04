@@ -19,6 +19,8 @@
 
 #include "Managers/AGDebugManager.h"
 
+#include "Engine/Math/AGMath.h"
+
 void AGGraphics::init()
 {
 	m_console = nullptr;
@@ -44,28 +46,27 @@ void AGGraphics::update()
 		if( surface == m_focusSurface )
 		{
 			surface->getCamera()->update(); 
-		} 
+		}
 
 		if( AGInput().isButtonDown( "MMB" ) && surface == m_focusSurface )
 		{
-			//Deprecated for now
-			/*AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
+			AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
 			AGPoint2 mousePos( winSize.getWidth() / 2.0f, winSize.getHeight() / 2.0f ); 
 			AGCamera* camera = getTopCamera(); 
 			if( !camera )
 			{
 				return; 
 			}
-			AGMatrixmatProj = camera->getProjMatrix(); 
+			D3DXMATRIX matProj = camera->getProjMatrix(); 
 
-			AGVec3 v; 
+			D3DXVECTOR3 v; 
 			v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
 			v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
 			v.z = 1.0f; 
 
-			AGMatrixmat; 
-			AGMatrixmatView = camera->getViewMatrix(); 
-			AGVec3 rayOrigin, rayDir; 
+			D3DXMATRIX mat; 
+			D3DXMATRIX matView = camera->getViewMatrix(); 
+			D3DXVECTOR3 rayOrigin, rayDir; 
 
 			D3DXMatrixInverse( &mat, NULL, &matView );
 
@@ -77,7 +78,7 @@ void AGGraphics::update()
 			rayOrigin.y = mat._42;
 			rayOrigin.z = mat._43; 
 
-			AGMatrixmatInverce;
+			D3DXMATRIX matInverce;
 
 			float minDist = -1.0f; 
 			AGRenderer* nearestObj = nullptr; 
@@ -85,7 +86,7 @@ void AGGraphics::update()
 			for( AGRenderer* renderer : m_renderers )
 			{
 				AGMesh* mesh = renderer->getMesh();
-				AGMatrixmatWorld;
+				D3DXMATRIX matWorld;
 				if( !mesh )
 				{
 					D3DXMatrixIdentity( &matWorld );
@@ -100,7 +101,7 @@ void AGGraphics::update()
 
 				D3DXMatrixInverse( &matInverce, NULL, &matWorld );
 
-				AGVec3 rayObjOrigin, rayObjDir; 
+				D3DXVECTOR3 rayObjOrigin, rayObjDir; 
 
 				D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
 				D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
@@ -122,15 +123,13 @@ void AGGraphics::update()
 			if( nearestObj )
 			{
 				surface->getCamera()->setTargetDistance( minDist );
-			}*/
+			}
 		}
 
 		for( AGRenderer* renderer : m_renderers )
 		{
 			renderer->draw( surface );
 		}
-
-		/*
 
 		for( AGDrawable* drawable : m_drawables )
 		{
@@ -140,13 +139,13 @@ void AGGraphics::update()
 		for( AGClickable* clickable : m_clickableObjects )
 		{
 			clickable->draw( surface ); 
-		}*/
+		}
 
 		surface->present(); 
 
 		surface->getDevice()->RSSetState( m_rasterizeStates[ surface->getDevice() ]->solid ); 
 				
-		/*for( AGManipulator* manipulator : m_manipulators )
+		for( AGManipulator* manipulator : m_manipulators )
 		{
 			manipulator->draw( surface );
 		}
@@ -155,17 +154,17 @@ void AGGraphics::update()
 		{
 			if( renderer->isSelected() )
 				renderer->getMesh()->getBoundingBox()->draw( surface );
-		}*/
+		}
 		
 		if( surface == m_focusSurface )
 			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), m_focusSurface );
 
 		surface->getDevice()->OMSetDepthStencilState( m_depthState.at( surface->getId() ), 0 );
 
-		/*if( m_console && AGEStateManager::getInstance().isConsoleMode() )
+		if( m_console && AGEStateManager::getInstance().isConsoleMode() )
 		{
 			m_console->draw( surface );
-		}*/
+		}
 
 		surface->swapChainPresent();
 	}
@@ -192,7 +191,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 	D3D10_INPUT_ELEMENT_DESC colorVertexLayout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D10_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT colorVertexLayoutNum = 2; 
 
@@ -407,9 +406,9 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	{
 		return; 
 	}
-	AGMatrix matProj = camera->getProjMatrix(); 
+	D3DXMATRIX matProj = camera->getProjMatrix(); 
 
-	AGMatrix matView = camera->getViewMatrix(); 
+	D3DXMATRIX matView = camera->getViewMatrix(); 
 
 	float minDist = -1.0f; 
 	AGRenderer* nearestObj = nullptr; 
@@ -422,25 +421,44 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0; 
 
-	AGVec3 nearPoint( mousePos.x, mousePos.y, 0.0f );
-	AGVec3 farPoint( mousePos.x, mousePos.y, 1.0f );
+	D3DXVECTOR3 nearPoint( mousePos.x, mousePos.y, 0.0f );
+	D3DXVECTOR3 farPoint( mousePos.x, mousePos.y, 1.0f );
+
+	AGVec3 nearP( mousePos.x, mousePos.y, 0.0f );
+	AGVec3 farP( mousePos.x, mousePos.y, 1.0f );
+
+	AGMatrix agProj( matProj );
+	AGMatrix agView( matView );
 
 	for( AGRenderer* renderer : m_renderers )
 	{
 		AGMesh* mesh = renderer->getMesh();
-		AGMatrix matWorld;
-		if( mesh )
+		D3DXMATRIX matWorld;
+		D3DXMatrixIdentity( &matWorld );
+		if( !mesh )
+		{
+			D3DXMatrixIdentity( &matWorld );
+		}
+		else
 		{
 			matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
 		}
 		AGGameObject* obj = renderer->getObject(); 
 		AGVec3 pos = obj->getLocalPos(); 
-		matWorld.setTranslate( pos );
+		D3DXMatrixTranslation( &matWorld, pos.x, pos.y, pos.z );
 
-		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
-		AGVec3 fp = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+		AGMatrix agWorld( matWorld );
 
-		AGVec3 dir = (fp - np).normilized(); 
+		D3DXVec3Unproject( &nearPoint, &nearPoint, &viewport, &matProj, &matView, &matWorld );
+		D3DXVec3Unproject( &farPoint, &farPoint, &viewport, &matProj, &matView, &matWorld );
+
+		AGVec3 np = AGVec3::unproject( nearP, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), agWorld, agView, agProj );
+		AGVec3 fp = AGVec3::unproject( farP, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), agWorld, agView, agProj );
+
+
+		D3DXVECTOR3 dir = farPoint - nearPoint; 
+
+		AGVec3 agDir = fp - np; 
 
 		float dist = renderer->intersect( nearPoint, dir );
 		renderer->setSelected( false );
@@ -515,7 +533,17 @@ void AGGraphics::removeCamera(AGCamera* camera)
 
 AGCamera* AGGraphics::getTopCamera() const
 {
+	int layer = m_cameras[ 0 ]->getLayer();
 	AGCamera* topCamera = m_cameras[ 0 ];
+
+	for( AGCamera* camera : m_cameras )
+	{
+		if( camera->getLayer() > layer )
+		{
+			topCamera = camera;
+			layer = camera->getLayer();
+		}
+	} 
 	return topCamera; 
 }
 

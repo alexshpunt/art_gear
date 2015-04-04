@@ -13,7 +13,7 @@ class AGELight : public AGClickable
 		~AGELight(); 
 
 		void draw( AGSurface* surface );
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
 		bool mouseMoveEvent( AGSurface* surface );
 		bool mouseClickEvent(  AGMouseButton button, AGSurface* surface );

@@ -1,19 +1,21 @@
 #ifndef AG_PRIMITIVE_H
 #define AG_PRIMITIVE_H
 
-#include "Engine/Interfaces/AGMovable.h"
+#include <vector>
 
+#include <Engine/Graphics/Objects/AGBuffer.h>
+#include <Engine/Graphics/Objects/AGShader.h>
+
+#include "AGMovable.h"
+#include "AGSurface.h"
 #include "AGPureInterfaces.h"
 
-#include "Engine/Graphics/Objects/AGBuffer.h"
-#include "Engine/Graphics/Objects/AGShader.h"
-
-#include "Engine/Math/AGMath.h"
+using namespace std;
 
 struct AGPrimitiveVertex 
 {
-	AGVec3 pos;
-	AGColor color; 
+	D3DXVECTOR3 pos;
+	D3DXVECTOR4 color; 
 };
 
 class AGPrimitive :  public AGMovable, public AGDrawable

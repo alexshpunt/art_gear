@@ -16,10 +16,13 @@ class AGIntersectPlane : public AGGizmo
 		~AGIntersectPlane();
 
 		void draw(  AGSurface* surface  );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
-		AGVec3 getAxis();
+		D3DXVECTOR3 getAxis();
 	private:
+		std::map< ID3D10Device* , ID3D10DepthStencilState* > m_depthState; 
 		PlaneAxis m_axis;
+		D3DXVECTOR3 m_vertices[ 6 ]; 
 };
 
 #endif 

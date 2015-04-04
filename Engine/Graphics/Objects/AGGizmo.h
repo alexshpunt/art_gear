@@ -15,23 +15,24 @@ class AGGizmo : public AGPrimitive
 		void setDistance( float distance );
 		float getDistance() const; 
 
-		void setBeginPos( AGVec3 beginPos );
+		void setBeginPos( D3DXVECTOR3 beginPos );
 		void setBeginPos( float x, float y, float z );
-		AGVec3 getBeginPos() const;
+		D3DXVECTOR3 getBeginPos() const;
 
-		void translateBeginPos( AGVec3 delta );
+		void translateBeginPos( D3DXVECTOR3 delta );
 		void translateBeginPos( float x, float y, float z );
 
 		void setSelected( bool value );
 		bool isSelected() const;
 
-		virtual AGVec3 getAxis() = 0;
+		virtual D3DXVECTOR3 getAxis() = 0;
 		 
 	protected:
 		virtual void updatePos( AGCamera* camera ); 
 		virtual void setupBuffers( AGSurface* surface );
+		void releaseBuffers(); 
 
-		AGVec3 m_beginPos; 
+		D3DXVECTOR3 m_beginPos; 
 		float m_distance; 
 
 		bool m_isSelected;

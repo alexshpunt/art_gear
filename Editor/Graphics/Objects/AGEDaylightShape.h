@@ -32,7 +32,7 @@ class AGEDaylightShape : public AGShape
 		AGColor m_color; 
 		AGSize m_size; 
 
-		vector< AGPrimitiveVertex > m_vertices;
+		vector< AGColorVertex > m_vertices;
 };
 
 #endif 

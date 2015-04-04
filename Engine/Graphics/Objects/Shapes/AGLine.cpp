@@ -15,9 +15,9 @@ void AGLine::setLine( const AGVec3& startPoint, const AGVec3& endPoint, const AG
 	if( m_vertexBuffer )
 		delete m_vertexBuffer; 
 
-	vector< AGPrimitiveVertex > vertices; 
+	vector< AGColorVertex > vertices; 
 
-	AGPrimitiveVertex vertex; 
+	AGColorVertex vertex; 
 	vertex.color = color;
 
 	vertex.pos = startPoint; 
@@ -26,7 +26,7 @@ void AGLine::setLine( const AGVec3& startPoint, const AGVec3& endPoint, const AG
 	vertex.pos = endPoint; 
 	vertices.push_back( vertex );
 	
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vertices, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vertices, AGBufferType::Vertex );
 
 }
 

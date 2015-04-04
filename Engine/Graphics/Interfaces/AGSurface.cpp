@@ -1,5 +1,7 @@
 #include "AGSurface.h"
 
+#include <assert.h>
+
 #include <d3dx10.h>
 #include <d3d10.h>
 #include <dxgi.h>
@@ -10,14 +12,13 @@
 #include "Graphics/Objects/AGCamera.h"
 #include "Graphics/AGGraphics.h"
 
-#include <assert.h>
 
 #include <Engine/Graphics/Objects/AGLight.h>
 
 struct SurfaceVertex
 {
-	AGVec3 pos;
-	AGVec2 uv; 
+	D3DXVECTOR3 pos;
+	D3DXVECTOR2 uv; 
 };
 
 AGSurface::AGSurface()
@@ -110,28 +111,28 @@ void AGSurface::setCameraMode(AGSurfaceCameraMode cameraMode)
 	}
 
 	m_camera->setType( AGCamera::Ortho ); 
-	m_camera->setTarget( AGVec3( 0.0f, 0.0f, 1.0f ) );
-	m_camera->setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
+	m_camera->setAt( D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) );
+	m_camera->setEye( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 
 	switch( m_surfaceCameraMode )
 	{
 		case Back:
-			m_camera->rotate( AGDegrees( 0.0f ), AGDegrees( 180 ) );
+			m_camera->rotate( 0, 180 );
 		break; 
 		case Front:
-			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 0 ) );
+			m_camera->rotate( 0, 0 );
 		break;
 		case Left:
-			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 90 ) );
+			m_camera->rotate( 0, 90 );
 		break;
 		case Right:
-			m_camera->rotate( AGDegrees( 0 ), AGDegrees( -90 ) );
+			m_camera->rotate( 0, -90 );
 		break;
 		case Top:
-			m_camera->rotate( AGDegrees( 90 ), AGDegrees( 0 ) );
+			m_camera->rotate( 90, 0 );
 		break;
 		case Bottom:
-			m_camera->rotate( AGDegrees( -90 ), AGDegrees( 0 ) );
+			m_camera->rotate( -90, 0 );
 		break; 
 	}
 
@@ -236,6 +237,8 @@ void AGSurface::resizeSurface(float width, float height )
 		m_camera->setAspectRatio( width / height );
 
 	m_size = AGSize( width, height );
+
+	//AGGraphics::getInstance().update();
 }
 
 const AGSize& AGSurface::getSize() const
@@ -295,13 +298,13 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 
 	SurfaceVertex vertices[] =
 	{
-		AGVec3( -1.0f,  1.0f, 1.0f ), AGVec2( 0.0f, 0.0f ), //1
-		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //2
-		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //3
+		D3DXVECTOR3( -1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 0.0f ), //1
+		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //2
+		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//3
 
-		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //4
-		AGVec3(  1.0f, -1.0f, 1.0f ), AGVec2( 1.0f, 1.0f ), //5
-		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //6
+		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //4
+		D3DXVECTOR3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 1.0f ), //5
+		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//6
 	};
 
 	D3D10_BUFFER_DESC bufferDesc;
@@ -517,10 +520,10 @@ void AGSurface::present()
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_technique->GetDesc( &techDesc );
 
-	/*if( m_surfaceMode == Shaded )
+	if( m_surfaceMode == Shaded )
 	{
-		AGVec3 camPos = m_camera->getPos(); 
-		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
+		D3DXVECTOR3 camPos = m_camera->getEye(); 
+		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( D3DXVECTOR3 ) );
 		if( FAILED( hr ) )
 		{
 			AGDebug() << DXGetErrorDescription( hr );
@@ -539,7 +542,7 @@ void AGSurface::present()
 			}
 		}
 	}
-	else */
+	else 
 	{
 		for( UINT p = 0; p < techDesc.Passes; ++p )
 		{

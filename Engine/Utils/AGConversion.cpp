@@ -16,12 +16,12 @@ AGRect AGConversion::toAGRect(const RECT& rect)
 	return AGRect( rect.left, rect.top, rect.right, rect.bottom );
 }
 
-AGVec3 AGConversion::toD3DXVec3D(const AGVec3& vec3)
+D3DXVECTOR3 AGConversion::toD3DXVec3D(const AGVec3& vec3)
 {
-	return AGVec3( vec3.x, vec3.y, vec3.z );
+	return D3DXVECTOR3( vec3.x, vec3.y, vec3.z );
 }
 
-AGVec3 AGConversion::toAGVec3D(const AGVec3& vec3)
+AGVec3 AGConversion::toAGVec3D(const D3DXVECTOR3& vec3)
 {
 	return AGVec3( vec3.x, vec3.y, vec3.z );
 }

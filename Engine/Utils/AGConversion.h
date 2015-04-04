@@ -15,7 +15,7 @@
 
 /* List: 
 	- RECT <-> AGRect
-	- AGVec3 <-> AGVec3 
+	- D3DXVECTOR3 <-> AGVec3 
 	- D3DXCOLOR <-> AGColor
 	- POINT <-> AGPoint2
 */
@@ -25,8 +25,8 @@ namespace AGConversion
 	RECT toWinAPIRect( const AGRect& rect );
 	AGRect toAGRect( const RECT& rect );
 	
-	AGVec3 toD3DXVec3D( const AGVec3& vec3 ); 
-	AGVec3 toAGVec3D( const AGVec3& vec3 );
+	D3DXVECTOR3 toD3DXVec3D( const AGVec3& vec3 ); 
+	AGVec3 toAGVec3D( const D3DXVECTOR3& vec3 );
 
 	D3DXCOLOR toD3DXColor( const AGColor& color );
 	AGColor toAGColor( const D3DXCOLOR& color );

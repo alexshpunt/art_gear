@@ -11,21 +11,21 @@
 
 using namespace std;
 
-AGBoundingBox::AGBoundingBox( AGVec3 v1, AGVec3 v2 )
+AGBoundingBox::AGBoundingBox( D3DXVECTOR3 v1, D3DXVECTOR3 v2 )
 {
-	AGColor clr( 1.0f, 1.0f, 1.0f, 1.0f );
+	D3DXVECTOR4 clr( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ AGVec3( v2.x, v2.y, v2.z ), clr }, //0
-		{ AGVec3( v2.x, v1.y, v2.z ), clr }, //1
-		{ AGVec3( v1.x, v1.y, v2.z ), clr }, //2
-		{ AGVec3( v1.x, v2.y, v2.z ), clr }, //3
+		{ D3DXVECTOR3( v2.x, v2.y, v2.z ), clr }, //0
+		{ D3DXVECTOR3( v2.x, v1.y, v2.z ), clr }, //1
+		{ D3DXVECTOR3( v1.x, v1.y, v2.z ), clr }, //2
+		{ D3DXVECTOR3( v1.x, v2.y, v2.z ), clr }, //3
 
-		{ AGVec3( v2.x, v2.y, v1.z ), clr }, //4
-		{ AGVec3( v2.x, v1.y, v1.z ), clr }, //5
-		{ AGVec3( v1.x, v1.y, v1.z ), clr }, //6
-		{ AGVec3( v1.x, v2.y, v1.z ), clr }, //7
+		{ D3DXVECTOR3( v2.x, v2.y, v1.z ), clr }, //4
+		{ D3DXVECTOR3( v2.x, v1.y, v1.z ), clr }, //5
+		{ D3DXVECTOR3( v1.x, v1.y, v1.z ), clr }, //6
+		{ D3DXVECTOR3( v1.x, v2.y, v1.z ), clr }, //7
 	};
 
 	for( int i = 0; i < 8; i++ )
@@ -122,20 +122,23 @@ void AGBoundingBox::draw( AGSurface* surface )
 {
 	ID3D10Device* device = surface->getDevice(); 
 
-	m_shader->apply( surface );
+	m_shader->applySurface( surface );
 	m_shader->setWorldMatrix( getLocalMatrix() ); 	
 
 	device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 
-	assert( m_indexBuffer );
-	assert( m_vertexBuffer );
+	ID3D10Buffer* indexBuffer = m_indexBuffer->applyTo( device ); 
+	ID3D10Buffer* vertexBuffer = m_vertexBuffer->applyTo( device ); 
 
-	m_indexBuffer->apply( surface ); 
-	m_vertexBuffer->apply( surface ); 
+	device->IASetIndexBuffer( indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
 	AGInputLayout* layout = AGGraphics::getInstance().getInputLayout( device );
-	assert( layout );
+
 	device->IASetInputLayout( layout->colorVertexInputLayout );
+	UINT stride = sizeof( AGPrimitiveVertex );
+
+	UINT offset = 0; 
+	device->IASetVertexBuffers( 0, 1, &vertexBuffer, &stride, &offset );
 
 	while( m_shader->applyNextPass() )
 	{
@@ -147,26 +150,27 @@ void AGBoundingBox::draw( AGSurface* surface )
 
 }
 
-float AGBoundingBox::intersect( AGVec3 rayOrigin, AGVec3 rayDir )
+float AGBoundingBox::intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir )
 {
 	float retDist = -1.0f; 
 	for( int i = 0; i < 34; i++ )
 	{
-		AGVec3 v1 = m_vertices[ m_indices[ i ] ];
-		AGVec3 v2 = m_vertices[ m_indices[ i + 1 ] ];
-		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ];
+		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ];
+		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ];
+		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ];
 
-		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
+		float dist, u, v; 
 
-		if( res.hit )
+		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
+		if( res )
 		{
 			if( retDist < 0 )
 			{
-				retDist = res.distance; 
+				retDist = dist; 
 			}
 			else 
 			{
-				retDist = min( retDist, res.distance ); 
+				retDist = min( retDist, dist );	
 			}
 		}
 	}

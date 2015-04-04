@@ -182,9 +182,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_AGEGridSplitter.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Objects\Shapes\AGConeShape.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGBoxShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -287,13 +284,16 @@
     <ClCompile Include="Engine\Math\AGVec4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Math\AGMathHelp.cpp">
+    <ClCompile Include="Engine\Graphics\Interfaces\AGMovable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Interfaces\AGMovable.cpp">
+    <ClCompile Include="Engine\Graphics\Objects\Shapes\AGConeShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\AGMathHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -349,6 +349,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Managers\AGResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\AGMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Math\AGPoint2.h">
@@ -430,9 +433,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\AGBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Graphics\Objects\Shapes\AGConeShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGBoxShape.h">
@@ -540,16 +540,16 @@
     <ClInclude Include="Engine\Math\AGVec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Math\AGMathHelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Math\AGMath.h">
+    <ClInclude Include="Engine\Graphics\Interfaces\AGMovable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Interfaces\AGMovable.h">
+    <ClInclude Include="Engine\Math\AGMathHelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Objects\Shapes\AGConeShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

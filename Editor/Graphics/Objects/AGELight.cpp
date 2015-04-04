@@ -14,6 +14,7 @@
 
 #include "Engine/Graphics/AGGraphics.h"
 #include "Engine/Managers/AGResourceManager.h"
+#include "Engine/Utils/AGConversion.h"
 
 class AGELightPrivate
 {
@@ -79,7 +80,7 @@ class AGELightPrivate
 
 		AGLine* line;	
 
-		AGVec3 dir; 
+		D3DXVECTOR3 dir; 
 
 		bool isSelected; 
 };
@@ -91,7 +92,7 @@ AGELight::AGELight()
 	m_p->hotspotCone = new AGConeShape( 0.5f, 1.0f, AGColor( 0.8f, 0.72f, 0.18f, 1.0f ) );
 	m_p->falloffCone = new AGConeShape( 0.52f, 1.0f, AGColor( 0.52f, 0.48f, 0.18f, 1.0f ) );
 
-	m_p->dir = AGVec3( 0.0f, 1.0f, 0.0f );
+	m_p->dir = D3DXVECTOR3( 0.0f, 1.0f, 0.0f );
 
 	m_p->hotspotCone->setLookAt( m_p->dir );
 	m_p->falloffCone->setLookAt( m_p->dir );
@@ -113,9 +114,9 @@ AGELight::AGELight()
 	m_p->daylightShape = new AGEDaylightShape( 0.2f, 0.5f, AGColor( 0.8f, 0.72f, 0.18f ) );
 	m_p->daylightShape->setLookAt( m_p->dir ) ;
 
-	m_p->posCone->setWorldPos( AGVec3::Zero() ); 
+	m_p->posCone->setWorldPos( 0.0, 0.0f, 0.0f ); 
 
-	m_p->line = new AGLine( m_p->posCone->getWorldPos(), m_p->posCone->getWorldPos() + m_p->dir, AGColor( 0.0f, 0.0f, 1.0f, 1.0f ) );
+	m_p->line = new AGLine( AGConversion::toAGVec3D( m_p->posCone->getWorldPos() ), AGConversion::toAGVec3D( m_p->posCone->getWorldPos() + m_p->dir ), AGColor( 0.0f, 0.0f, 1.0f, 1.0f ) );
 
 	m_p->light = new AGLight;
 	AGGraphics::getInstance().addLight( m_p->light );
@@ -174,9 +175,9 @@ void AGELight::draw(AGSurface* surface)
 	}
 }
 
-float AGELight::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
+float AGELight::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 {
-	return m_p->posBox->intersect( rayOrigin, rayDir );
+	return m_p->posBox->intersect( AGConversion::toAGVec3D( rayOrigin ), AGConversion::toAGVec3D( rayDir ) );
 }
 
 bool AGELight::mouseMoveEvent(AGSurface* surface)
@@ -190,7 +191,7 @@ bool AGELight::mouseClickEvent(AGMouseButton button, AGSurface* surface)
 		return false; 
 	calculateRays( surface, m_p->posBox->getResultMatrix() );
 
-	float dist = m_p->posBox->intersect( m_rayOrigin, m_rayDir );
+	float dist = m_p->posBox->intersect( AGConversion::toAGVec3D( m_rayOrigin ), AGConversion::toAGVec3D( m_rayDir ) );
 	m_p->isSelected = dist > 0.0f; 
 
 	return m_p->isSelected;

@@ -1,11 +1,10 @@
 #ifndef AG_CAMERA_H
 #define AG_CAMERA_H
 
-#include "Engine/Math/AGMath.h"
+#include <d3dx10.h>
+#include <d3d10.h>
 
 #include "Graphics/AGGraphics.h"
-
-class AGCameraPrivate; 
 
 class AGCamera
 {
@@ -41,19 +40,22 @@ class AGCamera
 		void setSensY( float sensY );
 		float getSensY() const; 
 
-		void setTarget( const AGVec3& at );
-		const AGVec3& getTarget() const;
+		void setLayer( int layer );
+		int getLayer() const; 
 
-		void setUp( const AGVec3& up );
-		const AGVec3& getUp() const;
+		void setAt( D3DXVECTOR3 at );
+		D3DXVECTOR3 getAt() const;
 
-		const AGVec3& getDir(); 
+		void setUp( D3DXVECTOR3 up );
+		D3DXVECTOR3 getUp() const;
 
-		void setPos( const AGVec3& forward );
-		const AGVec3& getPos() const;  
+		D3DXVECTOR3 getDir(); 
 
-		const AGMatrix& getViewMatrix() const; 
-		const AGMatrix& getProjMatrix() const; 
+		void setEye( D3DXVECTOR3 forward );
+		D3DXVECTOR3 getEye() const; 
+
+		D3DXMATRIX getViewMatrix() const; 
+		D3DXMATRIX getProjMatrix() const; 
 
 		float getAngleX() const;
 		float getAngleY() const; 
@@ -61,13 +63,46 @@ class AGCamera
 		void setTargetDistance( float dist );
 		void update(); 
 		void updateProj();
-		void updateOrtho();   
+		void updateOrtho();  
 
-		void rotate( AGRadians angleX, AGRadians angleY ); 
-		void rotate( AGDegrees angleX, AGDegrees angleY ); 
+		void rotateY( float angle );
+		void rotateX( float angle ); 
+		void rotate( float angleX, float angleY ); 
 
 		void translateInDirection( float z );
+
 	protected:
-		AGCameraPrivate* p; 
+		float m_nearPlane;
+		float m_farPlane;
+		float m_aspectRatio;
+		float m_speed;
+		float m_sprintSpeed; 
+		float m_sensX;
+		float m_sensY;
+		int m_layer;
+
+		float m_targetDistance; 
+		float m_angleX;
+		float m_angleY; 
+
+		D3DXVECTOR3 m_at;
+		D3DXVECTOR3 m_up;
+		D3DXVECTOR3 m_eye;
+
+		D3DXMATRIX m_rotMatrix; 
+
+		D3DXMATRIX m_viewMatrix;
+		D3DXMATRIX m_projMatrix; 
+
+		float m_vertSpeed;
+		float m_horSpeed; 
+
+		float m_fov;
+
+		float m_zoom; 
+
+		AGCameraType m_type;
+
+		POINT m_mpos; 
 };
 #endif 

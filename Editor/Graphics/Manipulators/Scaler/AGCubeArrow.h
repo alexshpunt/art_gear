@@ -16,13 +16,18 @@ class AGCubeArrow : public AGGizmo
 		~AGCubeArrow();
 
 		void draw(  AGSurface* surface  );
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
-		AGVec3 getAxis(); 
+		D3DXVECTOR3 getAxis(); 
 	private:
+		int m_nIndices; 
 		CubeArrowAxis m_axis; 
+		ID3D10DepthStencilState* m_depthState; 
+		ID3DX10Font* m_font; 
 		AGBoundingBox* m_boundingBox;
-		AGVec3 m_axisDir; 
+		vector< AGPrimitiveVertex > m_vertices;
+		vector< int > m_indices; 
+		D3DXVECTOR3 m_axisDir; 
 };
 
 #endif 

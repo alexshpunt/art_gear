@@ -1,6 +1,9 @@
 #ifndef AG_MOVABLE_H
 #define AG_MOVABLE_H
 
+#include <d3dx10.h>
+#include <d3d10.h>
+
 #include "Engine/Math/AGMath.h"
 
 class AGMovablePrivate; 
@@ -14,108 +17,99 @@ class AGMovable
 		virtual ~AGMovable(); 
 
 		void setPivot( const AGVec3& pivot );
+		void setPivot( float x, float y, float z );
 		const AGVec3& getPivot();
 
 		void setLocalPos( const AGVec3& pos );
+		void setLocalPos( float x, float y, float z );
 		const AGVec3& getLocalPos() const;
 
 		void setWorldPos( const AGVec3& pos );
+		void setWorldPos( float x, float y, float z );
 		const AGVec3& getWorldPos() const;
 
 		void translateLocal( const AGVec3& pos );
+		void translateLocal( float x, float y, float z );
 
 		void translateWorld( const AGVec3& pos );
+		void translateWorld( float x, float y, float z );
 
-		void setLocalAngle( const AGEulerAngles& angles );
-		void setLocalAngle( AGRadians x, AGRadians y, AGRadians z );
-		void setLocalAngle( AGDegrees x, AGDegrees y, AGDegrees z );
-		const AGEulerAngles& getLocalAngle() const; 
+		void setLocalAngle( const AGVec3& angle );
+		void setLocalAngle( float x, float y, float z );
+		const AGVec3& getLocalAngle() const; 
 
-		void setWorldAngle( const AGEulerAngles& angles );
-		void setWorldAngle( AGRadians x, AGRadians y, AGRadians z );
-		void setWorldAngle( AGDegrees x, AGDegrees y, AGDegrees z );
-		const AGEulerAngles& getWorldAngle() const; 
+		void setWorldAngle( const AGVec3& angle );
+		void setWorldAngle( float x, float y, float z );
+		const AGVec3& getWorldAngle() const; 
 
-		void rotateLocalAxis( const AGVec3& axis, AGRadians angle );
-		void rotateLocalAxis( const AGVec3& axis, AGDegrees angle );
-		void rotateLocalX( AGRadians angle );
-		void rotateLocalX( AGDegrees angle );
-		void rotateLocalY( AGRadians angle );
-		void rotateLocalY( AGDegrees angle );
-		void rotateLocalZ( AGRadians angle );
-		void rotateLocalZ( AGDegrees angle );
+		void rotateLocalAxis( const AGVec3& axis, float angle );
+		void rotateLocalX( float angle );
+		void rotateLocalY( float angle );
+		void rotateLocalZ( float angle );
+		void rotateLocal( const AGVec3& angle );
+		void rotateLocal( float x, float y, float z );
 
-		void rotateLocal( const AGEulerAngles& angles ); 
-		void rotateLocal( AGRadians x, AGRadians y, AGRadians z );
-		void rotateLocal( AGDegrees x, AGDegrees y, AGDegrees z );
+		void rotateWorldAxis( const AGVec3& axis, float angle );
 
-		void rotateWorldAxis( const AGVec3& axis, AGRadians angle );
-		void rotateWorldAxis( const AGVec3& axis, AGDegrees angle );
-
-		void rotateAroundWorldX( AGRadians angle );
-		void rotateAroundWorldX( AGDegrees angle );
-		void rotateAroundWorldY( AGRadians angle );
-		void rotateAroundWorldY( AGDegrees angle );
-		void rotateAroundWorldZ( AGRadians angle );
-		void rotateAroundWorldZ( AGDegrees angle );
+		void rotateAroundWorldX( float angle );
+		void rotateAroundWorldY( float angle );
+		void rotateAroundWorldZ( float angle );
 		
 		//Rotate around "parent" axis
-		void rotateWorldX( AGRadians angle );
-		void rotateWorldX( AGDegrees angle );
-		void rotateWorldY( AGRadians angle );
-		void rotateWorldY( AGDegrees angle );
-		void rotateWorldZ( AGRadians angle );
-		void rotateWorldZ( AGDegrees angle );
-	
-		void rotateWorld( const AGEulerAngles& angles );
-		void rotateWorld( AGRadians x, AGRadians y, AGRadians z );
-		void rotateWorld( AGDegrees x, AGDegrees y, AGDegrees z );
+		void rotateWorldX( float angle );
+		void rotateWorldY( float angle );
+		void rotateWorldZ( float angle );
+		void rotateWorld( const AGVec3& angle );
+		void rotateWorld( float x, float y, float z );
 
 		void setLocalScale( const AGVec3& factor );
+		void setLocalScale( float x, float y, float z ); 
 		const AGVec3& getLocalScale() const; 
 
 		void setWorldScale( const AGVec3& factor );
+		void setWorldScale( float x, float y, float z ); 
 		const AGVec3& getWorldScale() const; 
 
 		void scaleLocal( const AGVec3& factor ); 
+		void scaleLocal( float x, float y, float z );
 
 		void scaleWorld( const AGVec3& factor ); 
+		void scaleWorld( float x, float y, float z );
 
-		void setLocalMatrix( const AGMatrix& world );
-		const AGMatrix& getLocalMatrix();
+		void setLocalMatrix( D3DXMATRIX world );
+		D3DXMATRIX getLocalMatrix();
 
-		void setLocalTranslMatrix( const AGMatrix& transl );
-		const AGMatrix& getLocalTranslMatrix();
+		void setLocalTranslMatrix( D3DXMATRIX transl );
+		D3DXMATRIX getLocalTranslMatrix();
 
-		void setLocalRotMatrix( const AGMatrix& rot );
-		const AGMatrix& getLocalRotMatrix();
+		void setLocalRotMatrix( D3DXMATRIX rot );
+		D3DXMATRIX getLocalRotMatrix();
 
-		void setLocalScaleMatrix( const AGMatrix& scale );
-		const AGMatrix& getLocalScaleMatrix();
+		void setLocalScaleMatrix( D3DXMATRIX scale );
+		D3DXMATRIX getLocalScaleMatrix();
 
-		void setWorldMatrix( const AGMatrix& world );
-		const AGMatrix& getWorldMatrix();
+		void setWorldMatrix( D3DXMATRIX world );
+		D3DXMATRIX getWorldMatrix();
 
-		void setWorldTranslMatrix( const AGMatrix& transl ); 
-		const AGMatrix& getWorldTranslMatrix();
+		void setWorldTranslMatrix( D3DXMATRIX transl ); 
+		D3DXMATRIX getWorldTranslMatrix();
 
-		void setWorldRotMatrix( const AGMatrix& rot ); 
-		const AGMatrix& getWorldRotMatrix();
+		void setWorldRotMatrix( D3DXMATRIX rot ); 
+		D3DXMATRIX getWorldRotMatrix();
 
-		void setWorldScaleMatrix( const AGMatrix& scale ); 
-		const AGMatrix& getWorldScaleMatrix(); 
+		void setWorldScaleMatrix( D3DXMATRIX scale ); 
+		D3DXMATRIX getWorldScaleMatrix(); 
 
-		void setResultMatrix( const AGMatrix& world );
-		const AGMatrix& getResultMatrix(); 
+		void setResultMatrix( D3DXMATRIX world );
+		D3DXMATRIX getResultMatrix(); 
 
 		void setLookAt( const AGVec3& dir );
 		
 	protected:
-		//TODO: Сделать чисто вирутальной и реализовать во всех дочерних классах 
-		virtual void handleChanges( Changes changes ){}
+		virtual void handleChanges( Changes changes ) = 0;
 
 	private:
-		AGMovablePrivate* p; 
+		AGMovablePrivate* m_p; 
 };
 
 #endif 

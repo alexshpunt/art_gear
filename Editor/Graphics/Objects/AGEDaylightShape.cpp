@@ -94,7 +94,7 @@ void AGEDaylightShape::setupShape()
 
 	AGVec2 centerPoint( 0.0f, 0.0f );
 
-	AGPrimitiveVertex tVert; 
+	AGColorVertex tVert; 
 
 	int divider = 2;
 
@@ -117,5 +117,5 @@ void AGEDaylightShape::setupShape()
 
 	m_vertices.push_back( m_vertices[ pointsSize ] );
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( m_vertices, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( m_vertices, AGBufferType::Vertex );
 }

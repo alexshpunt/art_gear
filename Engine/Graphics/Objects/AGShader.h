@@ -60,12 +60,12 @@ class AGShader
 		AGShader( const std::wstring& shaderName ); 
 		virtual ~AGShader(); 
 
-		void apply( AGSurface* surface );
+		void applySurface( AGSurface* surface );
 		bool applyNextPass(); 
 
 		void setMap( int slot, AGTexture2D* texture, AGSurface* surface ); 
 
-		void setWorldMatrix( const AGMatrix& world );
+		void setWorldMatrix( D3DXMATRIX world );
 
 	private:
 		std::list< AGSurface* > m_surfaces; 

@@ -7,11 +7,11 @@ AGLight::AGLight()
 	setRange( 1.0f );
 	setIntensity( 1.0f );
 	setLightType( Point );
-	setDiffuse( AGColor( 1.0f ) );
-	setAmbient( AGColor( 1.0f ) );
-	setAttitude( AGVec3( 0.0f, 0.0f, 1.0f ) );
-	setDirection( AGVec3( 0.0f, -1.0f, 0.0f ) );
-	setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
+	setDiffuse( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+	setAmbient( D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+	setAttitude( D3DXVECTOR4( 0.0f, 0.0f, 1.0f, 0.0f ) );
+	setDirection( D3DXVECTOR3( 0.0f, -1.0f, 0.0f ) );
+	setPos( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 
 	m_name = "Light";
 }
@@ -81,12 +81,12 @@ AGLight::SpotType AGLight::getSpotType() const
 	return (AGLight::SpotType)0; 
 }
 
-void AGLight::setDirection( const AGVec3& dir)
+void AGLight::setDirection(D3DXVECTOR3 dir)
 {
-	m_desc.dir = dir;
+	m_desc.dir = D3DXVECTOR4( dir, 1.0f ); 
 }
 
-const AGVec3& AGLight::getDirection() const
+D3DXVECTOR3 AGLight::getDirection() const
 {
 	return m_desc.dir;  
 }
@@ -96,42 +96,42 @@ AGLightDesc AGLight::getDesc() const
 	return m_desc; 
 }
 
-void AGLight::setDiffuse( const AGColor& diffuse)
+void AGLight::setDiffuse(D3DXVECTOR4 diffuse)
 {
 	m_desc.diffuse = diffuse; 
 }
 
-const AGColor& AGLight::getDiffuse() const
+D3DXVECTOR4 AGLight::getDiffuse() const
 {
 	return m_desc.diffuse; 
 }
 
-void AGLight::setAmbient( const AGColor& ambient )
+void AGLight::setAmbient(D3DXVECTOR4 ambient)
 {
 	m_desc.ambient = ambient;
 }
 
-const AGColor& AGLight::getAmbient() const
+D3DXVECTOR4 AGLight::getAmbient() const
 {
 	return m_desc.ambient;
 }
 
-void AGLight::setAttitude( const AGVec3& att )
+void AGLight::setAttitude(D3DXVECTOR4 att)
 {
 	m_desc.attitude = att; 
 }
 
-const AGVec3& AGLight::getAttitude() const
+D3DXVECTOR4 AGLight::getAttitude() const
 {
 	return m_desc.attitude; 
 }
 
-void AGLight::setPos( const AGVec3& pos)
+void AGLight::setPos(D3DXVECTOR3 pos)
 {
-	m_desc.pos = pos;
+	m_desc.pos = D3DXVECTOR4( pos, 1.0f );
 }
 
-const AGVec3& AGLight::getPos() const
+D3DXVECTOR3 AGLight::getPos() const
 {
 	return m_desc.pos; 
 }

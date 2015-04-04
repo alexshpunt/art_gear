@@ -9,29 +9,29 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 	m_axis = axis; 
 	m_isSelected = false; 
 
-	AGColor color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
-	AGColor yellow( 1.0f, 1.0f, 0.0f, 1.0f );
+	D3DXVECTOR4 color( (axis == X_AXIS) * 0.798431372, (axis == Y_AXIS) * 0.6117647058, (axis == Z_AXIS) * 0.76470588233, 1.0f );
+	D3DXVECTOR4 yellow( 1.0f, 1.0f, 0.0f, 1.0f );
 	float k = 0.2f;
 	float height = 1.0f;
 	float radius = 1.0f;
 	float side = 0.3f;
 	AGPrimitiveVertex vertices[] = 
 	{
-		{ AGVec3( k * radius * -0.0315, k * height * 1, k * radius * -0.03125 ), color }, //0 
-		{ AGVec3( k * radius * 0.0315, k * height * 1, k * radius * 0.03125 ), color }, //1 
-		{ AGVec3( k * radius * -0.0315, k * height * 1, k * radius * 0.03125 ), color }, //2 
-		{ AGVec3( k * radius * 0.0315, k * height * 1, k * radius * -0.03125 ), color }, //3 
-		{ AGVec3( k * radius * -0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //4 
-		{ AGVec3( k * radius * 0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //5 
-		{ AGVec3( k * radius * 0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //6 
-		{ AGVec3( k * radius * -0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //7 
+		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1, k * radius * -0.03125 ), color }, //0 
+		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1, k * radius * 0.03125 ), color }, //1 
+		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1, k * radius * 0.03125 ), color }, //2 
+		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1, k * radius * -0.03125 ), color }, //3 
+		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //4 
+		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //5 
+		{ D3DXVECTOR3( k * radius * 0.0315, k * height * 1.063, k * radius * -0.03125 ), color }, //6 
+		{ D3DXVECTOR3( k * radius * -0.0315, k * height * 1.063, k * radius * 0.03125 ), color }, //7 
 
 		//Линия
-		{ AGVec3( 0.0f, k * height * 1.063, 0.0f ), color }, //8
-		{ AGVec3( 0.0f, 0.0f, 0.0f ), color }, //9
+		{ D3DXVECTOR3( 0.0f, k * height * 1.063, 0.0f ), color }, //8
+		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), color }, //9
 
-		{ AGVec3( 0.0f, k * height * 1.063, 0.0f ), yellow }, //10
-		{ AGVec3( 0.0f, 0.0f, 0.0f ), yellow }, //11
+		{ D3DXVECTOR3( 0.0f, k * height * 1.063, 0.0f ), yellow }, //10
+		{ D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), yellow }, //11
 	};
 
 	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 12 ), AGBufferType::Vertex );
@@ -40,7 +40,7 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 
 	for( int i = 0 ; i < verticesCount; i++ )
 	{
-		m_vertices.push_back( vertices[ i ].pos );
+		m_vertices.push_back( vertices[ i ] );
 	}
 
 	int indices[] = 
@@ -55,19 +55,16 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 		4, 0, 4, 2, 7, //36
 	};
 
-	int indexCount = sizeof( indices ) / sizeof( int );
+	m_nIndices = sizeof( indices ) / sizeof( int );
 
-	m_indices = vector< int >( indices, indices + indexCount );
+	m_indexBuffer = new AGBuffer< int >( vector< int >( indices, indices + m_nIndices + 1 ), AGBufferType::Index );
 
-	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index );
-
-	m_boundingBox = new AGBoundingBox( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
+	m_boundingBox = new AGBoundingBox( D3DXVECTOR3( -0.01f, 0.0f, -0.01f ), D3DXVECTOR3( 0.01f, k * height, 0.01f ) );
 }
 
 AGCubeArrow::~AGCubeArrow()
 {
-	delete m_boundingBox;
-	delete m_indexBuffer;
+
 }
 
 void AGCubeArrow::draw( AGSurface* surface )
@@ -75,31 +72,29 @@ void AGCubeArrow::draw( AGSurface* surface )
 	AGCamera* camera = surface->getCamera(); 
 	ID3D10Device* device = surface->getDevice(); 
 
-	assert( camera );
-	assert( device );
-
 	updatePos( camera );
 
-	AGVec3 xAxis( 1.0f, 0.0f, 0.0f );
-	AGVec3 yAxis( 0.0f, 1.0f, 0.0f );
-	AGVec3 zAxis( 0.0f, 0.0f, 1.0f );
+	D3DXMATRIX worldTextMat = getLocalMatrix();
+	D3DXVECTOR3 xAxis( 1.0f, 0.0f, 0.0f );
+	D3DXVECTOR3 yAxis( 0.0f, 1.0f, 0.0f );
+	D3DXVECTOR3 zAxis( 0.0f, 0.0f, 1.0f );
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
 
 	if( system == AGEStateManager::Local )
 	{
-		AGMatrix rotMatrix = getWorldRotMatrix(); 
+		D3DXMATRIX rotMatrix = getWorldRotMatrix(); 
 
-		xAxis *= rotMatrix;
-		yAxis *= rotMatrix;
-		zAxis *= rotMatrix; 
+		D3DXVec3TransformCoord( &xAxis, &xAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &yAxis, &yAxis, &rotMatrix );
+		D3DXVec3TransformCoord( &zAxis, &zAxis, &rotMatrix );	
 	}
 
-	AGVec3 camEye = camera->getPos() - m_beginPos; 	
+	D3DXVECTOR3 camEye = camera->getEye() - m_beginPos; 	
 
 	if( m_axis == X_AXIS )
 	{
-		float cosA = AGVec3::dot( xAxis, camEye );
+		float cosA = D3DXVec3Dot( &xAxis, &camEye );
 		if( cosA > 0.0f )
 		{
 			cosA = 1.0f; 
@@ -115,11 +110,11 @@ void AGCubeArrow::draw( AGSurface* surface )
 			cosA == 0.0f; 
 			m_axisDir.x = 0.0f;
 		}
-		setLocalAngle( AGDegrees( 0.0f ), AGDegrees( 0.0f ), AGDegrees( -90.0f * cosA ) );	
+		setLocalAngle( 0.0f, 0.0f, D3DXToRadian( -90.0f * cosA ) );	
 	}
 	else if( m_axis == Y_AXIS )
 	{
-		float cosA = AGVec3::dot( yAxis, camEye );
+		float cosA = D3DXVec3Dot( &yAxis, &camEye );
 		if( cosA >= 0.0f )
 		{
 			cosA = 0.0f; 
@@ -130,11 +125,11 @@ void AGCubeArrow::draw( AGSurface* surface )
 			cosA = -1.0f; 
 			m_axisDir.y = -1.0f; 
 		}
-		setLocalAngle( AGDegrees( 180.0f * cosA ), AGDegrees( 0.0f ), AGDegrees( 0.0f ) );	
+		setLocalAngle( D3DXToRadian( 180.0f * cosA ), 0.0f, 0.0f );	
 	}
 	else if( m_axis == Z_AXIS )
 	{
-		float cosA = AGVec3::dot( zAxis, camEye );
+		float cosA = D3DXVec3Dot( &zAxis, &camEye );
 		if( cosA > 0.0f )
 		{
 			cosA = 1.0f; 
@@ -150,7 +145,7 @@ void AGCubeArrow::draw( AGSurface* surface )
 			cosA == 0.0f; 
 			m_axisDir.z = 0.0f; 
 		}
-		setLocalAngle( AGDegrees( 90.0f * cosA ), AGDegrees( 0.0f ), AGDegrees( 0.0f ) );	
+		setLocalAngle( D3DXToRadian( 90.0f * cosA ), 0.0f, 0.0f );	
 	} 	
 
 	setupBuffers( surface );
@@ -158,7 +153,7 @@ void AGCubeArrow::draw( AGSurface* surface )
 	while( m_shader->applyNextPass() )
 	{
 		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-		device->DrawIndexed( m_indices.size(), 0, 0 );
+		device->DrawIndexed( m_nIndices, 0, 0 );
 		device->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_LINELIST );
 		if( m_isSelected )
 			device->Draw( 2, 10 );
@@ -166,12 +161,35 @@ void AGCubeArrow::draw( AGSurface* surface )
 			device->Draw( 2, 8 );
 	}
 
+	releaseBuffers(); 
 	m_boundingBox->setLocalMatrix( getLocalMatrix() );
 }
 
-float AGCubeArrow::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
+float AGCubeArrow::intersect(D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir)
 {
-	float retDist = AGDrawable::intersect( rayOrigin, rayDir );
+	float retDist = -1.0f;
+	int nIndices = m_indices.size() - 2;  
+	for( int i = 0; i < nIndices; i++ )
+	{
+		D3DXVECTOR3 vertex1 = m_vertices[ m_indices[ i ] ].pos;
+		D3DXVECTOR3 vertex2 = m_vertices[ m_indices[ i + 1 ] ].pos;
+		D3DXVECTOR3 vertex3 = m_vertices[ m_indices[ i + 2 ] ].pos;
+
+		float dist, u, v; 
+
+		bool res = D3DXIntersectTri( &vertex1, &vertex2, &vertex3, &rayOrigin, &rayDir, &u, &v, &dist );
+		if( res )
+		{
+			if( retDist < 0 )
+			{
+				retDist = dist; 
+			}
+			else 
+			{
+				retDist = min( retDist, dist );	
+			}
+		}
+	}
 
 	float boundBoxDist = m_boundingBox->intersect( rayOrigin, rayDir );
 
@@ -186,9 +204,9 @@ float AGCubeArrow::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 	return retDist; 
 }
 
-AGVec3 AGCubeArrow::getAxis()
+D3DXVECTOR3 AGCubeArrow::getAxis()
 {
-	AGVec3 axis( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
+	D3DXVECTOR3 axis( m_axis == X_AXIS, m_axis == Y_AXIS, m_axis == Z_AXIS );
 
 	axis.x *= m_axisDir.x != 0 ? m_axisDir.x : 1;
 	axis.y *= m_axisDir.y != 0 ? m_axisDir.y : 1; 

@@ -22,18 +22,3 @@ const string& AGComponent::getName() const
 	return m_name;
 }
 
-void AGComponent::onSceneInit()
-{
-
-}
-
-void AGComponent::onSceneUpdate()
-{
-
-}
-
-void AGComponent::onSceneFixedUpdate()
-{
-
-}
-

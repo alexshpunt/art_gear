@@ -140,7 +140,7 @@ AGShader::~AGShader()
 
 }
 
-void AGShader::apply(AGSurface* surface)
+void AGShader::applySurface(AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
@@ -160,8 +160,7 @@ void AGShader::apply(AGSurface* surface)
 
 	if( effect->cameraPos )
 	{
-		AGVec3 camPos = camera->getPos(); 
-		effect->cameraPos->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
+		effect->cameraPos->SetRawValue( &camera->getEye(), 0, sizeof( D3DXVECTOR3 ) );
 	}
 
 	effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
@@ -204,17 +203,12 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 	texture->apply( effect->maps[ slot ], surface );
 }
 
-void AGShader::setWorldMatrix(const AGMatrix& world)
+void AGShader::setWorldMatrix(D3DXMATRIX world)
 {
-	AGMatrix id; 
-
-	D3DXMATRIX matrix; 
-	D3DXMatrixIdentity( &matrix );
-
 	for( AGSurface* surface : m_surfaces )
 	{
 		AGEffect* effect = m_effects.at( surface );
-		effect->worldMatrix->SetMatrix( matrix );
+		effect->worldMatrix->SetMatrix( world );
 	}
 }
 

@@ -28,16 +28,17 @@ class AGBillboardPrivate
 		AGResPtr resPtr;
 		AGTexture2D* texture;  
 
-		AGVec3 pos;
-		AGSize size; 
+		D3DXVECTOR3 pos;
+		D3DXVECTOR2 size; 
+
 };
 
 AGBillboard::AGBillboard()
 {
 		m_p = new AGBillboardPrivate; 
 
-		m_p->pos = AGVec3( 0.0f, 0.0f, 0.0f );
-		m_p->size = AGSize( 0.5f, 0.5f ); 
+		m_p->pos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+		m_p->size = D3DXVECTOR2( 0.5f, 0.5f ); 
 	
 		m_p->vbo = nullptr; 
 		setup(); 
@@ -65,12 +66,12 @@ const AGVec3& AGBillboard::getPos() const
 
 void AGBillboard::setSize(const AGSize& size)
 {
-	m_p->size = size;
+	m_p->size = D3DXVECTOR2( size.getWidth(), size.getHeight() );
 }
 
 const AGSize& AGBillboard::getSize() const
 {
-	return getSize();
+	return AGSize( m_p->size.x, m_p->size.y );
 }
 
 void AGBillboard::draw(AGSurface* surface)
@@ -81,7 +82,7 @@ void AGBillboard::draw(AGSurface* surface)
 	if( !m_p->shader )
 		return; 
 
-	m_p->shader->apply( surface );
+	m_p->shader->applySurface( surface );
 
 	if( !m_p->texture->isValid() )
 		return; 

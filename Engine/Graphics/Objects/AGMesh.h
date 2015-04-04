@@ -7,10 +7,10 @@
 #include <d3dx10.h>
 #include <d3d10.h>
 
+#include "Graphics/Interfaces/AGMovable.h"
 #include "Graphics/AGGraphics.h"
 
 #include "Engine/Interfaces/AGResource.h"
-#include "Engine/Interfaces/AGMovable.h"
 
 using namespace std;
 
@@ -30,7 +30,7 @@ class AGMesh : public AGMovable, public AGResource
 		void setSelected( bool value );
 		bool isSelected() const; 
 
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
+		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
 
 		AGBoundingBox* getBoundingBox() const; 
 	private:

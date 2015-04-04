@@ -59,7 +59,7 @@
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(DXSDK_DIR)\Lib\x86;$(DXSDK_DIR)\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>qtmaind.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;d3dx10d.lib;d3d10.lib;d3d10_1.lib;dxgi.lib;d3dcompiler.lib;DxErr.lib;WinMM.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Profile>false</Profile>
+      <Profile>true</Profile>
     </Link>
     <Bscmake>
       <SuppressStartupBanner>false</SuppressStartupBanner>
@@ -98,6 +98,7 @@
     <ClCompile Include="Editor\UI\AGEGridSplitter.cpp" />
     <ClCompile Include="Editor\UI\AGESidePanel.cpp" />
     <ClCompile Include="Editor\UI\AGETransformPanel.cpp" />
+    <ClCompile Include="Engine\Graphics\Interfaces\AGMovable.cpp" />
     <ClCompile Include="Engine\Graphics\Interfaces\AGPrimitive.cpp" />
     <ClCompile Include="Engine\Graphics\Interfaces\AGPureInterfaces.cpp" />
     <ClCompile Include="Engine\Graphics\Managers\AGDebugManager.cpp" />
@@ -114,7 +115,6 @@
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGSphereShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\System\AGConsole.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Textures\AGTexture2D.cpp" />
-    <ClCompile Include="Engine\Interfaces\AGMovable.cpp" />
     <ClCompile Include="Engine\Interfaces\AGObject.cpp" />
     <ClCompile Include="Engine\Interfaces\AGResource.cpp" />
     <ClCompile Include="Engine\Managers\AGConsoleManager.cpp" />
@@ -248,6 +248,7 @@
     </CustomBuild>
     <ClInclude Include="Engine\Functors\AGGameObjectNotifyFunctor.h" />
     <ClInclude Include="Engine\Graphics\AGInputLayouts.h" />
+    <ClInclude Include="Engine\Graphics\Interfaces\AGMovable.h" />
     <ClInclude Include="Engine\Graphics\Interfaces\AGPrimitive.h" />
     <ClInclude Include="Engine\Graphics\Interfaces\AGPureInterfaces.h" />
     <ClInclude Include="Engine\Graphics\Managers\AGDebugManager.h" />
@@ -264,7 +265,6 @@
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGSphereShape.h" />
     <ClInclude Include="Engine\Graphics\Objects\Textures\AGTexture2D.h" />
     <ClInclude Include="Engine\Interfaces\AGEvent.h" />
-    <ClInclude Include="Engine\Interfaces\AGMovable.h" />
     <ClInclude Include="Engine\Interfaces\AGResource.h" />
     <ClInclude Include="Engine\Math\AGColor.h" />
     <ClInclude Include="Engine\Math\AGMathHelp.h" />
