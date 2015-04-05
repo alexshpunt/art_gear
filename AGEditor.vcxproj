@@ -128,7 +128,6 @@
     <ClCompile Include="Engine\Graphics\Components\AGRenderer.cpp" />
     <ClCompile Include="Engine\Graphics\Interfaces\AGSurface.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\AGGizmo.cpp" />
-    <ClCompile Include="Engine\Graphics\Objects\AGBoundingBox.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\AGCamera.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\AGMesh.cpp" />
     <ClCompile Include="Engine\Managers\AGComponentManager.cpp" />
@@ -247,6 +246,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets"</Command>
     </CustomBuild>
     <ClInclude Include="Engine\Functors\AGGameObjectNotifyFunctor.h" />
+    <ClInclude Include="Engine\Graphics\AGGraphicsHelper.h" />
     <ClInclude Include="Engine\Graphics\AGInputLayouts.h" />
     <ClInclude Include="Engine\Graphics\Interfaces\AGPrimitive.h" />
     <ClInclude Include="Engine\Graphics\Interfaces\AGPureInterfaces.h" />
@@ -314,7 +314,6 @@
     <ClInclude Include="Engine\Graphics\Components\AGRenderer.h" />
     <ClInclude Include="Engine\Graphics\Interfaces\AGSurface.h" />
     <ClInclude Include="Engine\Graphics\Objects\AGGizmo.h" />
-    <ClInclude Include="Engine\Graphics\Objects\AGBoundingBox.h" />
     <ClInclude Include="Engine\Graphics\Objects\AGCamera.h" />
     <ClInclude Include="Engine\Graphics\Objects\AGMesh.h" />
     <ClInclude Include="Engine\Managers\AGComponentManager.h" />

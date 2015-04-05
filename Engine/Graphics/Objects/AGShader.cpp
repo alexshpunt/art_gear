@@ -98,17 +98,9 @@ AGShader::AGShader( const std::wstring& shaderName )
 		ID3D10Effect* dxEffect; 
 		ID3D10Device* device = surface->getDevice();
 
-		hr = D3DX10CreateEffectFromFile( 
+		handleDXShaderError( D3DX10CreateEffectFromFile( 
 			&fullPath[0], NULL, NULL, "fx_4_0", shadersFlags,
-			NULL, device, NULL, NULL, &dxEffect, &blob, NULL 
-			);  
-		if( FAILED( hr ) )
-		{
-			AGError() << "Couldn't load dx10 shader: " << shaderName << AGCurFileFunctionLineSnippet; 
-			if( blob )
-				AGError() << (char*)blob->GetBufferPointer();
-			return; 
-		}	
+			NULL, device, NULL, NULL, &dxEffect, &blob, NULL ) );
 
 		AGEffect* agEffect = new AGEffect; 
 		agEffect->dxEffect = dxEffect; 
@@ -144,7 +136,7 @@ void AGShader::apply(AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
-		AGWarning() << "There is no effect for surface" << AGCurFileFunctionLineSnippet; 
+		AGWarning() << "There is no effect for surface" << AGErrorSnippet; 
 		return; 
 	}
 	AGEffect* effect = m_effects.at( surface );
@@ -190,14 +182,14 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
-		AGWarning() << "There is no effect for surface" << AGCurFileFunctionLineSnippet;
+		AGWarning() << "There is no effect for surface" << AGErrorSnippet;
 		return; 
 	}
 	AGEffect* effect = m_effects.at( surface );
 
 	if( effect->maps.find( slot ) == effect->maps.end() )
 	{
-		AGWarning() << "There is no map in slot: " << slot << AGCurFileFunctionLineSnippet;
+		AGWarning() << "There is no map in slot: " << slot << AGErrorSnippet;
 		return; 
 	}
 
@@ -206,15 +198,10 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 
 void AGShader::setWorldMatrix(const AGMatrix& world)
 {
-	AGMatrix id; 
-
-	D3DXMATRIX matrix; 
-	D3DXMatrixIdentity( &matrix );
-
 	for( AGSurface* surface : m_surfaces )
 	{
 		AGEffect* effect = m_effects.at( surface );
-		effect->worldMatrix->SetMatrix( matrix );
+		effect->worldMatrix->SetMatrix( world );
 	}
 }
 

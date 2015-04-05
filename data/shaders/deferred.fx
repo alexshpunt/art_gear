@@ -9,7 +9,6 @@ Texture2D txSpec;
 Light light; 
 
 float3 camPos; 
-
 SamplerState samLinear
 {
 	Filter = MIN_MAG_MIP_LINEAR;
@@ -35,7 +34,7 @@ float4 PS( PSIn psIn ) : SV_Target
 {
 	float4 pos = txPos.Sample( samLinear, psIn.tex ); 
 
-	if( pos.w == 1.0f )
+	if( pos.w == 1.0f )//Screen
 		discard;
 	
 	float4 diffuse = txDiffuse.Sample( samLinear, psIn.tex ); 
@@ -49,11 +48,9 @@ float4 PS( PSIn psIn ) : SV_Target
 	surface.diffuse = diffuse; 
 	surface.specLevel = specLvl; 
 	surface.gloss = gloss;
-	surface.specPower = 12.0f; 
+	surface.specPower = 8.0f; 
 	surface.pos = float3( pos.x, pos.y, pos.z );
 	surface.normal = float3( normal.x, normal.y, normal.z ); 
-
-	return float4( diffuse.x, diffuse.y, diffuse.z, 1.0f );
 
 	if( diffuse.w < 0.001f ) //Objects should be lighted 
 	{

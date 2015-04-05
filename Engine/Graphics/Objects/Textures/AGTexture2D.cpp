@@ -34,29 +34,24 @@ AGTexture2D::AGTexture2D(const std::wstring& fileName)
 			HRESULT hr = D3DX10CreateShaderResourceViewFromFile( surface->getDevice(), &fullPath[ 0 ], &loadInfo, NULL, &view, NULL );
 			if( FAILED( hr ) )
 			{
-				AGError() << "Couldn't load texture: " << fullPath << " " << DXGetErrorDescription( hr ) << AGCurFileFunctionLineSnippet; 
+				AGError() << "Couldn't load texture: " << fullPath << " " << DXGetErrorDescription( hr ) << AGErrorSnippet; 
 				return; 
 			}
 
-			AGDebug() << fileName << " was loaded";
+			AGSucces() << fileName << " was loaded";
 
 			ID3D10Resource* resource; 
 
 			view->GetResource( &resource );
 
 			IDXGIResource* res( NULL );
-			hr = resource->QueryInterface( __uuidof( IDXGIResource ), (void**)&res );
-
-			if( FAILED( hr ) )
-			{
-				AGError() << "Can't query interface IDXGIResource " << DXGetErrorDescription( hr ) << AGCurFileFunctionLineSnippet; 
-			}
+			handleDXError( resource->QueryInterface( __uuidof( IDXGIResource ), (void**)&res ) );
 
 			hr = res->GetSharedHandle( &texHandle );
 
 			if( FAILED( hr ) )
 			{
-				AGError() << "Cant get shared handle " << DXGetErrorDescription( hr ) << AGCurFileFunctionLineSnippet; 
+				AGError() << "Cant get shared handle " << DXGetErrorDescription( hr ) << AGErrorSnippet; 
 			}
 			else
 			{
@@ -71,7 +66,7 @@ AGTexture2D::AGTexture2D(const std::wstring& fileName)
 
 			if( FAILED( hr ) )
 			{
-				AGError() << "Couldn't open shared resource" << " " << DXGetErrorString( hr ) << AGCurFileFunctionLineSnippet; 
+				AGError() << "Couldn't open shared resource" << " " << DXGetErrorString( hr ) << AGErrorSnippet; 
 				return; 
 			}
 
@@ -80,7 +75,7 @@ AGTexture2D::AGTexture2D(const std::wstring& fileName)
 
 			if( FAILED( hr ) )
 			{
-				AGError() << "Can't quary interface ID3D10Resource" << AGCurFileFunctionLineSnippet; 
+				AGError() << "Can't quary interface ID3D10Resource" << AGErrorSnippet; 
 				return; 
 			}
 
@@ -103,7 +98,7 @@ AGTexture2D::AGTexture2D(const std::wstring& fileName)
 			hr = surface->getDevice()->CreateShaderResourceView( res, &srvDesc, &view );
 			if( FAILED( hr ) )
 			{
-				AGError() << "Cant create shader resource view " << DXGetErrorDescription( hr ) << AGCurFileFunctionLineSnippet; 
+				AGError() << "Cant create shader resource view " << DXGetErrorDescription( hr ) << AGErrorSnippet; 
 			}
 		}
 

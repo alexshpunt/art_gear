@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Engine/Graphics/Objects/AGGizmo.h"
-#include "Engine/Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ class AGArrow : public AGGizmo
 		AGVec3 getAxis(); 
 	private:
 		ArrowAxis m_axis; 
-		AGBoundingBox* m_boundingBox;
+		AGBoxShape* m_boundingBox;
 };
 
 #endif 

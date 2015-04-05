@@ -5,14 +5,13 @@
 #include <string>
 
 #include "Patterns/Singleton.h"
-#include "Math/AGMath.h"
 
 #define AGDebug() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Debug ) 
 #define AGSucces() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Succes ) 
 #define AGWarning() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Warning ) 
-#define AGError() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Error ) 
+#define AGError() AGLogger::getInstance().getLoggerAtLevel( AGLogger::Error )
 
-#define AGCurFileFunctionLineSnippet " Function: "##__FUNCTION__
+#define AGErrorSnippet "File: " << __FILE__ << "\nFunction: " << __FUNCTION__ << "\nLine: " << __LINE__ << "\nError: "
 
 using namespace std;
 
@@ -40,9 +39,9 @@ class AGLogger
 		AGLogger& operator<<( wchar_t var );
 		AGLogger& operator<<( wchar_t* var );
 		AGLogger& operator<<( const wstring& var );
-		AGLogger& operator<<( const AGSize& var );
+		/*AGLogger& operator<<( const AGSize& var );
 		AGLogger& operator<<( const AGPoint2& var );
-		AGLogger& operator<<( const AGRect& var );
+		AGLogger& operator<<( const AGRect& var );*/
 
 	private:
 		void init(); 

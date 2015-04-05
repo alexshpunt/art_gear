@@ -4,7 +4,7 @@
 #include <map>
 
 #include "Engine/Graphics/Objects/AGGizmo.h"
-#include "Engine/Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 
 class AGArrow; 
 

@@ -9,7 +9,7 @@
 
 AGRenderer::AGRenderer(AGGameObject* object) : AGComponent( object )
 {
-	m_boundingBox = new AGBoundingBox( AGVec3( 1.0f, 1.0f, 1.0f ), AGVec3( 0.0f, 0.0f, 0.0f ) );
+	m_boundingBox = new AGBoxShape( AGVec3( 1.0f, 1.0f, 1.0f ), AGVec3( 0.0f, 0.0f, 0.0f ) );
 	m_isSelected = false; 
 	AGGraphics::getInstance().addRenderer( this ); 
 }

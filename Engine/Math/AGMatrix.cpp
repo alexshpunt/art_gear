@@ -405,9 +405,19 @@ void AGMatrix::setRotate( const AGVec3& axis, AGRadians angle )
 	p->data[ 2 ][ 2 ] = cosA + ( 1 - cosA ) * ( normal.z * normal.z ); 
 }
 
-void AGMatrix::setRotate(AGRadians yaw, AGRadians pitch, AGRadians roll)
+void AGMatrix::setRotateYawPitchRoll(AGRadians yaw, AGRadians pitch, AGRadians roll)
 {
-	*this = AGMatrix::RotationZ( roll ) * AGMatrix::RotationX( pitch ) * AGMatrix::RotationY( yaw ); 
+	*this = AGMatrix::RotationZ( roll ) * AGMatrix::RotationX( pitch ) * AGMatrix::RotationY( yaw );
+}
+
+void AGMatrix::setRotateYawPitchRoll(AGDegrees yaw, AGDegrees pitch, AGDegrees roll)
+{
+	setRotateYawPitchRoll( yaw.toRadians(), pitch.toRadians(), roll.toRadians() );
+}
+
+void AGMatrix::setRotate(AGRadians x, AGRadians y, AGRadians z)
+{
+	*this = AGMatrix::RotationZ( z ) * AGMatrix::RotationX( x ) * AGMatrix::RotationY( y ); 
 }
 
 void AGMatrix::setRotate(const AGVec3& axis, AGDegrees angle)
@@ -415,9 +425,9 @@ void AGMatrix::setRotate(const AGVec3& axis, AGDegrees angle)
 	setRotate( axis, angle.toRadians() );
 }
 
-void AGMatrix::setRotate(AGDegrees yaw, AGDegrees pitch, AGDegrees roll)
+void AGMatrix::setRotate(AGDegrees x, AGDegrees y, AGDegrees z)
 {
-	setRotate( yaw.toRadians(), pitch.toRadians(), roll.toRadians() );
+	setRotate( x.toRadians(), y.toRadians(), z.toRadians() );
 }
 
 void AGMatrix::setTranslate(const AGVec3& transl)
@@ -438,6 +448,85 @@ AGMatrix::operator float *() const
 {
 	return p->data[ 0 ];
 }
+
+void AGMatrix::rotateX(AGRadians angle)
+{
+	*this *= AGMatrix::RotationX( angle );
+}
+
+void AGMatrix::rotateX(AGDegrees angle)
+{
+	rotateX( angle.toRadians() );
+}
+
+void AGMatrix::rotateY(AGRadians angle)
+{
+	*this *= AGMatrix::RotationY( angle );
+}
+
+void AGMatrix::rotateY(AGDegrees angle)
+{
+	rotateY( angle.toRadians() );
+}
+
+void AGMatrix::rotateZ(AGRadians angle)
+{
+	*this *= AGMatrix::RotationZ( angle );
+}
+
+void AGMatrix::rotateZ(AGDegrees angle)
+{
+	rotateZ( angle );
+}
+
+void AGMatrix::rotate(const AGVec3& axis, AGRadians angle)
+{
+	*this *= AGMatrix::Rotation( axis, angle );
+}
+
+void AGMatrix::rotate(const AGVec3& axis, AGDegrees angle)
+{
+	rotate( axis, angle.toRadians() );
+}
+
+void AGMatrix::rotate(AGRadians yaw, AGRadians pitch, AGRadians roll)
+{
+	*this *= AGMatrix::Rotation( yaw, pitch, roll );
+}
+
+void AGMatrix::rotate(AGDegrees yaw, AGDegrees pitch, AGDegrees roll)
+{
+	rotate( yaw.toRadians(), pitch.toRadians(), roll.toRadians() );
+}
+
+void AGMatrix::translate(const AGVec3& transl)
+{
+	*this *= AGMatrix::Translation( transl );
+}
+
+void AGMatrix::scale(const AGVec3& scale)
+{
+	*this *= AGMatrix::Scaling( scale ); 
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

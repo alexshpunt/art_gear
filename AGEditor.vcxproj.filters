@@ -206,9 +206,6 @@
     <ClCompile Include="Engine\Graphics\Interfaces\AGPureInterfaces.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Objects\AGBoundingBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Graphics\Objects\AGCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -453,9 +450,6 @@
     <ClInclude Include="Engine\Utils\AGConversion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Objects\AGBoundingBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\AGCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -550,6 +544,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Interfaces\AGMovable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\AGGraphicsHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

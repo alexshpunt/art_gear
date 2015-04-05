@@ -2,17 +2,17 @@
 
 AGLight::AGLight()
 { 
-	setFalloff( 1.1f );
-	setHotspot( 1.0f );
-	setRange( 1.0f );
-	setIntensity( 1.0f );
+	setFalloff( 2.5f );
+	setHotspot( 2.0f );
+	setRange( 2.0f );
+	setIntensity( 4.0f );
 	setLightType( Point );
-	setDiffuse( AGColor( 1.0f ) );
-	setAmbient( AGColor( 1.0f ) );
+	setDiffuse( AGColor( 244, 235, 204 ) );
+	setAmbient( AGColor( 0.2f, 0.2f, 0.2f ) );
 	setAttitude( AGVec3( 0.0f, 0.0f, 1.0f ) );
 	setDirection( AGVec3( 0.0f, -1.0f, 0.0f ) );
 	setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
-
+	m_desc.spotPower = 1.0f;
 	m_name = "Light";
 }
 

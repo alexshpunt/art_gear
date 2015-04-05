@@ -87,9 +87,14 @@ class AGELightPrivate
 AGELight::AGELight()
 {
 	m_p = new AGELightPrivate; 
+
+	m_p->light = new AGLight;
+	AGGraphics::getInstance().addLight( m_p->light );
+	AGGraphics::getInstance().addClickableObject( this ); 
+		
 	m_p->posCone = new AGConeShape( 0.05f, 0.1f );
-	m_p->hotspotCone = new AGConeShape( 0.5f, 1.0f, AGColor( 0.8f, 0.72f, 0.18f, 1.0f ) );
-	m_p->falloffCone = new AGConeShape( 0.52f, 1.0f, AGColor( 0.52f, 0.48f, 0.18f, 1.0f ) );
+	m_p->hotspotCone = new AGConeShape( 0.5f, 1.0f, AGColor( 0.8f, 0.72f, 0.18f ) );
+	m_p->falloffCone = new AGConeShape( 0.52f, 1.0f, AGColor( 0.52f, 0.48f, 0.18f ) );
 
 	m_p->dir = AGVec3( 0.0f, 1.0f, 0.0f );
 
@@ -106,20 +111,19 @@ AGELight::AGELight()
 
 	m_p->posBox = new AGBoxShape( 0.1f ); 
 
-	m_p->pointHotspot = new AGSphereShape( 0.5f, AGColor( 0.8f, 0.72f, 0.18f ) ); 
-	m_p->pointFalloff = new AGSphereShape( 0.6, AGColor( 0.52f, 0.48f, 0.18f ) );
+	m_p->pointHotspot = new AGSphereShape( m_p->light->getRange(), AGColor( 0.8f, 0.72f, 0.18f ) ); 
+	//m_p->pointFalloff = new AGSphereShape( m_p->light->getFalloff(), AGColor( 0.52f, 0.48f, 0.18f ) );
 
 	m_p->dirCylinder = new AGCylinderShape( 0.5f, 1.0f, AGColor( 0.8f, 0.72f, 0.18f ) );
 	m_p->daylightShape = new AGEDaylightShape( 0.2f, 0.5f, AGColor( 0.8f, 0.72f, 0.18f ) );
 	m_p->daylightShape->setLookAt( m_p->dir ) ;
 
+	//m_p->dirCylinder->setLookAt( m_p->light->getDirection() );
+
 	m_p->posCone->setWorldPos( AGVec3::Zero() ); 
+	m_p->hotspotCone->setWorldPos( AGVec3::Zero() ); 
 
 	m_p->line = new AGLine( m_p->posCone->getWorldPos(), m_p->posCone->getWorldPos() + m_p->dir, AGColor( 0.0f, 0.0f, 1.0f, 1.0f ) );
-
-	m_p->light = new AGLight;
-	AGGraphics::getInstance().addLight( m_p->light );
-	AGGraphics::getInstance().addClickableObject( this ); 
 }
 
 AGELight::~AGELight()
@@ -145,8 +149,8 @@ void AGELight::draw(AGSurface* surface)
 		m_p->posCone->draw( surface );
 	}
 
-	if( !m_p->isSelected )
-		return; 
+	/*if( !m_p->isSelected )
+		return;*/ 
 
 	if( lightType == AGLight::Directional )
 	{
@@ -170,7 +174,7 @@ void AGELight::draw(AGSurface* surface)
 	else if( lightType == AGLight::Point )
 	{
 		m_p->pointHotspot->draw( surface );
-		m_p->pointFalloff->draw( surface );
+	//	m_p->pointFalloff->draw( surface );
 	}
 }
 

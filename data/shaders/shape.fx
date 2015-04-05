@@ -58,7 +58,7 @@ PSOutput PS( PS_INPUT input )
 
 	output.diffuse = input.color; 
 	output.diffuse.w = 0.0f; 
-	output.pos.w = 0.1f; 
+	output.pos.w = 0.0f; 
 
 	return output;
 }
@@ -71,6 +71,6 @@ technique10 Render
 	SetGeometryShader( NULL );
 	SetPixelShader( CompileShader( ps_4_0, PS() ) );
 	SetRasterizerState( rs ); 
-	SetBlendState( AlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
+	//SetBlendState( AlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }

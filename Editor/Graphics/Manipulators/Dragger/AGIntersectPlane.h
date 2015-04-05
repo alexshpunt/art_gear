@@ -4,7 +4,7 @@
 #include <map>
 
 #include "Engine/Graphics/Objects/AGGizmo.h"
-#include "Engine/Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 
 class AGArrow; 
 
@@ -15,7 +15,8 @@ class AGIntersectPlane : public AGGizmo
 		AGIntersectPlane( PlaneAxis axis );
 		~AGIntersectPlane();
 
-		void draw(  AGSurface* surface  );
+		void draw(  AGSurface* surface  ) override;
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ) override; 
 
 		AGVec3 getAxis();
 	private:

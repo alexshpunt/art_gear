@@ -61,7 +61,7 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 
 	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index );
 
-	m_boundingBox = new AGBoundingBox( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
+	m_boundingBox = new AGBoxShape( AGVec3( -0.01f, 0.0f, -0.01f ), AGVec3( 0.01f, k * height, 0.01f ) );
 }
 
 AGCubeArrow::~AGCubeArrow()

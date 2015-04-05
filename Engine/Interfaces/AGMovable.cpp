@@ -129,12 +129,12 @@ void AGMovable::setLocalAngle(AGRadians x, AGRadians y, AGRadians z)
 {
 	p->updateWorldMatrix = true;
 	p->localAngle = AGEulerAngles( x, y, z );
-	p->localRotMatrix.setIdentity();
+	//p->localRotMatrix.setIdentity();
 	p->localRotMatrix.setRotate( x, y, z );
 
 	p->forward *= p->localRotMatrix; 
 	p->up *= p->localRotMatrix;
-	p->rotMatrix *= p->localRotMatrix; 
+	//p->rotMatrix *= p->localRotMatrix; 
 
 	handleChanges( LocalRot );
 }
@@ -543,16 +543,6 @@ void AGMovable::setLookAt(const AGVec3& dir)
 
 	p->localRotMatrix.setIdentity(); 
 	p->localRotMatrix.setRotate( axis, AGRadians( angle ) );
-
-	/*float cosA = D3DXVec3Dot( &dir, &m_p->up ); 
-	float angle = acos( cosA ); 
-
-	AGVec3 axis;
-	D3DXVec3Cross( &axis, &dir, &m_p->up ); 
-
-	AGMatrixRotationAxis( &m_p->localRotMatrix, &axis, angle ); 
-
-	m_p->up = dir; */
 }
 
 

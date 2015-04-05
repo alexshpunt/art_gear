@@ -10,16 +10,23 @@ public:
 	AGBoxShapePrivate()
 	{
 		length = width = height = EPSILON_FOR_FLOAT; 
+		initByVertices = false; 
 	}
 	float length; 
 	float width;
 	float height; 
+
+	AGVec3 v1, v2; 
+	bool initByVertices; 
 };
 
 AGBoxShape::AGBoxShape(const AGVec3& v1, const AGVec3& v2, const AGColor& color)
 {
 	p = new AGBoxShapePrivate; 
 
+	p->v1 = v1;
+	p->v2 = v2; 
+	p->initByVertices = true; 
 	setLength( abs( v2.z - v1.z ) );
 	setWidth( abs( v2.x - v1.x ) );
 	setHeight( abs( v2.y - v1.y ) );
@@ -114,8 +121,19 @@ void AGBoxShape::setupShape()
 	if( m_indexBuffer )
 		delete m_indexBuffer; 
 
-	AGVec3 v2( p->width / 2.0f, p->height / 2.0f, p->length / 2.0f );
-	AGVec3 v1( -p->width / 2.0f, -p->height / 2.0f, -p->length / 2.0f );
+	AGVec3 v1;
+	AGVec3 v2;
+
+	if( p->initByVertices )
+	{
+		v1 = p->v1;
+		v2 = p->v2;
+	}
+	else 
+	{
+		v2 = AGVec3( p->width / 2.0f, p->height / 2.0f, p->length / 2.0f );
+		v1 = AGVec3( -p->width / 2.0f, -p->height / 2.0f, -p->length / 2.0f );
+	}
 
 	AGColorVertex vertices[] = 
 	{

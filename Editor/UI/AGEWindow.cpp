@@ -11,7 +11,6 @@
 #include "Managers/AGGraphicsSettings.h"
 #include "Managers/AGEStateManager.h"
 #include "Graphics/AGGraphics.h"
-#include "Graphics/Objects/AGBoundingBox.h"
 #include "Graphics/Objects/AGCamera.h"
 #include "Graphics/Objects/AGMesh.h"
 #include "Managers/AGLogger.h"

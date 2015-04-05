@@ -214,74 +214,62 @@ void AGGraphics::addSurface(AGSurface* surface)
 	ID3D10Effect* dxEffect; 
 	ID3D10Device* device = surface->getDevice();
 
-	hr = D3DX10CreateEffectFromFile( 
+	handleDXShaderError( D3DX10CreateEffectFromFile( 
 		L"data/shaders/dif.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS,
 		NULL, device, NULL, NULL, &dxEffect, NULL, NULL 
-		);  
+		) );  
 
 	D3D10_PASS_DESC passDesc; 
 	ID3D10EffectTechnique* technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	hr = device->CreateInputLayout( vertexLayout, vertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->vertexInputLayout );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create input layout";
-		return;
-	}
+	handleDXError( device->CreateInputLayout( vertexLayout, vertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->vertexInputLayout ) );
 	
 	dxEffect->Release(); 
 
-	D3DX10CreateEffectFromFile( L"data/shaders/console.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/console.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( simpleVertexLayout, simpleVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->simpleVertexInputLayout );
+	handleDXError( device->CreateInputLayout( simpleVertexLayout, simpleVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->simpleVertexInputLayout ) );
 
 	dxEffect->Release();
 
-	D3DX10CreateEffectFromFile( L"data/shaders/shape.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/shape.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( colorVertexLayout, colorVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->colorVertexInputLayout );
+	handleDXError( device->CreateInputLayout( colorVertexLayout, colorVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->colorVertexInputLayout ) );
 
 	dxEffect->Release();
 
-	D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	//TODO: Change shader to something like diffuse.fx 
+	/*handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( textureVertexLayout, textureVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->textureVertexInputLayout );
+	handleDXError( device->CreateInputLayout( textureVertexLayout, textureVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->textureVertexInputLayout ) );
 
-	dxEffect->Release();
+	dxEffect->Release();*/
 
-	ID3D10Blob* blob; 
-
-	hr = D3DX10CreateEffectFromFile( L"data/shaders/billboard.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, &blob, NULL ); 
-
-	if( FAILED( hr ) )
-	{
-		AGError() << (char*)blob->GetBufferPointer(); 
-	}
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/billboard.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, &blob, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( billboardVertexLayout, billboardVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->billboardVertexInputLayout );
+	handleDXError( device->CreateInputLayout( billboardVertexLayout, billboardVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->billboardVertexInputLayout ) );
 
 	dxEffect->Release();
 
@@ -311,7 +299,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 
 	ID3D10DepthStencilState* state; 
 
-	device->CreateDepthStencilState( &dsDesc, &state );
+	handleDXError( device->CreateDepthStencilState( &dsDesc, &state ) );
 	
 	m_depthState.push_back( state ); 
 }
@@ -420,11 +408,9 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 		AGMatrix matWorld;
 		if( mesh )
 		{
-			matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
+			matWorld = mesh->getResultMatrix(); //Локальные координаты модели
 		}
 		AGGameObject* obj = renderer->getObject(); 
-		AGVec3 pos = obj->getLocalPos(); 
-		//matWorld.setTranslate( pos );
 
 		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
 		AGVec3 fp = AGVec3::unproject( farPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 

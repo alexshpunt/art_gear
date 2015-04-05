@@ -140,7 +140,7 @@ AGLogger& AGLogger::operator<<(const wstring& var)
 	return *this; 
 }
 
-AGLogger& AGLogger::operator<<(const AGSize& var)
+/*AGLogger& AGLogger::operator<<(const AGSize& var)
 {
 	m_skipLine = true;
 	cout << "AGSize( width : " << var.getWidth() << " ; height : " << var.getHeight() << " ) ";
@@ -160,7 +160,7 @@ AGLogger& AGLogger::operator<<(const AGRect& var)
 	cout << "AGRect( left : " << var.getLeft() << " ; top : " << var.getTop() <<
 		 " ; right : " << var.getRight() << " ; bottom : " << var.getBottom() << " ) ";
 	return *this; 
-}
+}*/
 
 AGLogger& AGLogger::getLoggerAtLevel(Levels level)
 {

@@ -8,6 +8,7 @@
 
 void AGClickable::calculateDeltaRays( AGSurface* surface )
 {
+	assert( surface );
 	AGPoint2 mousePos = AGInput().getMousePos(); 
 	AGPoint2 nextMousePos = mousePos + AGInput().getMouseDeltaPos();
 	AGSize winSize = surface->getSize();  
@@ -39,7 +40,7 @@ void AGClickable::calculateDeltaRays( AGSurface* surface )
 
 		AGVec3 dir = ( farPoint - nearPoint ).normilized(); 
 
-		m_rayDelta -= nearPoint + dir; 
+		m_rayDelta = ( nearPoint + dir ) - m_rayDelta; 
 	}
 
 	

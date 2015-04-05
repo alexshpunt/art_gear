@@ -1,6 +1,8 @@
 #ifndef AG_VEC3_H
 #define AG_VEC3_H
 
+#include "Engine/Managers/AGLogger.h"
+
 class AGMatrix; 
 class AGRect; 
 class AGVec2; 
@@ -52,6 +54,7 @@ class AGVec3
 		AGVec3 operator/( float var );
 		AGVec3& operator/=( float var );
 
+		friend AGLogger& operator<<( AGLogger& logger, const AGVec3& vec );
 
 		operator float*() const; 
 };

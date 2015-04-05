@@ -4,7 +4,7 @@
 
 #include "Managers/AGLogger.h"
 #include "AGMaterial.h"
-#include "AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 #include "Graphics/Interfaces/AGSurface.h"
 #include "AGCamera.h"
 

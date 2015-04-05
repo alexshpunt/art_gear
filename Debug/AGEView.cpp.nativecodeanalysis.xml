@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<DEFECTS><DEFECT><SFA><FILEPATH>c:\program files (x86)\windows kits\8.0\include\um\</FILEPATH><FILENAME>winnt.h</FILENAME><LINE>556</LINE><COLUMN>48</COLUMN></SFA><DEFECTCODE>28301</DEFECTCODE><DESCRIPTION>Нет аннотаций для первого объявления "HRESULT". См. d:\libs\qt5.3.0\5.3\msvc2012_opengl\include\qtgui\qwindowdefs_win.h(111). </DESCRIPTION><FUNCTION></FUNCTION><DECORATED></DECORATED><FUNCLINE>0</FUNCLINE><PATH/></DEFECT></DEFECTS>

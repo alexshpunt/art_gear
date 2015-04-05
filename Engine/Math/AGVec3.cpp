@@ -230,6 +230,10 @@ AGVec3 AGVec3::unproject( const AGVec3& vec, const AGRect& viewport, const AGMat
 	return tmp; 
 }
 
-
+AGLogger& operator<<( AGLogger& logger, const AGVec3& vec )
+{
+	AGDebug() << "AGVec3( " << vec.x << ", " << vec.y << ", " << vec.z << " )"; 
+	return AGLogger::getInstance(); 
+}
 
 

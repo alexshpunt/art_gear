@@ -1,2 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<DEFECTS><DEFECT><SFA><FILEPATH>d:\libs\qt5.3.0\5.3\msvc2012_opengl\include\qtgui\</FILEPATH><FILENAME>qwindowdefs_win.h</FILENAME><LINE>111</LINE><COLUMN>13</COLUMN></SFA><DEFECTCODE>28251</DEFECTCODE><DESCRIPTION>Несогласованная аннотация для "HRESULT": данный экземпляр содержит нет аннотаций. См. c:\program files (x86)\windows kits\8.0\include\um\winnt.h(556). </DESCRIPTION><FUNCTION></FUNCTION><DECORATED></DECORATED><FUNCLINE>0</FUNCLINE><PATH/></DEFECT></DEFECTS>

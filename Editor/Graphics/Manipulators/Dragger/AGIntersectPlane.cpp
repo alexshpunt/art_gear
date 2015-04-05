@@ -123,3 +123,31 @@ AGVec3 AGIntersectPlane::getAxis()
 	return AGVec3( 0.0f, 0.0f, 0.0f );
 }
 
+float AGIntersectPlane::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
+{
+	float retDist = -1.0f; 
+
+	for( int i = 0; i < 3; i++ )
+	{
+		AGVec3 v1 = m_vertices[ i ]; 
+		AGVec3 v2 = m_vertices[ i + 1 ];
+		AGVec3 v3 = m_vertices[ i + 2 ]; 
+
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ), false );
+
+		if( res.hit )
+		{
+			if( retDist < 0.0f )
+			{
+				retDist = res.distance; 
+			}
+			else 
+			{
+				retDist = min( retDist, res.distance );
+			}
+		}
+	}
+
+	return retDist; 
+}
+

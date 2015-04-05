@@ -24,6 +24,8 @@
 
 #include "AGInputLayouts.h"
 
+#include "AGGraphicsHelper.h"
+
 class AGGameObject; 
 class AGSurface; 
 class AGManipulator;
