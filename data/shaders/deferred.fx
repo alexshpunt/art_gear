@@ -51,9 +51,9 @@ float4 PS( PSIn psIn ) : SV_Target
 	surface.gloss = gloss;
 	surface.specPower = 12.0f; 
 	surface.pos = float3( pos.x, pos.y, pos.z );
-	surface.normal = float3( normal.x, normal.y, normal.z );
+	surface.normal = float3( normal.x, normal.y, normal.z ); 
 
-	return float4( diffuse.x, diffuse.y, diffuse.z, 1.0f ); 
+	return float4( diffuse.x, diffuse.y, diffuse.z, 1.0f );
 
 	if( diffuse.w < 0.001f ) //Objects should be lighted 
 	{

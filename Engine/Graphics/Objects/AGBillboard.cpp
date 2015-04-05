@@ -1,5 +1,6 @@
 #include "AGBillboard.h"
 
+#include <assert.h>
 #include <vector>
 
 #include "Engine/Graphics/AGGraphics.h"
@@ -55,12 +56,12 @@ AGBillboard::~AGBillboard()
 
 void AGBillboard::setPos(const AGVec3& pos)
 {
-	m_p->pos = AGConversion::toD3DXVec3D( pos ); 
+	m_p->pos = pos; 
 }
 
 const AGVec3& AGBillboard::getPos() const
 {
-	return AGConversion::toAGVec3D( m_p->pos );
+	return m_p->pos;
 }
 
 void AGBillboard::setSize(const AGSize& size)
@@ -78,18 +79,17 @@ void AGBillboard::draw(AGSurface* surface)
 	AGCamera* camera = surface->getCamera();
 	ID3D10Device* device = surface->getDevice();
 
-	if( !m_p->shader )
-		return; 
+	assert( camera );
+	assert( device );
+	assert( m_p->shader );
 
 	m_p->shader->apply( surface );
 
-	if( !m_p->texture->isValid() )
-		return; 
+	assert( m_p->texture->isValid() );
 
 	m_p->shader->setMap( AGShaderMapSlots::DifSlot, m_p->texture, surface );
 
-	if( !m_p->vbo )
-		return; 
+	assert( m_p->vbo );
 
 	m_p->vbo->apply( surface );
 
@@ -106,7 +106,7 @@ void AGBillboard::setup()
 
 	AGBillboardVertex vertex;
 	vertex.pos = m_p->pos;
-	vertex.size = m_p->size; 
+	vertex.size = D3DXVECTOR2( m_p->size.getWidth(), m_p->size.getHeight() ); 
 	
 	m_p->vbo = new AGBuffer< AGBillboardVertex >( vector< AGBillboardVertex >( &vertex, &vertex + 1 ), AGBufferType::Vertex );
 }

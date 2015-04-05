@@ -15,7 +15,7 @@ AGBoundingBox::AGBoundingBox( AGVec3 v1, AGVec3 v2 )
 {
 	AGColor clr( 1.0f, 1.0f, 1.0f, 1.0f );
 
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		{ AGVec3( v2.x, v2.y, v2.z ), clr }, //0
 		{ AGVec3( v2.x, v1.y, v2.z ), clr }, //1
@@ -30,13 +30,13 @@ AGBoundingBox::AGBoundingBox( AGVec3 v1, AGVec3 v2 )
 
 	for( int i = 0; i < 8; i++ )
 	{
-		AGPrimitiveVertex clrVert = vertices[ i ]; 
+		AGColorVertex clrVert = vertices[ i ]; 
 		m_vertices[ i ] = clrVert.pos; 
 	}
 
-	vector< AGPrimitiveVertex > vertexVector( vertices, vertices + 8 );
+	vector< AGColorVertex > vertexVector( vertices, vertices + 8 );
 	
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vertexVector, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vertexVector, AGBufferType::Vertex );
 
 	int indices[] = 
 	{

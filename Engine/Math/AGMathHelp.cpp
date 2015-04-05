@@ -1,7 +1,12 @@
 #include "AGMathHelp.h"
 
+#include <d3d10.h>
+#include <d3dx10.h>
+
 #include "AGVec2.h"
 #include "AGVec3.h"
+
+#include "Engine/Managers/AGLogger.h"
 
 AGRadians AGDegrees::toRadians()
 {
@@ -43,7 +48,8 @@ namespace AGMath
 
 	AGMath::IntersectResult intersectTriangle(const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace )
 	{
-		IntersectResult res; 
+		IntersectResult res;
+		 
 		double det, invDet; 
 
 		AGVec3 edge1 = triangle.v2 - triangle.v1; 

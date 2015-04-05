@@ -38,7 +38,7 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 
 	AGColor yellow( red.getRedF(), green.getGreenF(), 0.0f, 0.4f );
 
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		//Unselected rect
 		{ AGVec3( 0.0f, 0.0f, 0.0f ), firstColor  }, //0
@@ -68,7 +68,7 @@ AGIntersectPlane::AGIntersectPlane( PlaneAxis axis )
 		m_vertices.push_back( vertices[ 8 + i ].pos ); 
 	}
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 14 ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vector< AGColorVertex >( vertices, vertices + 14 ), AGBufferType::Vertex );
 }
 
 AGIntersectPlane::~AGIntersectPlane()

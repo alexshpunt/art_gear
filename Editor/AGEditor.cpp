@@ -115,7 +115,7 @@ int AGEditor::run( QApplication& app )
 	ui.statusBar->showMessage( "Loading mesh data" );
 	createObjAction();
 	m_object->getRenderer()->setMesh( AGResourceManager::getInstance().getMesh( "trash.agmsh" ) );
-	createLight();
+	//createLight();
 	ui.statusBar->showMessage( "Ready" );
 
 	AGDebugManager::getInstance().init(); 
@@ -219,7 +219,7 @@ void AGEditor::createLight()
 {
 	AGELight* light = new AGELight; 
 	AGESceneViewItem* item = new AGESceneViewItem( light );
-	light->getLight()->setLightType( AGLight::Daylight );
+	light->getLight()->setLightType( AGLight::Point );
 	m_sceneView->addItem( item ); 
 }
 

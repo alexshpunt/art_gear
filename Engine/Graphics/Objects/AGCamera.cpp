@@ -9,10 +9,6 @@
 #include "Managers/AGInputManager.h"
 #include "Managers/AGGraphicsSettings.h"
 
-#include "Engine/Utils/AGConversion.h"
-
-#define PI_2 1.5707963267948966192313216916398
-
 class AGCameraPrivate
 {
 	public:
@@ -58,7 +54,7 @@ class AGCameraPrivate
 		float vertSpeed;
 		float horSpeed; 
 
-		float fov;
+		AGDegrees fov;
 
 		float zoom; 
 
@@ -69,7 +65,7 @@ AGCamera::AGCamera( AGCameraType type )
 {
 	p = new AGCameraPrivate; 
 
-	setFov( 45 );
+	setFov( AGDegrees( 45.0f ) );
 
 	p->viewMatrix.setLookAtLH( p->pos, p->target, p->up );
 	p->targetDistance = p->target.getLength(); 
@@ -227,17 +223,14 @@ void AGCamera::setTargetDistance(float dist)
 
 void AGCamera::update()
 {
-	if( AGEStateManager::getInstance().isCameraFovChanged() )
+	/*if( AGEStateManager::getInstance().isCameraFovChanged() )
 	{
-		setFov( AGEStateManager::getInstance().getCameraFov() );
-	}
+		setFov( AGDegrees( AGEStateManager::getInstance().getCameraFov() ) );
+	}*/
 
 	bool mmb = AGInput().isButtonPressed( "MMB" );
-	p->vertSpeed = AGInput().isKeyPressed( 'W' ) ? 1 : AGInput().isKeyPressed( 'S' ) ? -1 : 0;
-	p->horSpeed = AGInput().isKeyPressed( 'D' ) ? -1 : AGInput().isKeyPressed( 'A' ) ? 1 : 0; 
-
-	p->vertSpeed = D3DXToRadian( p->vertSpeed );
-	p->horSpeed = D3DXToRadian( p->horSpeed );
+	p->vertSpeed = AGMath::toRadians( AGInput().isKeyPressed( 'W' ) ? 1 : AGInput().isKeyPressed( 'S' ) ? -1 : 0 );
+	p->horSpeed = AGMath::toRadians( AGInput().isKeyPressed( 'D' ) ? -1 : AGInput().isKeyPressed( 'A' ) ? 1 : 0 ); 
 
 	bool rmb = AGInput().isButtonPressed( "RMB" );
 	bool alt = AGInput().isKeyPressed( "Alt" );
@@ -293,8 +286,8 @@ void AGCamera::update()
 
 			AGVec3 v( 0.0f, 0.0f, p->targetDistance );
 
-			v *= AGMatrix::RotationY( p->angleX ); 
-			v *= AGMatrix::RotationX( p->angleY );
+			v *= AGMatrix::RotationX( p->angleX ); 
+			v *= AGMatrix::RotationY( p->angleY );
 
 			p->pos = p->target - v; 
 			AGEStateManager::getInstance().setRotating( true );
@@ -303,13 +296,11 @@ void AGCamera::update()
 		{
 			AGVec3 right( 1.0, 0.0f, 0.0f );
 			AGVec3 up( 0.0f, 1.0, 0.0f );
-			AGMatrix rotMatRight = AGMatrix::RotationX( p->angleY );
+			AGMatrix rotMatRight = AGMatrix::RotationY( p->angleY );
 
 			right *= rotMatRight;
 			up *= rotMatRight; 
-
-			up *= AGMatrix::RotationY( p->angleX );
-			
+			up *= AGMatrix::RotationX( p->angleX );
 
 			p->target -= right * dAngleY; 
 			p->target += up * dAngleX;
@@ -335,24 +326,9 @@ void AGCamera::update()
 		}
 		AGVec3 v = AGVec3::Forward();
 
-		if( p->angleX > 0.1f )
-		{
-			AGDebug() << "c";
-		}
-
 		v *= AGMatrix::Rotation( p->angleY, p->angleX, AGRadians( 0.0f ) ); 
 
 		p->target = p->pos + v; 
-
-		//AGDebug() << p->angleX << p->angleY;
-
-		/*D3DXVECTOR3 dv( 0.0f, 0.0f, 1.0f );
-		D3DXMATRIX rotMat; 
-		D3DXMatrixRotationYawPitchRoll( &rotMat, p->angleY, p->angleX, 0.0f );
-		D3DXVec3TransformCoord( &dv, &dv, &rotMat );
-
-		AGDebug() << "1" << v.x << " " << v.y << " " << v.z; 
-		AGDebug() << "2" << dv.x << " " << dv.y << " " << dv.z; */
 
 		AGEStateManager::getInstance().setRotating( true );
 	}
@@ -362,7 +338,7 @@ void AGCamera::update()
 
 		AGVec3 rightVec = AGVec3::Right(); 
 
-		rightVec *= AGMatrix::RotationX( AGRadians( p->angleY ) ); 
+		rightVec *= AGMatrix::RotationY( p->angleY ); 
 		rightVec *= -p->horSpeed * p->speed; 
 
 		p->pos += rightVec;
@@ -409,7 +385,7 @@ const AGVec3& AGCamera::getDir()
 
 void AGCamera::updateProj()
 {
-	p->projMatrix.setPerspectiveLH( AGDegrees( p->fov ), p->aspectRatio, p->nearPlane, p->farPlane );
+	p->projMatrix.setPerspectiveLH( p->fov, p->aspectRatio, p->nearPlane, p->farPlane );
 }
 
 void AGCamera::updateOrtho()
@@ -417,7 +393,7 @@ void AGCamera::updateOrtho()
 	p->projMatrix.setOrthoLH( p->zoom * p->aspectRatio, p->zoom, p->nearPlane, p->farPlane );
 }
 
-void AGCamera::setFov(float fov)
+void AGCamera::setFov(AGDegrees fov)
 {
 	p->fov = fov; 
 	if( p->type == Ortho )
@@ -426,7 +402,12 @@ void AGCamera::setFov(float fov)
 		updateProj();
 }
 
-float AGCamera::getFov() const
+void AGCamera::setFov(AGRadians fov)
+{
+	setFov( fov.toDegrees() );
+}
+
+AGDegrees AGCamera::getFov() const
 {
 	return p->fov; 
 }

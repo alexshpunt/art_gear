@@ -15,14 +15,13 @@ class AGConeShapePrivate
 		float height; 
 
 		int indicesCount; 
-		std::vector< AGPrimitiveVertex > vertices;
+		std::vector< AGColorVertex > vertices;
 		std::vector< int > indices; 
 };
 
 AGConeShape::AGConeShape( float radius, float height, const AGColor& color ) : AGShape( color )
 {
 	p = new AGConeShapePrivate; 
-
 	setRadius( radius );
 	setHeight( height );
 	setupShape(); 
@@ -39,7 +38,7 @@ void AGConeShape::draw(AGSurface* surface)
 
 	while( m_shader->applyNextPass() )
 	{	
-		for( int i = 0; i < p->vertices.size() - 2; i++ )
+		for( int i = 0; i < p->vertices.size() - 1; i++ )
 		{
 			surface->draw( 2, i );
 		}
@@ -70,7 +69,6 @@ float AGConeShape::getHeight() const
 	return p->height; 
 }
 
-
 void AGConeShape::setupShape()
 {
 	if( m_vertexBuffer )
@@ -78,18 +76,22 @@ void AGConeShape::setupShape()
 		delete m_vertexBuffer; 
 		m_vertexBuffer = nullptr; 
 	}
+	if( m_indexBuffer )
+	{
+		delete m_indexBuffer;
+		m_indexBuffer = nullptr; 
+	}
 
 	if( p->vertices.size() > 0 )
 		p->vertices.clear(); 
 
 	float step = AGMath::Pi / 6.0f; 
-
 	vector< AGVec2 > points; 
 	AGMath::generateCircle2D( p->radius, step, points );
 
 	AGVec2 centerPoint( 0.0f, 0.0f );
 
-	AGPrimitiveVertex tVert; 
+	AGColorVertex tVert; 
 
 	for( int i = 0; i < points.size(); i++ )
 	{
@@ -114,6 +116,6 @@ void AGConeShape::setupShape()
 		p->vertices.push_back( p->vertices[ quarter * i ] );	
 	}
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( p->vertices, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( p->vertices, AGBufferType::Vertex );
 }
 

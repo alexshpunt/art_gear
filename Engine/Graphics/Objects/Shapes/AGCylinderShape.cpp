@@ -7,8 +7,10 @@ class AGCylinderShapePrivate
 		AGSize size; 
 
 		int indexCount; 
-		vector< AGPrimitiveVertex > vertices;
+		vector< AGColorVertex > vertices;
 		vector< int > indices; 
+
+		int circleVerticesCount; 
 };
 
 AGCylinderShape::AGCylinderShape( float radius, float height, const AGColor& color ) : AGShape( color )
@@ -30,7 +32,14 @@ void AGCylinderShape::draw(AGSurface* surface)
 
 	while( m_shader->applyNextPass() )
 	{
-		for( int i = 0; i < p->vertices.size() - 2; i++ )
+		/*
+		 FirstCircle( from 0 to circleVerticesCount ) and then Other vertices wich include height lines and SecondCircle
+		*/
+		for( int i = 0; i < p->circleVerticesCount - 2; i++ )
+		{
+			surface->draw( 2, i ); 
+		}
+		for( int i = p->circleVerticesCount; i < p->vertices.size() - 2; i++ )
 		{
 			surface->draw( 2, i ); 
 		}
@@ -96,14 +105,14 @@ void AGCylinderShape::setupShape()
 
 	AGVec2 centerPoint( 0.0f, 0.0f );
 
-	AGPrimitiveVertex tVert; 
+	AGColorVertex tVert; 
 
 	for( int i = 0; i < points.size(); i++ )
 	{
 		tVert.pos.x = points[ i ].x; 
 		tVert.pos.y = 0; 
 		tVert.pos.z = points[ i ].y; 
-		tVert.color = p->color; 
+		tVert.color = m_color; 
 		p->vertices.push_back( tVert );
 
 		tVert.pos.y = p->size.getHeight(); 
@@ -111,12 +120,14 @@ void AGCylinderShape::setupShape()
 
 	int divider = 2;
 
+	p->circleVerticesCount = pointsSize; 
+
 	for( int i = 0; i < points.size(); i++ )
 	{
 		tVert.pos.x = points[ i ].x; 
 		tVert.pos.y = p->size.getHeight(); 
 		tVert.pos.z = points[ i ].y; 
-		tVert.color = p->color; 
+		tVert.color = m_color; 
 		p->vertices.push_back( tVert );
 
 		if( i % divider == 0 )
@@ -128,8 +139,6 @@ void AGCylinderShape::setupShape()
 		}
 	}
 
-	p->vertices.push_back( p->vertices[ pointsSize ] );
-
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( p->vertices, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( p->vertices, AGBufferType::Vertex );
 }
 

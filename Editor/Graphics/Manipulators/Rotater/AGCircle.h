@@ -30,7 +30,7 @@ class AGCircle : public AGGizmo
 		vector< AGVec3 > m_tangents; 
 		AGVec3 m_tangent; 
 		
-		AGBuffer< AGPrimitiveVertex >* m_additionalVB; 
+		AGBuffer< AGColorVertex >* m_additionalVB; 
 };
 
 

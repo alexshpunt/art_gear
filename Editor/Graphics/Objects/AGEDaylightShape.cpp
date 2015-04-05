@@ -61,16 +61,6 @@ const AGSize& AGEDaylightShape::getSize() const
 	return m_size; 
 }
 
-void AGEDaylightShape::setColor(const AGColor& color)
-{
-	m_color = color; 
-}
-
-const AGColor& AGEDaylightShape::getColor() const
-{
-	return m_color; 
-}
-
 void AGEDaylightShape::setupShape()
 {
 	if( m_vertexBuffer )
@@ -94,7 +84,7 @@ void AGEDaylightShape::setupShape()
 
 	AGVec2 centerPoint( 0.0f, 0.0f );
 
-	AGPrimitiveVertex tVert; 
+	AGColorVertex tVert; 
 
 	int divider = 2;
 
@@ -117,5 +107,5 @@ void AGEDaylightShape::setupShape()
 
 	m_vertices.push_back( m_vertices[ pointsSize ] );
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( m_vertices, AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( m_vertices, AGBufferType::Vertex );
 }

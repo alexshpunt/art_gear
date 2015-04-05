@@ -15,7 +15,7 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 	float height = 1.0f;
 	float radius = 1.0f;
 	float side = 0.3f;
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		{ AGVec3( k * radius * -0.0315, k * height * 1, k * radius * -0.03125 ), color }, //0 
 		{ AGVec3( k * radius * 0.0315, k * height * 1, k * radius * 0.03125 ), color }, //1 
@@ -34,9 +34,9 @@ AGCubeArrow::AGCubeArrow( CubeArrowAxis axis )
 		{ AGVec3( 0.0f, 0.0f, 0.0f ), yellow }, //11
 	};
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 12 ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vector< AGColorVertex >( vertices, vertices + 12 ), AGBufferType::Vertex );
 
-	int verticesCount = sizeof( vertices ) / sizeof( AGPrimitiveVertex ) - 4; //4 вертекса на линию 
+	int verticesCount = sizeof( vertices ) / sizeof( AGColorVertex ) - 4; //4 вертекса на линию 
 
 	for( int i = 0 ; i < verticesCount; i++ )
 	{

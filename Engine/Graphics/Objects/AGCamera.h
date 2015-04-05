@@ -17,8 +17,9 @@ class AGCamera
 		void setType( AGCameraType type );
 		AGCameraType getType() const; 
 
-		void setFov( float fov );
-		float getFov() const; 
+		void setFov( AGRadians fov );
+		void setFov( AGDegrees fov );
+		AGDegrees getFov() const; 
 
 		void setAspectRatio( float aspectRatio );
 		float getAspectRatio() const; 

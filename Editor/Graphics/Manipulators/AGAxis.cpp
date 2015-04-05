@@ -19,7 +19,7 @@ AGAxises::AGAxises()
 	
 	float len = 0.25f; 
 
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		{ AGVec3( 0.0f, 0.0f, 0.0f ), red },  //0
 		{ AGVec3( len, 0.0f, 0.0f ), red },   //1
@@ -29,7 +29,7 @@ AGAxises::AGAxises()
 		{ AGVec3( 0.0f, 0.0f, len ), blue },  //5
 	};
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 6 ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vector< AGColorVertex >( vertices, vertices + 6 ), AGBufferType::Vertex );
 
 	m_object = nullptr; 
 }

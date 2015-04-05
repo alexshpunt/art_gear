@@ -3,9 +3,15 @@
 
 #include <vector>
 
+#include <Engine/Graphics/Interfaces/AGPrimitive.h>
 #include "AGShape.h"
+#include <Engine/Graphics/Objects/AGGizmo.h>
 
 #include "Engine/Math/AGMath.h"
+
+#include "Engine/Graphics/AGInputLayouts.h"
+
+using namespace std;
 
 class AGConeShapePrivate; 
 

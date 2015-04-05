@@ -134,7 +134,7 @@ void AGEViewTop::fovSpinBoxValueChanged(int value)
 	if( !camera )
 		return; 
 
-	camera->setFov( value );
+	camera->setFov( AGDegrees( value ) );
 }
 
 void AGEViewTop::renderModeComboBoxChanged( int i )

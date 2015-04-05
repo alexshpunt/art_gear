@@ -26,7 +26,7 @@ template < class T >
 class AGBuffer
 {
 	public:
-		AGBuffer( std::vector< T > vertices, AGBufferType bufferType );
+		AGBuffer( std::vector< T > data, AGBufferType bufferType );
 		~AGBuffer();
 
 		void apply( AGSurface* surface ); 
@@ -42,7 +42,7 @@ class AGBuffer
 ///////////////////////////////////////////////////////////////////////////
 
 template < class T >
-AGBuffer<T>::AGBuffer( std::vector< T > vertices, AGBufferType bufferType )
+AGBuffer<T>::AGBuffer( std::vector< T > data, AGBufferType bufferType )
 {
 	m_type = bufferType; 
 
@@ -55,14 +55,14 @@ AGBuffer<T>::AGBuffer( std::vector< T > vertices, AGBufferType bufferType )
 	D3D10_BUFFER_DESC buffDesc; 
 
 	buffDesc.Usage = D3D10_USAGE_DEFAULT; 
-	buffDesc.ByteWidth = sizeof( T ) * vertices.size(); 
+	buffDesc.ByteWidth = sizeof( T ) * data.size(); 
 	buffDesc.CPUAccessFlags = 0;
 	buffDesc.MiscFlags = 0;
 	buffDesc.BindFlags = bufferType == AGBufferType::Vertex ? D3D10_BIND_VERTEX_BUFFER : D3D10_BIND_INDEX_BUFFER; 
-	buffDesc.MiscFlags = D3D10_RESOURCE_MISC_SHARED;
+	buffDesc.MiscFlags = 0;
 
 	D3D10_SUBRESOURCE_DATA subresData; 
-	subresData.pSysMem = &vertices[0];
+	subresData.pSysMem = &data[0];
 
 	for( AGSurface* surface : surfaces )
 	{

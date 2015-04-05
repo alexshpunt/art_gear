@@ -20,7 +20,7 @@ class AGSphereShape : public AGShape
 
 		void setupShape(); 
 	private:
-		AGSphereShapePrivate* m_p; 
+		AGSphereShapePrivate* p; 
 };
 
 #endif 

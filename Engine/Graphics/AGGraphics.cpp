@@ -130,8 +130,6 @@ void AGGraphics::update()
 			renderer->draw( surface );
 		}
 
-		/*
-
 		for( AGDrawable* drawable : m_drawables )
 		{
 			drawable->draw( surface );
@@ -140,32 +138,26 @@ void AGGraphics::update()
 		for( AGClickable* clickable : m_clickableObjects )
 		{
 			clickable->draw( surface ); 
-		}*/
+		}
 
 		surface->present(); 
 
 		surface->getDevice()->RSSetState( m_rasterizeStates[ surface->getDevice() ]->solid ); 
 				
-		/*for( AGManipulator* manipulator : m_manipulators )
+		for( AGManipulator* manipulator : m_manipulators )
 		{
 			manipulator->draw( surface );
 		}
-
-		for( AGRenderer* renderer : m_renderers )
-		{
-			if( renderer->isSelected() )
-				renderer->getMesh()->getBoundingBox()->draw( surface );
-		}*/
 		
 		if( surface == m_focusSurface )
-			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), m_focusSurface );
+			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), surface );
 
 		surface->getDevice()->OMSetDepthStencilState( m_depthState.at( surface->getId() ), 0 );
 
-		/*if( m_console && AGEStateManager::getInstance().isConsoleMode() )
+		if( m_console && AGEStateManager::getInstance().isConsoleMode() )
 		{
 			m_console->draw( surface );
-		}*/
+		}
 
 		surface->swapChainPresent();
 	}
@@ -192,7 +184,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 	D3D10_INPUT_ELEMENT_DESC colorVertexLayout[] = 
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D10_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",   0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	UINT colorVertexLayoutNum = 2; 
 
@@ -253,7 +245,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 
 	dxEffect->Release();
 
-	D3DX10CreateEffectFromFile( L"data/shaders/primitive.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+	D3DX10CreateEffectFromFile( L"data/shaders/shape.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
 		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
@@ -403,12 +395,9 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	AGPoint2 mousePos = AGInput().getMousePos(); 
 	AGSize winSize = m_focusSurface->getSize();  
 	AGCamera* camera = m_focusSurface->getCamera();
-	if( !camera )
-	{
-		return; 
-	}
-	AGMatrix matProj = camera->getProjMatrix(); 
+	assert( camera );
 
+	AGMatrix matProj = camera->getProjMatrix(); 
 	AGMatrix matView = camera->getViewMatrix(); 
 
 	float minDist = -1.0f; 
@@ -435,14 +424,14 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 		}
 		AGGameObject* obj = renderer->getObject(); 
 		AGVec3 pos = obj->getLocalPos(); 
-		matWorld.setTranslate( pos );
+		//matWorld.setTranslate( pos );
 
 		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
-		AGVec3 fp = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+		AGVec3 fp = AGVec3::unproject( farPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
 
-		AGVec3 dir = (fp - np).normilized(); 
-
-		float dist = renderer->intersect( nearPoint, dir );
+		AGVec3 dir = (fp - np); 
+		
+		float dist = renderer->intersect( np, dir );
 		renderer->setSelected( false );
 		if( dist > 0 )
 		{

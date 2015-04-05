@@ -115,9 +115,9 @@ PSOut PS( GSOut input ) : SV_Target
 	if( output.diffuse.w < 0.8f ) 
 	{
 		discard;
-	}
-		 
-	output.diffuse.w = 0.0f; 
+	}	 
+	output.diffuse.w = 1.0f; 
+	output.pos.w = 0.1f; 
 	output.normal = float4( input.normal, 1.0f ); 
 
 	return output; 

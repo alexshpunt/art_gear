@@ -9,6 +9,8 @@
 
 #include "Graphics/AGGraphics.h"
 
+#include "Graphics/Objects/Shapes/AGBoxShape.h"
+
 #include "Engine/Interfaces/AGResource.h"
 #include "Engine/Interfaces/AGMovable.h"
 
@@ -32,14 +34,14 @@ class AGMesh : public AGMovable, public AGResource
 
 		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
-		AGBoundingBox* getBoundingBox() const; 
+		AGBoxShape* getBoundingBox() const; 
 	private:
 		AGMesh( const std::string &fileName );
 		~AGMesh();
 
 		vector< AGSubMesh* > m_subMeshes; 
 
-		AGBoundingBox* m_boundingBox; 
+		AGBoxShape* m_boundingBox; 
 
 		bool m_isSelected; 
 

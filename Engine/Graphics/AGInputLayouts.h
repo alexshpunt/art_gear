@@ -17,17 +17,17 @@ struct AGInputLayout
 
 struct AGVertex 
 {
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 normal;
-	D3DXVECTOR3 binormal;
-	D3DXVECTOR3 tangent; 
-	D3DXVECTOR2 uv; 
+	AGVec3 pos;
+	AGVec3 normal;
+	AGVec3 binormal;
+	AGVec3 tangent; 
+	AGVec2 uv; 
 };
 
 struct AGColorVertex 
 {
 	AGVec3 pos;
-	AGVec3 color; 
+	AGColor color; 
 };
 
 struct AGTextureVertex 
@@ -44,7 +44,7 @@ struct AGSimpleVertex
 struct AGBillboardVertex
 {
 	AGVec3 pos;
-	AGSize size; 
+	D3DXVECTOR2 size; 
 };
 
 #endif 

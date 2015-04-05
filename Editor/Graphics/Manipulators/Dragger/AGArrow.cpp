@@ -15,7 +15,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 	float height = 4.0f;
 	float radius = 0.2f;
 	float d = 0.025f;
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		{ AGVec3( k * radius * 0            , k * height, k * radius * 0 ),             color }, //0 
 		{ AGVec3( k * radius * 1            , k * height, k * radius * 0 ),             color }, //1 
@@ -45,7 +45,7 @@ AGArrow::AGArrow( ArrowAxis axis  )
 		{ AGVec3( 0.0f                      , 0               , k * radius * 0 ),      yellow }, //25
 	};
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + 26 ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vector< AGColorVertex >( vertices, vertices + 26 ), AGBufferType::Vertex );
 
 	for( int i = 0 ; i < 26; i++ )
 	{

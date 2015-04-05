@@ -20,7 +20,7 @@ AGCircle::AGCircle( CircleAxis axis)
 	float radius = 1.0f;
 	float d = 0.025f;
 
-	AGPrimitiveVertex vertices[] = 
+	AGColorVertex vertices[] = 
 	{
 		{ AGVec3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
 		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
@@ -72,9 +72,9 @@ AGCircle::AGCircle( CircleAxis axis)
 		{ AGVec3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
 	};
 
-	int verticesCount = sizeof( vertices ) / sizeof( AGPrimitiveVertex );
+	int verticesCount = sizeof( vertices ) / sizeof( AGColorVertex );
 
-	m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( vector< AGPrimitiveVertex >( vertices, vertices + verticesCount ), AGBufferType::Vertex );
+	m_vertexBuffer = new AGBuffer< AGColorVertex >( vector< AGColorVertex >( vertices, vertices + verticesCount ), AGBufferType::Vertex );
 
 	for( int i = 0; i < verticesCount; i++ )
 	{
@@ -83,7 +83,7 @@ AGCircle::AGCircle( CircleAxis axis)
 
 	color = yellow;
 
-	AGPrimitiveVertex selectedVertices[] = 
+	AGColorVertex selectedVertices[] = 
 	{
 		{ AGVec3( k * radius * 0.999525, k * height * 0.0150551, k * radius * 3.65244e-010 ), color }, //0 
 		{ AGVec3( k * radius * 0.962182, k * height * 0.0150551, k * radius * 0.265132 ), color }, //1 
@@ -135,7 +135,7 @@ AGCircle::AGCircle( CircleAxis axis)
 		{ AGVec3( k * radius * 0.963791, k * height * 0.0150551, k * radius * -0.265509 ), color }, //47 
 	};
 
-	AGPrimitiveVertex boundingVertices[] = 
+	AGColorVertex boundingVertices[] = 
 	{
 		{ AGVec3( k * radius * 1.01514, k * height * 0.015, k * radius * 6.6136e-010 ), color }, //0 
 		{ AGVec3( k * radius * 0.949646, k * height * 0.015, k * radius * 0.261678 ), color }, //1 
@@ -235,17 +235,17 @@ AGCircle::AGCircle( CircleAxis axis)
 		{ AGVec3( k * radius * 0.978843, k * height * -0.015, k * radius * -0.269655 ), color }, //95 
 	};
 
-	verticesCount = sizeof( boundingVertices ) / sizeof( AGPrimitiveVertex );
+	verticesCount = sizeof( boundingVertices ) / sizeof( AGColorVertex );
 
 	for( int i = 0 ; i < verticesCount; i++ )
 	{
 		m_vertices.push_back( boundingVertices[ i ].pos );
 	}
 
-	int selectedVerticesCount = sizeof( selectedVertices ) / sizeof( AGPrimitiveVertex );
+	int selectedVerticesCount = sizeof( selectedVertices ) / sizeof( AGColorVertex );
 
-	m_additionalVB = new AGBuffer< AGPrimitiveVertex >( 
-		vector< AGPrimitiveVertex >( selectedVertices, selectedVertices + selectedVerticesCount ), AGBufferType::Vertex );
+	m_additionalVB = new AGBuffer< AGColorVertex >( 
+		vector< AGColorVertex >( selectedVertices, selectedVertices + selectedVerticesCount ), AGBufferType::Vertex );
 
 	int indices[] = 
 	{

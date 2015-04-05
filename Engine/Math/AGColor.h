@@ -48,10 +48,13 @@ class AGColor
 
 		AGColor& operator=( AGColor color );
 
-		//operator float*() const; 
+		operator float*() const; 
 
 	private:	
-		AGColorPrivate* p; 
+		float m_r; 
+		float m_g;
+		float m_b;
+		float m_a; 
 };
 
 #endif 

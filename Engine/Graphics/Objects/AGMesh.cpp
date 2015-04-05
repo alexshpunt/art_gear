@@ -143,7 +143,7 @@ void AGSubMesh::draw( AGSurface* surface )
 float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	float retDist = -1.0f;
-	/*int nIndices = m_indices.size() - 2;  
+	int nIndices = m_indices.size() - 2;  
 	for( int i = 0; i < nIndices; i++ )
 	{
 		AGVec3 v1 = m_vertices[ m_indices[ i ] ].pos;
@@ -151,7 +151,6 @@ float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ].pos;
 
 		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
-
 		if( res.hit )
 		{
 			if( retDist < 0 )
@@ -163,7 +162,7 @@ float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 				retDist = min( retDist, res.distance ); 
 			}
 		}
-	}*/
+	}
 	return retDist; 
 }
 
@@ -211,13 +210,13 @@ AGMesh::AGMesh(const std::string &fileName)
 	READ( v2.y );
 	READ( v2.z );
 
-	m_boundingBox = new AGBoundingBox( v1, v2 );
+	m_boundingBox = new AGBoxShape( v1, v2 );
 }
 
 AGMesh::~AGMesh()
 {
 	//m_subMeshes.clear(); 
-	//delete m_boundingBox;
+	delete m_boundingBox;
 }
 
 void AGMesh::draw( AGSurface* surface )
@@ -232,7 +231,7 @@ void AGMesh::draw( AGSurface* surface )
 	m_boundingBox->setLocalMatrix( getResultMatrix() );
 }	
 
-AGBoundingBox* AGMesh::getBoundingBox() const
+AGBoxShape* AGMesh::getBoundingBox() const
 {
 	return m_boundingBox; 
 }

@@ -10,6 +10,7 @@ class AGBoxShapePrivate;
 class AGBoxShape : public AGShape
 {
 	public:
+		AGBoxShape( const AGVec3& v1, const AGVec3& v2, const AGColor& color = AGColor( 1.0f ) ); 
 		AGBoxShape( float side = 1.0f, const AGColor& color = AGColor( 1.0f ) ); 
 		AGBoxShape( float lenght, float width, float height, const AGColor& color = AGColor( 1.0f ) );
 

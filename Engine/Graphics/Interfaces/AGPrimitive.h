@@ -1,6 +1,8 @@
 #ifndef AG_PRIMITIVE_H
 #define AG_PRIMITIVE_H
 
+#include "Engine/Graphics/AGInputLayouts.h"
+
 #include "Engine/Interfaces/AGMovable.h"
 
 #include "AGPureInterfaces.h"
@@ -10,12 +12,6 @@
 
 #include "Engine/Math/AGMath.h"
 
-struct AGPrimitiveVertex 
-{
-	AGVec3 pos;
-	AGColor color; 
-};
-
 class AGPrimitive :  public AGMovable, public AGDrawable
 {
 	public:
@@ -24,7 +20,7 @@ class AGPrimitive :  public AGMovable, public AGDrawable
 
 	protected:
 		AGBuffer< int >* m_indexBuffer;
-		AGBuffer< AGPrimitiveVertex >* m_vertexBuffer; 
+		AGBuffer< AGColorVertex >* m_vertexBuffer; 
 		
 		AGShader* m_shader; 
 };

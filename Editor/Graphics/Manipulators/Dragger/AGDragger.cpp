@@ -246,7 +246,7 @@ void AGDragger::draw( AGSurface* surface )
 		m_xyPlane, m_xzPlane, m_yzPlane
 	};
 
-	AGVec3 angle = m_object->getLocalRot(); 
+	//AGVec3 angle = m_object->getLocalRot(); 
 	for( int i = 0; i < 6; i++ )
 	{
 		gizmos[ i ]->setWorldRotMatrix( m_object->getRenderer()->getLocalRotMatrix() );

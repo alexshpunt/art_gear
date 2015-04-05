@@ -43,7 +43,6 @@ struct PSOutput
 PS_INPUT VS( VS_INPUT input )
 {
 	PS_INPUT output;
-	input.pos.w = 1.0f; 
 	output.pos = mul( input.pos, mtxWorld );
 	output.pos = mul( output.pos, mtxView );
 	output.pos = mul( output.pos, mtxProj );
@@ -59,6 +58,7 @@ PSOutput PS( PS_INPUT input )
 
 	output.diffuse = input.color; 
 	output.diffuse.w = 0.0f; 
+	output.pos.w = 0.1f; 
 
 	return output;
 }

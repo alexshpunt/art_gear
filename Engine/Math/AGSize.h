@@ -32,9 +32,11 @@ class AGSize
 		
 		AGSize operator/( float var );
 		AGSize operator/=( float var );
-	private:
+
 		float m_width;
 		float m_height;
+	private:
+		
 };
 
 #endif 

@@ -41,7 +41,7 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 	if( m_axis == XYZ_AXIS )
 	{
 		len = len / 1.5f; 
-		AGPrimitiveVertex vertices[] = 
+		AGColorVertex vertices[] = 
 		{
 			//Selected tri
 			//XY Selected
@@ -101,12 +101,12 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 			m_vertices.push_back( vertices[ 18+i ].pos ); 
 		}
 		
-		m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( 
-			vector< AGPrimitiveVertex >( vertices, vertices + 30 ), AGBufferType::Vertex );
+		m_vertexBuffer = new AGBuffer< AGColorVertex >( 
+			vector< AGColorVertex >( vertices, vertices + 30 ), AGBufferType::Vertex );
 	}
 	else 
 	{
-		AGPrimitiveVertex vertices[] = 
+		AGColorVertex vertices[] = 
 		{
 			//Unselected tri
 			{ AGVec3 ( 0.0f, len / 1.5, 0.0f ), firstColor },                         //0
@@ -143,8 +143,8 @@ AGIntersectTriangle::AGIntersectTriangle( TriangleAxis axis)
 			m_vertices.push_back( vertices[ 12+i ].pos ); 
 		}
 
-		m_vertexBuffer = new AGBuffer< AGPrimitiveVertex >( 
-			vector< AGPrimitiveVertex >( vertices, vertices + 18 ), AGBufferType::Vertex );	
+		m_vertexBuffer = new AGBuffer< AGColorVertex >( 
+			vector< AGColorVertex >( vertices, vertices + 18 ), AGBufferType::Vertex );	
 	}
 }
 

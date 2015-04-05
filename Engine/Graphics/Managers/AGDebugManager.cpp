@@ -31,13 +31,15 @@ void AGDebugManager::init()
 	fontDesc.Quality = DEFAULT_QUALITY; 
 	fontDesc.PitchAndFamily = DEFAULT_PITCH; 
 
-	wcscpy_s( fontDesc.FaceName, L"Arial" );
+	wcscpy_s( fontDesc.FaceName, L"Consolas" );
 
 	m_p->devices.resize( surfaces.size() );
 
+	m_p->color = AGColor( 1.0f );
+
 	for( AGSurface* surface : surfaces )
 	{
-		D3DX10CreateFontIndirect( surface->getDevice(), &fontDesc, &m_p->devices.at( surface->getId() ) ); 
+		HRESULT hr = D3DX10CreateFontIndirect( surface->getDevice(), &fontDesc, &m_p->devices.at( surface->getId() ) ); 
 	}
 }
 
