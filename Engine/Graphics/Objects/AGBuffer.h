@@ -2,6 +2,7 @@
 #define AG_VERTEXBUFFER_H
 
 #include <windows.h>
+#include <assert.h>
 
 #include <d3dx10.h>
 #include <d3d10.h>
@@ -25,11 +26,8 @@ template < class T >
 class AGBuffer
 {
 	public:
-		AGBuffer( std::vector< T > vertices, AGBufferType bufferType );
+		AGBuffer( std::vector< T > data, AGBufferType bufferType );
 		~AGBuffer();
-
-		//Return buffer for specific ID3D10Device
-		ID3D10Buffer* applyTo( ID3D10Device* device );
 
 		void apply( AGSurface* surface ); 
 
@@ -44,31 +42,27 @@ class AGBuffer
 ///////////////////////////////////////////////////////////////////////////
 
 template < class T >
-AGBuffer<T>::AGBuffer( std::vector< T > vertices, AGBufferType bufferType )
+AGBuffer<T>::AGBuffer( std::vector< T > data, AGBufferType bufferType )
 {
 	m_type = bufferType; 
 
 	ID3D10Device* device = AGGraphics::getInstance().getDevice();
 
+	assert( device );
+
 	std::list< AGSurface* > surfaces = AGGraphics::getInstance().getSurfaces(); 
-
-	if( !device )
-	{
-		AGError() << "Device = nullptr " << AGCurFileFunctionLineSnippet; 
-		return; 
-	}
-
+	
 	D3D10_BUFFER_DESC buffDesc; 
 
 	buffDesc.Usage = D3D10_USAGE_DEFAULT; 
-	buffDesc.ByteWidth = sizeof( T ) * vertices.size(); 
+	buffDesc.ByteWidth = sizeof( T ) * data.size(); 
 	buffDesc.CPUAccessFlags = 0;
 	buffDesc.MiscFlags = 0;
 	buffDesc.BindFlags = bufferType == AGBufferType::Vertex ? D3D10_BIND_VERTEX_BUFFER : D3D10_BIND_INDEX_BUFFER; 
-	buffDesc.MiscFlags = D3D10_RESOURCE_MISC_SHARED;
+	buffDesc.MiscFlags = 0;
 
 	D3D10_SUBRESOURCE_DATA subresData; 
-	subresData.pSysMem = &vertices[0];
+	subresData.pSysMem = &data[0];
 
 	for( AGSurface* surface : surfaces )
 	{
@@ -76,7 +70,9 @@ AGBuffer<T>::AGBuffer( std::vector< T > vertices, AGBufferType bufferType )
 		HRESULT hr = surface->getDevice()->CreateBuffer( &buffDesc, &subresData, &buffer );
 		if( FAILED( hr ) )
 		{
+			//TODO: ќбернуть это в try/catch? 
 			AGError() << DXGetErrorDescription( hr ); 
+			assert( false ); 
 			return; 
 		}
 		m_buffers[ surface->getDevice() ] = buffer; 
@@ -94,35 +90,21 @@ AGBuffer<T>::~AGBuffer()
 }
 
 template < class T >
-ID3D10Buffer* AGBuffer<T>::applyTo( ID3D10Device* device)
-{
-	std::map< ID3D10Device*, ID3D10Buffer* >::iterator iter = m_buffers.find( device ); 
-	if( iter == m_buffers.end() )
-		return nullptr;
-	else 
-		return  iter->second; 
-}
-
-template < class T >
 void AGBuffer<T>::apply(AGSurface* surface)
 {
 	std::map< ID3D10Device*, ID3D10Buffer* >::iterator iter = m_buffers.find( surface->getDevice() ); 
-	if( iter == m_buffers.end() )
+	
+	assert( iter != m_buffers.end() );
+
+	if( m_type == Index )
 	{
-		AGWarning() << "There is no buffer for device"; 
+		surface->getDevice()->IASetIndexBuffer( iter->second, DXGI_FORMAT_R32_UINT, 0 ); 
 	}
-	else 
+	else if( m_type == Vertex )
 	{
-		if( m_type == Index )
-		{
-			surface->getDevice()->IASetIndexBuffer( iter->second, DXGI_FORMAT_R32_UINT, 0 ); 
-		}
-		else if( m_type == Vertex )
-		{
-			UINT stride = sizeof( AGPrimitiveVertex );
-			UINT offset = 0; 
-			surface->getDevice()->IASetVertexBuffers( 0, 1, &iter->second, &stride, &offset );
-		}
+		UINT stride = sizeof( T );
+		UINT offset = 0; 
+		surface->getDevice()->IASetVertexBuffers( 0, 1, &iter->second, &stride, &offset );
 	}
 }
 

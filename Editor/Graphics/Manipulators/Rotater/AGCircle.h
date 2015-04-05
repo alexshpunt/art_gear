@@ -15,25 +15,22 @@ class AGCircle : public AGGizmo
 		~AGCircle();
 
 		void draw(  AGSurface* surface  );
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
-		D3DXVECTOR3 getAxis(); 
-		D3DXVECTOR3 getTangent(); 
+		AGVec3 getAxis(); 
+		AGVec3 getTangent(); 
 	private:
 		ID3D10EffectVectorVariable* m_cameraPosVar; 
 		ID3D10EffectScalarVariable* m_fadingVar;
 
-		int m_nIndices; 
 		int m_nBoundIndices; 
 		CircleAxis m_axis; 
 		ID3D10DepthStencilState* m_depthState; 
 		ID3DX10Font* m_font; 
-		vector< AGPrimitiveVertex > m_vertices;
-		vector< int > m_indices; 
-		vector< D3DXVECTOR3 > m_tangents; 
-		D3DXVECTOR3 m_tangent; 
+		vector< AGVec3 > m_tangents; 
+		AGVec3 m_tangent; 
 		
-		AGBuffer< AGPrimitiveVertex >* m_additionalVB; 
+		AGBuffer< AGColorVertex >* m_additionalVB; 
 };
 
 

@@ -53,7 +53,7 @@ AGColor::AGColor(int r, int g, int b, int a)
 	m_g = AGMath::clamp( clrToFloat( g ), 0.0f, 1.0f );
 	m_b = AGMath::clamp( clrToFloat( b ), 0.0f, 1.0f );
 	m_a = AGMath::clamp( clrToFloat( a ), 0.0f, 1.0f ); 
-	
+
 }
 
 ///////////////////////////////////////////////////////////////////////////

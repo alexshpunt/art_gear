@@ -98,17 +98,9 @@ AGShader::AGShader( const std::wstring& shaderName )
 		ID3D10Effect* dxEffect; 
 		ID3D10Device* device = surface->getDevice();
 
-		hr = D3DX10CreateEffectFromFile( 
+		handleDXShaderError( D3DX10CreateEffectFromFile( 
 			&fullPath[0], NULL, NULL, "fx_4_0", shadersFlags,
-			NULL, device, NULL, NULL, &dxEffect, &blob, NULL 
-			);  
-		if( FAILED( hr ) )
-		{
-			AGError() << "Couldn't load dx10 shader: " << shaderName << AGCurFileFunctionLineSnippet; 
-			if( blob )
-				AGError() << (char*)blob->GetBufferPointer();
-			return; 
-		}	
+			NULL, device, NULL, NULL, &dxEffect, &blob, NULL ) );
 
 		AGEffect* agEffect = new AGEffect; 
 		agEffect->dxEffect = dxEffect; 
@@ -140,11 +132,11 @@ AGShader::~AGShader()
 
 }
 
-void AGShader::applySurface(AGSurface* surface)
+void AGShader::apply(AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
-		AGWarning() << "There is no effect for surface" << AGCurFileFunctionLineSnippet; 
+		AGWarning() << "There is no effect for surface" << AGErrorSnippet; 
 		return; 
 	}
 	AGEffect* effect = m_effects.at( surface );
@@ -160,7 +152,8 @@ void AGShader::applySurface(AGSurface* surface)
 
 	if( effect->cameraPos )
 	{
-		effect->cameraPos->SetRawValue( &camera->getEye(), 0, sizeof( D3DXVECTOR3 ) );
+		AGVec3 camPos = camera->getPos(); 
+		effect->cameraPos->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
 	}
 
 	effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
@@ -189,21 +182,21 @@ void AGShader::setMap(int slot, AGTexture2D* texture, AGSurface* surface)
 {
 	if( m_effects.find( surface ) == m_effects.end() )
 	{
-		AGWarning() << "There is no effect for surface" << AGCurFileFunctionLineSnippet;
+		AGWarning() << "There is no effect for surface" << AGErrorSnippet;
 		return; 
 	}
 	AGEffect* effect = m_effects.at( surface );
 
 	if( effect->maps.find( slot ) == effect->maps.end() )
 	{
-		AGWarning() << "There is no map in slot: " << slot << AGCurFileFunctionLineSnippet;
+		AGWarning() << "There is no map in slot: " << slot << AGErrorSnippet;
 		return; 
 	}
 
 	texture->apply( effect->maps[ slot ], surface );
 }
 
-void AGShader::setWorldMatrix(D3DXMATRIX world)
+void AGShader::setWorldMatrix(const AGMatrix& world)
 {
 	for( AGSurface* surface : m_surfaces )
 	{

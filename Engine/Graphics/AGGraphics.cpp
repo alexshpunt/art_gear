@@ -19,8 +19,6 @@
 
 #include "Managers/AGDebugManager.h"
 
-#include "Engine/Math/AGMath.h"
-
 void AGGraphics::init()
 {
 	m_console = nullptr;
@@ -46,27 +44,28 @@ void AGGraphics::update()
 		if( surface == m_focusSurface )
 		{
 			surface->getCamera()->update(); 
-		}
+		} 
 
 		if( AGInput().isButtonDown( "MMB" ) && surface == m_focusSurface )
 		{
-			AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
+			//Deprecated for now
+			/*AGSize winSize = AGGraphicsSettings::getInstance().getSize();  
 			AGPoint2 mousePos( winSize.getWidth() / 2.0f, winSize.getHeight() / 2.0f ); 
 			AGCamera* camera = getTopCamera(); 
 			if( !camera )
 			{
 				return; 
 			}
-			D3DXMATRIX matProj = camera->getProjMatrix(); 
+			AGMatrixmatProj = camera->getProjMatrix(); 
 
-			D3DXVECTOR3 v; 
+			AGVec3 v; 
 			v.x =  ( ( ( 2.0f * mousePos.x ) / winSize.getWidth() ) - 1 ) / matProj._11;
 			v.y = -( ( ( 2.0f * mousePos.y ) / winSize.getHeight() ) - 1 ) / matProj._22;  
 			v.z = 1.0f; 
 
-			D3DXMATRIX mat; 
-			D3DXMATRIX matView = camera->getViewMatrix(); 
-			D3DXVECTOR3 rayOrigin, rayDir; 
+			AGMatrixmat; 
+			AGMatrixmatView = camera->getViewMatrix(); 
+			AGVec3 rayOrigin, rayDir; 
 
 			D3DXMatrixInverse( &mat, NULL, &matView );
 
@@ -78,7 +77,7 @@ void AGGraphics::update()
 			rayOrigin.y = mat._42;
 			rayOrigin.z = mat._43; 
 
-			D3DXMATRIX matInverce;
+			AGMatrixmatInverce;
 
 			float minDist = -1.0f; 
 			AGRenderer* nearestObj = nullptr; 
@@ -86,7 +85,7 @@ void AGGraphics::update()
 			for( AGRenderer* renderer : m_renderers )
 			{
 				AGMesh* mesh = renderer->getMesh();
-				D3DXMATRIX matWorld;
+				AGMatrixmatWorld;
 				if( !mesh )
 				{
 					D3DXMatrixIdentity( &matWorld );
@@ -101,7 +100,7 @@ void AGGraphics::update()
 
 				D3DXMatrixInverse( &matInverce, NULL, &matWorld );
 
-				D3DXVECTOR3 rayObjOrigin, rayObjDir; 
+				AGVec3 rayObjOrigin, rayObjDir; 
 
 				D3DXVec3TransformCoord( &rayObjOrigin, &rayOrigin, &matInverce );
 				D3DXVec3TransformNormal( &rayObjDir, &rayDir, &matInverce );
@@ -123,7 +122,7 @@ void AGGraphics::update()
 			if( nearestObj )
 			{
 				surface->getCamera()->setTargetDistance( minDist );
-			}
+			}*/
 		}
 
 		for( AGRenderer* renderer : m_renderers )
@@ -149,15 +148,9 @@ void AGGraphics::update()
 		{
 			manipulator->draw( surface );
 		}
-
-		for( AGRenderer* renderer : m_renderers )
-		{
-			if( renderer->isSelected() )
-				renderer->getMesh()->getBoundingBox()->draw( surface );
-		}
 		
 		if( surface == m_focusSurface )
-			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), m_focusSurface );
+			AGDebugManager::getInstance().drawText( AGRect( 0, 0, 100, 100 ), wstring( L"FPS: " ) + to_wstring( m_fps ), surface );
 
 		surface->getDevice()->OMSetDepthStencilState( m_depthState.at( surface->getId() ), 0 );
 
@@ -221,74 +214,62 @@ void AGGraphics::addSurface(AGSurface* surface)
 	ID3D10Effect* dxEffect; 
 	ID3D10Device* device = surface->getDevice();
 
-	hr = D3DX10CreateEffectFromFile( 
+	handleDXShaderError( D3DX10CreateEffectFromFile( 
 		L"data/shaders/dif.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS,
 		NULL, device, NULL, NULL, &dxEffect, NULL, NULL 
-		);  
+		) );  
 
 	D3D10_PASS_DESC passDesc; 
 	ID3D10EffectTechnique* technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	hr = device->CreateInputLayout( vertexLayout, vertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->vertexInputLayout );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create input layout";
-		return;
-	}
+	handleDXError( device->CreateInputLayout( vertexLayout, vertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->vertexInputLayout ) );
 	
 	dxEffect->Release(); 
 
-	D3DX10CreateEffectFromFile( L"data/shaders/console.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/console.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( simpleVertexLayout, simpleVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->simpleVertexInputLayout );
+	handleDXError( device->CreateInputLayout( simpleVertexLayout, simpleVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->simpleVertexInputLayout ) );
 
 	dxEffect->Release();
 
-	D3DX10CreateEffectFromFile( L"data/shaders/primitive.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/shape.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( colorVertexLayout, colorVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->colorVertexInputLayout );
+	handleDXError( device->CreateInputLayout( colorVertexLayout, colorVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->colorVertexInputLayout ) );
 
 	dxEffect->Release();
 
-	D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ); 
+	//TODO: Change shader to something like diffuse.fx 
+	/*handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, NULL, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( textureVertexLayout, textureVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->textureVertexInputLayout );
+	handleDXError( device->CreateInputLayout( textureVertexLayout, textureVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->textureVertexInputLayout ) );
 
-	dxEffect->Release();
+	dxEffect->Release();*/
 
-	ID3D10Blob* blob; 
-
-	hr = D3DX10CreateEffectFromFile( L"data/shaders/billboard.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
-		NULL, device, NULL, NULL, &dxEffect, &blob, NULL ); 
-
-	if( FAILED( hr ) )
-	{
-		AGError() << (char*)blob->GetBufferPointer(); 
-	}
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/billboard.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 
+		NULL, device, NULL, NULL, &dxEffect, &blob, NULL ) ); 
 
 	technique = dxEffect->GetTechniqueByName( "Render" );
-	technique->GetPassByIndex( 0 )->GetDesc( &passDesc );
+	handleDXError( technique->GetPassByIndex( 0 )->GetDesc( &passDesc ) );
 
-	device->CreateInputLayout( billboardVertexLayout, billboardVertexLayoutNum, passDesc.pIAInputSignature, 
-		passDesc.IAInputSignatureSize, &inputLayout->billboardVertexInputLayout );
+	handleDXError( device->CreateInputLayout( billboardVertexLayout, billboardVertexLayoutNum, passDesc.pIAInputSignature, 
+		passDesc.IAInputSignatureSize, &inputLayout->billboardVertexInputLayout ) );
 
 	dxEffect->Release();
 
@@ -318,7 +299,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 
 	ID3D10DepthStencilState* state; 
 
-	device->CreateDepthStencilState( &dsDesc, &state );
+	handleDXError( device->CreateDepthStencilState( &dsDesc, &state ) );
 	
 	m_depthState.push_back( state ); 
 }
@@ -402,13 +383,10 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	AGPoint2 mousePos = AGInput().getMousePos(); 
 	AGSize winSize = m_focusSurface->getSize();  
 	AGCamera* camera = m_focusSurface->getCamera();
-	if( !camera )
-	{
-		return; 
-	}
-	D3DXMATRIX matProj = camera->getProjMatrix(); 
+	assert( camera );
 
-	D3DXMATRIX matView = camera->getViewMatrix(); 
+	AGMatrix matProj = camera->getProjMatrix(); 
+	AGMatrix matView = camera->getViewMatrix(); 
 
 	float minDist = -1.0f; 
 	AGRenderer* nearestObj = nullptr; 
@@ -421,46 +399,25 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0; 
 
-	D3DXVECTOR3 nearPoint( mousePos.x, mousePos.y, 0.0f );
-	D3DXVECTOR3 farPoint( mousePos.x, mousePos.y, 1.0f );
-
-	AGVec3 nearP( mousePos.x, mousePos.y, 0.0f );
-	AGVec3 farP( mousePos.x, mousePos.y, 1.0f );
-
-	AGMatrix agProj( matProj );
-	AGMatrix agView( matView );
+	AGVec3 nearPoint( mousePos.x, mousePos.y, 0.0f );
+	AGVec3 farPoint( mousePos.x, mousePos.y, 1.0f );
 
 	for( AGRenderer* renderer : m_renderers )
 	{
 		AGMesh* mesh = renderer->getMesh();
-		D3DXMATRIX matWorld;
-		D3DXMatrixIdentity( &matWorld );
-		if( !mesh )
+		AGMatrix matWorld;
+		if( mesh )
 		{
-			D3DXMatrixIdentity( &matWorld );
-		}
-		else
-		{
-			matWorld = mesh->getLocalMatrix(); //Локальные координаты модели
+			matWorld = mesh->getResultMatrix(); //Локальные координаты модели
 		}
 		AGGameObject* obj = renderer->getObject(); 
-		AGVec3 pos = obj->getLocalPos(); 
-		D3DXMatrixTranslation( &matWorld, pos.x, pos.y, pos.z );
 
-		AGMatrix agWorld( matWorld );
+		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+		AGVec3 fp = AGVec3::unproject( farPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
 
-		D3DXVec3Unproject( &nearPoint, &nearPoint, &viewport, &matProj, &matView, &matWorld );
-		D3DXVec3Unproject( &farPoint, &farPoint, &viewport, &matProj, &matView, &matWorld );
-
-		AGVec3 np = AGVec3::unproject( nearP, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), agWorld, agView, agProj );
-		AGVec3 fp = AGVec3::unproject( farP, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), agWorld, agView, agProj );
-
-
-		D3DXVECTOR3 dir = farPoint - nearPoint; 
-
-		AGVec3 agDir = fp - np; 
-
-		float dist = renderer->intersect( nearPoint, dir );
+		AGVec3 dir = (fp - np); 
+		
+		float dist = renderer->intersect( np, dir );
 		renderer->setSelected( false );
 		if( dist > 0 )
 		{
@@ -533,17 +490,7 @@ void AGGraphics::removeCamera(AGCamera* camera)
 
 AGCamera* AGGraphics::getTopCamera() const
 {
-	int layer = m_cameras[ 0 ]->getLayer();
 	AGCamera* topCamera = m_cameras[ 0 ];
-
-	for( AGCamera* camera : m_cameras )
-	{
-		if( camera->getLayer() > layer )
-		{
-			topCamera = camera;
-			layer = camera->getLayer();
-		}
-	} 
 	return topCamera; 
 }
 

@@ -61,16 +61,6 @@ const AGSize& AGEDaylightShape::getSize() const
 	return m_size; 
 }
 
-void AGEDaylightShape::setColor(const AGColor& color)
-{
-	m_color = color; 
-}
-
-const AGColor& AGEDaylightShape::getColor() const
-{
-	return m_color; 
-}
-
 void AGEDaylightShape::setupShape()
 {
 	if( m_vertexBuffer )

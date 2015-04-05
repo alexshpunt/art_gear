@@ -1,10 +1,11 @@
 #ifndef AG_CAMERA_H
 #define AG_CAMERA_H
 
-#include <d3dx10.h>
-#include <d3d10.h>
+#include "Engine/Math/AGMath.h"
 
 #include "Graphics/AGGraphics.h"
+
+class AGCameraPrivate; 
 
 class AGCamera
 {
@@ -16,8 +17,9 @@ class AGCamera
 		void setType( AGCameraType type );
 		AGCameraType getType() const; 
 
-		void setFov( float fov );
-		float getFov() const; 
+		void setFov( AGRadians fov );
+		void setFov( AGDegrees fov );
+		AGDegrees getFov() const; 
 
 		void setAspectRatio( float aspectRatio );
 		float getAspectRatio() const; 
@@ -40,22 +42,19 @@ class AGCamera
 		void setSensY( float sensY );
 		float getSensY() const; 
 
-		void setLayer( int layer );
-		int getLayer() const; 
+		void setTarget( const AGVec3& at );
+		const AGVec3& getTarget() const;
 
-		void setAt( D3DXVECTOR3 at );
-		D3DXVECTOR3 getAt() const;
+		void setUp( const AGVec3& up );
+		const AGVec3& getUp() const;
 
-		void setUp( D3DXVECTOR3 up );
-		D3DXVECTOR3 getUp() const;
+		const AGVec3& getDir(); 
 
-		D3DXVECTOR3 getDir(); 
+		void setPos( const AGVec3& forward );
+		const AGVec3& getPos() const;  
 
-		void setEye( D3DXVECTOR3 forward );
-		D3DXVECTOR3 getEye() const; 
-
-		D3DXMATRIX getViewMatrix() const; 
-		D3DXMATRIX getProjMatrix() const; 
+		const AGMatrix& getViewMatrix() const; 
+		const AGMatrix& getProjMatrix() const; 
 
 		float getAngleX() const;
 		float getAngleY() const; 
@@ -63,46 +62,13 @@ class AGCamera
 		void setTargetDistance( float dist );
 		void update(); 
 		void updateProj();
-		void updateOrtho();  
+		void updateOrtho();   
 
-		void rotateY( float angle );
-		void rotateX( float angle ); 
-		void rotate( float angleX, float angleY ); 
+		void rotate( AGRadians angleX, AGRadians angleY ); 
+		void rotate( AGDegrees angleX, AGDegrees angleY ); 
 
 		void translateInDirection( float z );
-
 	protected:
-		float m_nearPlane;
-		float m_farPlane;
-		float m_aspectRatio;
-		float m_speed;
-		float m_sprintSpeed; 
-		float m_sensX;
-		float m_sensY;
-		int m_layer;
-
-		float m_targetDistance; 
-		float m_angleX;
-		float m_angleY; 
-
-		D3DXVECTOR3 m_at;
-		D3DXVECTOR3 m_up;
-		D3DXVECTOR3 m_eye;
-
-		D3DXMATRIX m_rotMatrix; 
-
-		D3DXMATRIX m_viewMatrix;
-		D3DXMATRIX m_projMatrix; 
-
-		float m_vertSpeed;
-		float m_horSpeed; 
-
-		float m_fov;
-
-		float m_zoom; 
-
-		AGCameraType m_type;
-
-		POINT m_mpos; 
+		AGCameraPrivate* p; 
 };
 #endif 

@@ -1,14 +1,16 @@
 #include "AGGizmo.h"
 
-#include <Engine/Graphics/Objects/AGCamera.h>
+#include "Engine/Math/AGMath.h"
 
-#include <Editor/Managers/AGEStateManager.h>
+#include "Engine/Graphics/Objects/AGCamera.h"
+
+#include "Editor/Managers/AGEStateManager.h"
 
 AGGizmo::AGGizmo()
 {
 	m_isSelected = false; 
 	m_distance = 1.0f;
-	m_beginPos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	m_beginPos = AGVec3( 0.0f, 0.0f, 0.0f );
 
 	m_vbo = nullptr;
 	m_ibo = nullptr; 
@@ -19,29 +21,29 @@ AGGizmo::~AGGizmo()
 
 }
 
-void AGGizmo::setBeginPos(D3DXVECTOR3 beginPos)
+void AGGizmo::setBeginPos(AGVec3 beginPos)
 {
 	m_beginPos = beginPos; 
 }
 
 void AGGizmo::setBeginPos(float x, float y, float z)
 {
-	m_beginPos = D3DXVECTOR3( x, y ,z );
+	m_beginPos = AGVec3( x, y ,z );
 }
 
-D3DXVECTOR3 AGGizmo::getBeginPos() const
+AGVec3 AGGizmo::getBeginPos() const
 {
 	return m_beginPos; 
 }
 
-void AGGizmo::translateBeginPos(D3DXVECTOR3 delta)
+void AGGizmo::translateBeginPos(AGVec3 delta)
 {
 	m_beginPos += delta;
 }
 
 void AGGizmo::translateBeginPos(float x, float y, float z)
 {
-	m_beginPos += D3DXVECTOR3( x, y, z );
+	m_beginPos += AGVec3( x, y, z );
 }
 
 void AGGizmo::setSelected(bool value)
@@ -66,13 +68,11 @@ float AGGizmo::getDistance() const
 
 void AGGizmo::updatePos(AGCamera* camera)
 {
-	D3DXVECTOR3 camEye = camera->getEye(); 
-	D3DXVECTOR3 dir = camEye - m_beginPos; 
-	D3DXVec3Normalize( &dir, &dir );
+	AGVec3 camEye = camera->getPos(); 
+	AGVec3 dir = ( camEye - m_beginPos ).normilized(); 
 	dir = camEye - dir * 1.5f; 
-	D3DXVECTOR3 pos = dir; 
 
-	setLocalPos( pos.x, pos.y, pos.z );
+	setLocalPos( dir );
 }
 
 void AGGizmo::setupBuffers( AGSurface* surface )
@@ -83,47 +83,19 @@ void AGGizmo::setupBuffers( AGSurface* surface )
 
 	AGInputLayout* inputLayout = AGGraphics::getInstance().getInputLayout( surface->getDevice() );
 
-	if( !inputLayout )
-	{
-		AGError() << "Cant get input layout for device " << AGCurFileFunctionLineSnippet; 
-		return; 
-	}
+	assert( inputLayout ); 
 
 	surface->getDevice()->IASetInputLayout( inputLayout->colorVertexInputLayout );
 
 	if( m_vertexBuffer )
 	{
-		m_vbo = m_vertexBuffer->applyTo( surface->getDevice() );
+		m_vertexBuffer->apply( surface );
 	}
-	
 	if( m_indexBuffer )
 	{
-		m_ibo = m_indexBuffer->applyTo( surface->getDevice() );	
-	}
-	
-	if( !m_vbo )
-	{
-		AGError() << "Cant apply vertex buffer to device " << AGCurFileFunctionLineSnippet; 
-		return; 
+		m_indexBuffer->apply( surface );
 	}
 
-	if( m_ibo )
-	{
-		surface->getDevice()->IASetIndexBuffer( m_ibo, DXGI_FORMAT_R32_UINT, 0 );
-	}
-
-	UINT stride = sizeof( AGPrimitiveVertex );
-	UINT offset = 0; 
-	surface->getDevice()->IASetVertexBuffers( 0, 1, &m_vbo, &stride, &offset );
-
-	m_shader->applySurface( surface );
-}
-
-void AGGizmo::releaseBuffers()
-{
-	/*if( m_vbo )
-		m_vbo->Release(); 
-	if( m_ibo )
-		m_ibo->Release(); */
+	m_shader->apply( surface );
 }
 

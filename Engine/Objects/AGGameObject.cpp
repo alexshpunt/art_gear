@@ -162,7 +162,7 @@ float AGGameObject::getLocalZPos() const
 void AGGameObject::setLocalPos(const AGVec3& pos)
 {
 	m_localPos = pos; 
-	m_renderer->setLocalPos( m_localPos.x, m_localPos.y, m_localPos.z );
+	m_renderer->setLocalPos( m_localPos );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::LocalPos ); 
@@ -238,7 +238,7 @@ float AGGameObject::getWorldZPos() const
 void AGGameObject::setWorldPos(const AGVec3& pos)
 {
 	m_worldPos = pos; 
-	m_renderer->setWorldPos( m_worldPos.x, m_worldPos.y, m_worldPos.z );
+	m_renderer->setWorldPos( m_worldPos );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::WorldPos ); 
@@ -318,7 +318,7 @@ float AGGameObject::getLocalZRot() const
 void AGGameObject::setLocalRot(const AGVec3& angles)
 {
 	m_localRot = angles; 
-	m_renderer->setLocalAngle( m_localRot.x, m_localRot.y, m_localRot.z );
+	m_renderer->setLocalAngle( AGEulerAngles( AGRadians( m_localRot.x ), AGRadians(  m_localRot.y ), AGRadians( m_localRot.z ) ) );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::LocalRot ); 
@@ -343,19 +343,19 @@ void AGGameObject::rotateLocalAxis(const AGVec3& axis, float angle)
 void AGGameObject::rotateLocalX(float angleX)
 {
 	m_localRot.x += angleX; 
-	m_renderer->rotateLocalX( angleX );
+	m_renderer->rotateLocalX( AGRadians( angleX ) );
 }
 
 void AGGameObject::rotateLocalY(float angleY)
 {
 	m_localRot.y += angleY; 
-	m_renderer->rotateLocalY( angleY );
+	m_renderer->rotateLocalY( AGRadians( angleY ) );
 }
 
 void AGGameObject::rotateLocalZ(float angleZ)
 {
 	m_localRot.z += angleZ; 
-	m_renderer->rotateLocalZ( angleZ );
+	m_renderer->rotateLocalZ( AGRadians( angleZ ) );
 }
 
 void AGGameObject::rotateLocal(const AGVec3& angles)
@@ -401,7 +401,7 @@ float AGGameObject::getWorldZRot() const
 void AGGameObject::setWorldRot(const AGVec3& angles)
 {
 	m_worldRot = angles; 
-	m_renderer->setWorldAngle( angles.x, angles.y, angles.z );
+	m_renderer->setWorldAngle( AGRadians( angles.x ), AGRadians( angles.y ), AGRadians( angles.z ) );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::WorldRot ); 
@@ -426,37 +426,37 @@ void AGGameObject::rotateWorldAxis(const AGVec3& axis, float angle)
 void AGGameObject::rotateAroundWorldX(float angleX)
 {
 	m_worldRot.x += angleX; 
-	m_renderer->rotateAroundWorldX( angleX );
+	m_renderer->rotateAroundWorldX( AGRadians( angleX ) );
 }
 
 void AGGameObject::rotateAroundWorldY(float angleY)
 {
 	m_worldRot.y += angleY;
-	m_renderer->rotateAroundWorldY( angleY );
+	m_renderer->rotateAroundWorldY( AGRadians( angleY ) );
 }
 
 void AGGameObject::rotateAroundWorldZ(float angleZ)
 {
 	m_worldRot.z += angleZ; 
-	m_renderer->rotateAroundWorldZ( angleZ );
+	m_renderer->rotateAroundWorldZ( AGRadians( angleZ ) );
 }
 
 void AGGameObject::rotateWorldX(float angleX)
 {
 	m_worldRot.x += angleX; 
-	m_renderer->rotateWorldX( angleX );
+	m_renderer->rotateWorldX( AGRadians( angleX ) );
 }
 
 void AGGameObject::rotateWorldY(float angleY)
 {
 	m_worldRot.y += angleY; 
-	m_renderer->rotateWorldY( angleY );
+	m_renderer->rotateWorldY( AGRadians( angleY ) );
 }
 
 void AGGameObject::rotateWorldZ(float angleZ)
 {
 	m_worldRot.z += angleZ; 
-	m_renderer->rotateWorldZ( angleZ );
+	m_renderer->rotateWorldZ( AGRadians( angleZ ) );
 }
 
 void AGGameObject::rotateWorld(const AGVec3& angles)
@@ -506,7 +506,7 @@ float AGGameObject::getLocalZScale() const
 void AGGameObject::setLocalScale(const AGVec3& scale)
 {
 	m_localScale = scale; 
-	m_renderer->setLocalScale( scale.x, scale.y, scale.z );
+	m_renderer->setLocalScale( m_localScale );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::LocalScale); 
@@ -566,7 +566,7 @@ float AGGameObject::getWorldZScale() const
 void AGGameObject::setWorldScale(const AGVec3& scale)
 {
 	m_worldScale = scale; 
-	m_renderer->setWorldScale( scale.x, scale.y, scale.z );
+	m_renderer->setWorldScale( m_worldScale );
 	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
 	{
 		(*func)( Change::WorldScale ); 

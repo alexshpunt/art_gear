@@ -13,6 +13,7 @@ AGRadians AGDegrees::toRadians()
 	return AGRadians( AGMath::toRadians( value ) ); 
 }
 
+
 AGDegrees AGRadians::toDegrees()
 {
 	return AGDegrees( AGMath::toDegrees( value ) );
@@ -39,7 +40,7 @@ namespace AGMath
 
 	void generateCircle2D(float radius, float step, std::vector< AGVec2 >& points)
 	{
-		for( float angle = 0.0f; angle <= PiX2 + step; angle += step )
+		for( float angle = 0.0f; angle < PiX2 + step; angle += step )
 		{
 			points.push_back( AGVec2( radius * cos( angle ), radius * sin( angle ) ) );
 		}
@@ -47,26 +48,7 @@ namespace AGMath
 
 	AGMath::IntersectResult intersectTriangle(const AGVec3& rayOrigin, const AGVec3& rayDir, const Triangle& triangle, bool cullFace )
 	{
-		D3DXVECTOR3 v1( triangle.v1 );
-		D3DXVECTOR3 v2( triangle.v2 );
-		D3DXVECTOR3 v3( triangle.v3 );
-
-		D3DXVECTOR3 o( rayOrigin );
-		D3DXVECTOR3 d( rayDir ); 
-
-		float u, v, t; 
-
 		IntersectResult res;
-
-		res.hit = D3DXIntersectTri( &v1, &v2, &v3, &o, &d, &res.u, &res.v, &res.distance );
-
-		if( res.hit )
-		{
-			AGDebug() << "HIT";
-		}
-
-		return res; 
-
 		 
 		double det, invDet; 
 

@@ -23,13 +23,9 @@ class AGEDaylightShape : public AGShape
 		void setSize( const AGSize& size );
 		const AGSize& getSize() const; 
 
-		void setColor( const AGColor& color );
-		const AGColor& getColor() const; 
-
 		void setupShape(); 
 
 	private:
-		AGColor m_color; 
 		AGSize m_size; 
 
 		vector< AGColorVertex > m_vertices;

@@ -6,10 +6,10 @@
 #include <string>
 
 #include "Objects/AGComponent.h"
-#include "Graphics/Interfaces/AGMovable.h"
 #include "Graphics/Interfaces/AGPureInterfaces.h"
-#include "Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 #include "Engine/Interfaces/AGResource.h"
+#include "Engine/Interfaces/AGMovable.h"
 
 using namespace std;
 
@@ -37,7 +37,7 @@ class AGRenderer : public AGComponent, public AGMovable
 		AGMesh* getMesh() const; 
 
 		void loadMeshFrom( const string& fileName ); 
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
 		void draw( AGSurface* surface ); 
 
@@ -47,7 +47,7 @@ class AGRenderer : public AGComponent, public AGMovable
 		bool m_isSelected; 
 		AGResPtr m_mesh; 
 		//AGMesh* m_mesh;
-		AGBoundingBox* m_boundingBox; 
+		AGBoxShape* m_boundingBox; 
 };
 
 #endif 

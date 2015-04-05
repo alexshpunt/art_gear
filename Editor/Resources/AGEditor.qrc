@@ -1,0 +1,27 @@
+<RCC>
+  <qresource prefix="AGEditor">
+    <file>ToolBar/scale.png</file>
+    <file>ToolBar/scale_activ.png</file>
+    <file>ToolBar/mirror.png</file>
+    <file>ToolBar/mirror_activ.png</file>
+    <file>ToolBar/move.png</file>
+    <file>ToolBar/move_activ.png</file>
+    <file>ToolBar/rotate.png</file>
+    <file>ToolBar/rotate_activ.png</file>
+    <file>ToolBar/XZ.png</file>
+    <file>ToolBar/XZ_activ.png</file>
+    <file>ToolBar/Y.png</file>
+    <file>ToolBar/Y_activ.png</file>
+    <file>ToolBar/Z.png</file>
+    <file>ToolBar/Z_activ.png</file>
+    <file>ToolBar/X.png</file>
+    <file>ToolBar/X_activ.png</file>
+  </qresource>
+  <qresource prefix="TreeWidget">
+    <file>TreeWidget/stylesheet-branch-closed.png</file>
+    <file>TreeWidget/stylesheet-branch-end.png</file>
+    <file>TreeWidget/stylesheet-branch-more.png</file>
+    <file>TreeWidget/stylesheet-branch-open.png</file>
+    <file>TreeWidget/stylesheet-vline.png</file>
+  </qresource>
+</RCC>

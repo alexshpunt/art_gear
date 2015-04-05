@@ -1,7 +1,5 @@
 #include "AGSurface.h"
 
-#include <assert.h>
-
 #include <d3dx10.h>
 #include <d3d10.h>
 #include <dxgi.h>
@@ -12,13 +10,14 @@
 #include "Graphics/Objects/AGCamera.h"
 #include "Graphics/AGGraphics.h"
 
+#include <assert.h>
 
 #include <Engine/Graphics/Objects/AGLight.h>
 
 struct SurfaceVertex
 {
-	D3DXVECTOR3 pos;
-	D3DXVECTOR2 uv; 
+	AGVec3 pos;
+	AGVec2 uv; 
 };
 
 AGSurface::AGSurface()
@@ -44,16 +43,8 @@ void AGSurface::setSurfaceMode(AGSurfaceMode surfaceMode)
 	if( m_surfaceMode == Shaded )
 	{
 		DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-		ID3D10Blob* blob; 
-
-		HRESULT hr = D3DX10CreateEffectFromFile( L"data/shaders/deferred.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
-			m_device, NULL, NULL, &m_effect, &blob, NULL );
-		if( FAILED( hr ) )
-		{
-			MessageBoxA( NULL,
-				(char*)blob->GetBufferPointer(), "Error", MB_OK );
-			return;
-		}
+		handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/deferred.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
+			m_device, NULL, NULL, &m_effect, &blob, NULL ) );
 
 		// Obtain the technique
 		m_technique = m_effect->GetTechniqueByName( "Render" );
@@ -68,16 +59,8 @@ void AGSurface::setSurfaceMode(AGSurfaceMode surfaceMode)
 	else 
 	{
 		DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-		ID3D10Blob* blob; 
-
-		HRESULT hr = D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
-			m_device, NULL, NULL, &m_effect, &blob, NULL );
-		if( FAILED( hr ) )
-		{
-			MessageBoxA( NULL,
-				(char*)blob->GetBufferPointer(), "Error", MB_OK );
-			return;
-		}
+		handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/deferredSimple.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
+			m_device, NULL, NULL, &m_effect, &blob, NULL ) );
 
 		m_technique = m_effect->GetTechniqueByName( "Render" );
 
@@ -111,28 +94,28 @@ void AGSurface::setCameraMode(AGSurfaceCameraMode cameraMode)
 	}
 
 	m_camera->setType( AGCamera::Ortho ); 
-	m_camera->setAt( D3DXVECTOR3( 0.0f, 0.0f, 1.0f ) );
-	m_camera->setEye( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
+	m_camera->setTarget( AGVec3( 0.0f, 0.0f, 1.0f ) );
+	m_camera->setPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
 
 	switch( m_surfaceCameraMode )
 	{
 		case Back:
-			m_camera->rotate( 0, 180 );
+			m_camera->rotate( AGDegrees( 0.0f ), AGDegrees( 180 ) );
 		break; 
 		case Front:
-			m_camera->rotate( 0, 0 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 0 ) );
 		break;
 		case Left:
-			m_camera->rotate( 0, 90 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( 90 ) );
 		break;
 		case Right:
-			m_camera->rotate( 0, -90 );
+			m_camera->rotate( AGDegrees( 0 ), AGDegrees( -90 ) );
 		break;
 		case Top:
-			m_camera->rotate( 90, 0 );
+			m_camera->rotate( AGDegrees( 90 ), AGDegrees( 0 ) );
 		break;
 		case Bottom:
-			m_camera->rotate( -90, 0 );
+			m_camera->rotate( AGDegrees( -90 ), AGDegrees( 0 ) );
 		break; 
 	}
 
@@ -170,15 +153,9 @@ void AGSurface::resizeSurface(float width, float height )
 		DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
 
 	ID3D10Texture2D* backBuffer; 
-	HRESULT hr = m_swapChain->GetBuffer( 0, __uuidof( backBuffer ), ( LPVOID* )&backBuffer );
+	handleDXError( m_swapChain->GetBuffer( 0, __uuidof( backBuffer ), ( LPVOID* )&backBuffer ) );
 
-	if( FAILED( hr ) )
-	{
-		AGError() << "Cannot get buffer from swap chain for back buffer, error: " << DXGetErrorDescription( hr );
-		return; 
-	}
-
-	hr = m_device->CreateRenderTargetView( backBuffer, NULL, &m_renderTargetView );
+	handleDXError( m_device->CreateRenderTargetView( backBuffer, NULL, &m_renderTargetView ) );
 	backBuffer->Release(); 
 	
 	D3D10_TEXTURE2D_DESC descDepth; 
@@ -194,26 +171,14 @@ void AGSurface::resizeSurface(float width, float height )
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0; 
 
-	hr = m_device->CreateTexture2D( &descDepth, NULL, &m_depthBuffer );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create depth stencil buffer, error: " << DXGetErrorDescription( hr );
-		return; 
-	}
+	handleDXError( m_device->CreateTexture2D( &descDepth, NULL, &m_depthBuffer ) );
 
 	D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
 	descDSV.Format = descDepth.Format; 
 	descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D; 
 	descDSV.Texture2D.MipSlice = 0; 
 
-	hr = m_device->CreateDepthStencilView( m_depthBuffer, &descDSV, &m_depthStencilView );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create depth stencil view, error: " << DXGetErrorDescription( hr );
-		return; 
-	}
+	handleDXError( m_device->CreateDepthStencilView( m_depthBuffer, &descDSV, &m_depthStencilView ) );
 
 	D3D10_VIEWPORT viewPort; 
 	viewPort.Width = width;
@@ -237,8 +202,6 @@ void AGSurface::resizeSurface(float width, float height )
 		m_camera->setAspectRatio( width / height );
 
 	m_size = AGSize( width, height );
-
-	//AGGraphics::getInstance().update();
 }
 
 const AGSize& AGSurface::getSize() const
@@ -282,14 +245,8 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 	swapChainDesc.Windowed = TRUE; 
 
 
-	hr = D3D10CreateDeviceAndSwapChain( NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, 
-		D3D10_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Cannot create device or swap chain, error: " << DXGetErrorDescriptionA( hr );
-		return; 
-	}
+	handleDXError( D3D10CreateDeviceAndSwapChain( NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, 
+		D3D10_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device ) );
 
 	ID3D10Texture2D* backBuffer; 
 	hr = m_swapChain->GetBuffer( 0, __uuidof( backBuffer ), ( LPVOID* )&backBuffer );
@@ -298,13 +255,13 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 
 	SurfaceVertex vertices[] =
 	{
-		D3DXVECTOR3( -1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 0.0f ), //1
-		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //2
-		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//3
+		AGVec3( -1.0f,  1.0f, 1.0f ), AGVec2( 0.0f, 0.0f ), //1
+		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //2
+		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //3
 
-		D3DXVECTOR3( 1.0f, 1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 0.0f ),  //4
-		D3DXVECTOR3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 1.0f, 1.0f ), //5
-		D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR2( 0.0f, 1.0f ),//6
+		AGVec3(  1.0f,  1.0f, 1.0f ), AGVec2( 1.0f, 0.0f ), //4
+		AGVec3(  1.0f, -1.0f, 1.0f ), AGVec2( 1.0f, 1.0f ), //5
+		AGVec3( -1.0f, -1.0f, 1.0f ), AGVec2( 0.0f, 1.0f ), //6
 	};
 
 	D3D10_BUFFER_DESC bufferDesc;
@@ -318,16 +275,9 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 	m_device->CreateBuffer( &bufferDesc, &initData, &m_vertexBuffer );
 
 	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-	ID3D10Blob* blob; 
 
-	hr = D3DX10CreateEffectFromFile( L"data/shaders/deferred.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
-		m_device, NULL, NULL, &m_effect, &blob, NULL );
-	if( FAILED( hr ) )
-	{
-		MessageBoxA( NULL,
-			(char*)blob->GetBufferPointer(), "Error", MB_OK );
-		return;
-	}
+	handleDXShaderError( D3DX10CreateEffectFromFile( L"data/shaders/deferred.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0,
+		m_device, NULL, NULL, &m_effect, &blob, NULL ) );
 
 	// Obtain the technique
 	m_technique = m_effect->GetTechniqueByName( "Render" );
@@ -366,26 +316,14 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 	descDepth.CPUAccessFlags = 0;
 	descDepth.MiscFlags = 0; 
 
-	hr = m_device->CreateTexture2D( &descDepth, NULL, &m_depthBuffer );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create depth stencil buffer, error: " << DXGetErrorDescription( hr );
-		return; 
-	}
+	handleDXError( m_device->CreateTexture2D( &descDepth, NULL, &m_depthBuffer ) );
 
 	D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
 	descDSV.Format = descDepth.Format; 
 	descDSV.ViewDimension = D3D10_DSV_DIMENSION_TEXTURE2D; 
 	descDSV.Texture2D.MipSlice = 0; 
 
-	hr = m_device->CreateDepthStencilView( m_depthBuffer, &descDSV, &m_depthStencilView );
-
-	if( FAILED( hr ) )
-	{
-		AGError() << "Couldn't create depth stencil view, error: " << DXGetErrorDescription( hr );
-		return; 
-	}
+	handleDXError( m_device->CreateDepthStencilView( m_depthBuffer, &descDSV, &m_depthStencilView ) );
 
 	D3D10_VIEWPORT viewport; 
 	viewport.Height = 800;
@@ -520,34 +458,25 @@ void AGSurface::present()
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_technique->GetDesc( &techDesc );
 
+	for( UINT p = 0; p < techDesc.Passes; ++p )
+	{
+		m_technique->GetPassByIndex( p )->Apply( 0 );
+		m_device->Draw( 6, 0 );
+	}
+
 	if( m_surfaceMode == Shaded )
 	{
-		D3DXVECTOR3 camPos = m_camera->getEye(); 
-		HRESULT hr = m_camPosVar->SetRawValue( &camPos, 0, sizeof( D3DXVECTOR3 ) );
-		if( FAILED( hr ) )
-		{
-			AGDebug() << DXGetErrorDescription( hr );
-		}
+		AGVec3 camPos = m_camera->getPos(); 
+		handleDXError( m_camPosVar->SetRawValue( &camPos, 0, sizeof( AGVec3 ) ) );
+
 		for( AGLight* light : lights )
 		{
-			HRESULT hr = m_lightVar->SetRawValue( &light->getDesc(), 0, sizeof( AGLightDesc ) );
-			if( FAILED( hr ) )
-			{
-				AGDebug() << DXGetErrorDescription( hr );
-			}
+			handleDXError( m_lightVar->SetRawValue( &light->getDesc(), 0, sizeof( AGLightDesc ) ) );
 			for( UINT p = 0; p < techDesc.Passes; ++p )
 			{
 				m_technique->GetPassByIndex( p )->Apply( 0 );
 				m_device->Draw( 6, 0 );
 			}
-		}
-	}
-	else 
-	{
-		for( UINT p = 0; p < techDesc.Passes; ++p )
-		{
-			m_technique->GetPassByIndex( p )->Apply( 0 );
-			m_device->Draw( 6, 0 );
 		}
 	}
 }

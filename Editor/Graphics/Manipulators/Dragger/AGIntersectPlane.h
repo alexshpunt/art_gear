@@ -4,7 +4,7 @@
 #include <map>
 
 #include "Engine/Graphics/Objects/AGGizmo.h"
-#include "Engine/Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 
 class AGArrow; 
 
@@ -15,14 +15,12 @@ class AGIntersectPlane : public AGGizmo
 		AGIntersectPlane( PlaneAxis axis );
 		~AGIntersectPlane();
 
-		void draw(  AGSurface* surface  );
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		void draw(  AGSurface* surface  ) override;
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ) override; 
 
-		D3DXVECTOR3 getAxis();
+		AGVec3 getAxis();
 	private:
-		std::map< ID3D10Device* , ID3D10DepthStencilState* > m_depthState; 
 		PlaneAxis m_axis;
-		D3DXVECTOR3 m_vertices[ 6 ]; 
 };
 
 #endif 

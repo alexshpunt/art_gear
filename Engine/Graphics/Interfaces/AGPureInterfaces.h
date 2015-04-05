@@ -3,19 +3,23 @@
 
 #include <vector>
 
-#include "Engine/Graphics/Interfaces/AGSurface.h"
-
 #include "Engine/Managers/AGInputManager.h"
+
+#include "Engine/Math/AGMath.h"
+
+class AGSurface; 
 
 //Данный интерфейс позволяет классу быть отрисованным системой графики
 //Также он может обрабатывать пересечение лучём своих треугольников
 class AGDrawable
 {
 	public:
+		virtual ~AGDrawable(){}
+
 		virtual void draw( AGSurface* surface ) = 0;
 		//Если возвращаемое значение < 0, значит, что луч не коснулся сетки примитива, иначе это дистанция 
-		virtual float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir ){ return -1.0f; }
 		virtual float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ); 
+
 	protected:
 		std::vector< int > m_indices;
 		std::vector< AGVec3 > m_vertices; 
@@ -30,16 +34,12 @@ class AGClickable : public AGDrawable
 		virtual bool mouseMoveEvent( AGSurface* surface ) = 0; 
 
 	protected: 
-		void calculateRays( AGSurface* surface );
-		void calculateRays( AGSurface* surface, D3DXMATRIX worldMatrix );
-		void calculateObjRays( D3DXMATRIX matWorld ); 
+		void calculateDeltaRays( AGSurface* surface );
+		void calculateRays( AGSurface* surface, const AGMatrix& matWorld );
 
-		D3DXVECTOR3 m_rayOrigin;
-		D3DXVECTOR3 m_rayDir; 
-		D3DXVECTOR3 m_rayDelta; 
-
-		D3DXVECTOR3 m_rayObjOrigin;
-		D3DXVECTOR3 m_rayObjDir; 
+		AGVec3 m_rayOrigin;
+		AGVec3 m_rayDir; 
+		AGVec3 m_rayDelta; 
 };
 
 #endif 

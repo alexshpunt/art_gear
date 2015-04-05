@@ -1,5 +1,6 @@
 #include "AGBillboard.h"
 
+#include <assert.h>
 #include <vector>
 
 #include "Engine/Graphics/AGGraphics.h"
@@ -28,17 +29,16 @@ class AGBillboardPrivate
 		AGResPtr resPtr;
 		AGTexture2D* texture;  
 
-		D3DXVECTOR3 pos;
-		D3DXVECTOR2 size; 
-
+		AGVec3 pos;
+		AGSize size; 
 };
 
 AGBillboard::AGBillboard()
 {
 		m_p = new AGBillboardPrivate; 
 
-		m_p->pos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-		m_p->size = D3DXVECTOR2( 0.5f, 0.5f ); 
+		m_p->pos = AGVec3( 0.0f, 0.0f, 0.0f );
+		m_p->size = AGSize( 0.5f, 0.5f ); 
 	
 		m_p->vbo = nullptr; 
 		setup(); 
@@ -56,22 +56,22 @@ AGBillboard::~AGBillboard()
 
 void AGBillboard::setPos(const AGVec3& pos)
 {
-	m_p->pos = AGConversion::toD3DXVec3D( pos ); 
+	m_p->pos = pos; 
 }
 
 const AGVec3& AGBillboard::getPos() const
 {
-	return AGConversion::toAGVec3D( m_p->pos );
+	return m_p->pos;
 }
 
 void AGBillboard::setSize(const AGSize& size)
 {
-	m_p->size = D3DXVECTOR2( size.getWidth(), size.getHeight() );
+	m_p->size = size;
 }
 
 const AGSize& AGBillboard::getSize() const
 {
-	return AGSize( m_p->size.x, m_p->size.y );
+	return getSize();
 }
 
 void AGBillboard::draw(AGSurface* surface)
@@ -79,18 +79,17 @@ void AGBillboard::draw(AGSurface* surface)
 	AGCamera* camera = surface->getCamera();
 	ID3D10Device* device = surface->getDevice();
 
-	if( !m_p->shader )
-		return; 
+	assert( camera );
+	assert( device );
+	assert( m_p->shader );
 
-	m_p->shader->applySurface( surface );
+	m_p->shader->apply( surface );
 
-	if( !m_p->texture->isValid() )
-		return; 
+	assert( m_p->texture->isValid() );
 
 	m_p->shader->setMap( AGShaderMapSlots::DifSlot, m_p->texture, surface );
 
-	if( !m_p->vbo )
-		return; 
+	assert( m_p->vbo );
 
 	m_p->vbo->apply( surface );
 
@@ -107,7 +106,7 @@ void AGBillboard::setup()
 
 	AGBillboardVertex vertex;
 	vertex.pos = m_p->pos;
-	vertex.size = m_p->size; 
+	vertex.size = D3DXVECTOR2( m_p->size.getWidth(), m_p->size.getHeight() ); 
 	
 	m_p->vbo = new AGBuffer< AGBillboardVertex >( vector< AGBillboardVertex >( &vertex, &vertex + 1 ), AGBufferType::Vertex );
 }

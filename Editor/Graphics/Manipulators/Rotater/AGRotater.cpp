@@ -18,7 +18,7 @@ AGRotater::AGRotater() : AGManipulator()
 	m_zCircle = new AGCircle( AGCircle::Z_AXIS );
 
 	m_selectedObject = nullptr;
-	m_angles = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
+	m_angles = AGVec3( 0.0f, 0.0f, 0.0f );
 }
 
 AGRotater::~AGRotater()
@@ -51,9 +51,9 @@ bool AGRotater::mouseClickEvent( AGMouseButton btn, AGSurface* surface)
 	{
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateObjRays( system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix()  );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix()  );
 
-		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
+		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -76,38 +76,25 @@ bool AGRotater::mouseClickEvent( AGMouseButton btn, AGSurface* surface)
 		m_v1 = m_selectedObject->getBeginPos();
 		m_v2 = ( reinterpret_cast< AGCircle* >( m_selectedObject ) )->getTangent(); 
 
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
+		AGVec3 pos = m_selectedObject->getBeginPos();
+		AGMatrix worldRot = m_selectedObject->getWorldRotMatrix();
+		AGRadians pi4( AGMath::toRadians( 90.0f ) );
 
-		D3DXVECTOR3 pos = m_selectedObject->getBeginPos();
-
-		D3DXMATRIX worldRot = m_selectedObject->getWorldRotMatrix();
-
-		D3DXMATRIX world;
-		D3DXMatrixIdentity( &world );
-		D3DXMATRIX transl;
-		D3DXMatrixIdentity( &transl );
-		D3DXMATRIX rot;
-		D3DXMatrixIdentity( &rot );
-
-		D3DXMatrixTranslation( &transl, pos.x, pos.y, pos.z );
-
-		float pi4 = D3DXToRadian( 90.0f );
-
-		D3DXMatrixRotationYawPitchRoll( 
-			&rot,
-			axis.x * pi4 + axis.y * pi4 + axis.z * pi4,
-			axis.x * pi4,
-			axis.z * pi4  
+		AGMatrix transl = AGMatrix::Translation( pos );
+		AGMatrix rot = AGMatrix::Rotation( 
+			AGRadians( axis.x * pi4 + axis.y * pi4 + axis.z * pi4 ),
+			AGRadians( axis.x * pi4 ),
+			AGRadians( axis.z * pi4 ) 
 		);
 
-		world = worldRot * rot * transl; 
+		AGMatrix world = worldRot * rot * transl; 
 
-		D3DXVec3TransformCoord( &m_v1, &m_v1, &world );
-		D3DXVec3TransformCoord( &m_v2, &m_v2, &world );
+		m_v1 *= world;
+		m_v2 *= world; 
 
-		m_tangent = m_v2 - m_v1; 
+		m_tangent = ( m_v2 - m_v1 ).normilized(); 
 
-		D3DXVec3Normalize( &m_tangent, &m_tangent );
 		return true; 
 	}
 	return false; 
@@ -126,15 +113,15 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 	};
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateRays( surface );
+	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		D3DXVECTOR3 axis = m_selectedObject->getAxis();
+		AGVec3 axis = m_selectedObject->getAxis();
 
-		D3DXVECTOR3 cameraEye = surface->getCamera()->getEye();
+		AGVec3 cameraEye = surface->getCamera()->getPos();
 
-		float cosT = D3DXVec3Dot( &m_tangent, &m_rayDelta );
+		float cosT = AGVec3::dot( m_tangent, m_rayDelta );
 
 		AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
 
@@ -191,13 +178,11 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 
 	for( int i = 0; i < 3; i++ )
 	{
-		D3DXMATRIX matInverce;
-
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateObjRays( system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix()  );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix()  );
 
-		float dist = gizmo->intersect( m_rayObjOrigin, m_rayObjDir );
+		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
 		if( dist > 0 )
 		{
@@ -232,15 +217,15 @@ void AGRotater::draw( AGSurface* surface )
 		m_xCircle, m_yCircle, m_zCircle,
 	};
 
-	D3DXVECTOR3 gizmoPos; 
-	D3DXVECTOR3 gizmoAngles; 
+	AGVec3 gizmoPos; 
+	AGVec3 gizmoAngles; 
 
 	if( m_object )
 	{
 		AGVec3 pos = m_object->getLocalPos();
 		AGVec3 angles = m_object->getLocalRot(); 
-		gizmoPos = D3DXVECTOR3( pos.x, pos.y, pos.z );
-		gizmoAngles = D3DXVECTOR3( angles.x, angles.y, angles.z );
+		gizmoPos = AGVec3( pos.x, pos.y, pos.z );
+		gizmoAngles = AGVec3( angles.x, angles.y, angles.z );
 	}
 	else 
 	{
@@ -254,7 +239,7 @@ void AGRotater::draw( AGSurface* surface )
 		gizmos[ i ]->draw( surface );
 	}
 
-	//AGDebugDraw::getInstance().drawLine( surface, D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), m_tangent, D3DXVECTOR4( 1.0f, 1.0f, 0.0f, 1.0f ) );
+	//AGDebugDraw::getInstance().drawLine( surface, AGVec3( 0.0f, 0.0f, 0.0f ), m_tangent, D3DXVECTOR4( 1.0f, 1.0f, 0.0f, 1.0f ) );
 }
 
  

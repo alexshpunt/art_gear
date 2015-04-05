@@ -1,22 +1,16 @@
 #ifndef AG_PRIMITIVE_H
 #define AG_PRIMITIVE_H
 
-#include <vector>
+#include "Engine/Graphics/AGInputLayouts.h"
 
-#include <Engine/Graphics/Objects/AGBuffer.h>
-#include <Engine/Graphics/Objects/AGShader.h>
+#include "Engine/Interfaces/AGMovable.h"
 
-#include "AGMovable.h"
-#include "AGSurface.h"
 #include "AGPureInterfaces.h"
 
-using namespace std;
+#include "Engine/Graphics/Objects/AGBuffer.h"
+#include "Engine/Graphics/Objects/AGShader.h"
 
-struct AGPrimitiveVertex 
-{
-	D3DXVECTOR3 pos;
-	D3DXVECTOR4 color; 
-};
+#include "Engine/Math/AGMath.h"
 
 class AGPrimitive :  public AGMovable, public AGDrawable
 {
@@ -26,7 +20,7 @@ class AGPrimitive :  public AGMovable, public AGDrawable
 
 	protected:
 		AGBuffer< int >* m_indexBuffer;
-		AGBuffer< AGPrimitiveVertex >* m_vertexBuffer; 
+		AGBuffer< AGColorVertex >* m_vertexBuffer; 
 		
 		AGShader* m_shader; 
 };

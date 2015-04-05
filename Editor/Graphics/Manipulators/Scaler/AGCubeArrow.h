@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Engine/Graphics/Objects/AGGizmo.h"
-#include "Engine/Graphics/Objects/AGBoundingBox.h"
+#include "Engine/Graphics/Objects/Shapes/AGBoxShape.h"
 
 using namespace std;
 
@@ -16,18 +16,13 @@ class AGCubeArrow : public AGGizmo
 		~AGCubeArrow();
 
 		void draw(  AGSurface* surface  );
-		float intersect( D3DXVECTOR3 rayOrigin, D3DXVECTOR3 rayDir );
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
 
-		D3DXVECTOR3 getAxis(); 
+		AGVec3 getAxis(); 
 	private:
-		int m_nIndices; 
 		CubeArrowAxis m_axis; 
-		ID3D10DepthStencilState* m_depthState; 
-		ID3DX10Font* m_font; 
-		AGBoundingBox* m_boundingBox;
-		vector< AGPrimitiveVertex > m_vertices;
-		vector< int > m_indices; 
-		D3DXVECTOR3 m_axisDir; 
+		AGBoxShape* m_boundingBox;
+		AGVec3 m_axisDir; 
 };
 
 #endif 
