@@ -42,9 +42,12 @@ AGVec3::AGVec3(const AGVec2& vec2)
 void AGVec3::normilize()
 {
 	float len = getLength();
-	x /= len;
-	y /= len;
-	z /= len; 
+	if( len > 0.0f )
+	{
+		x /= len;
+		y /= len;
+		z /= len; 	
+	}
 }
 
 AGVec3 AGVec3::normilized()

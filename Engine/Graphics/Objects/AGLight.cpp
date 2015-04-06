@@ -5,7 +5,7 @@ AGLight::AGLight()
 	setFalloff( 2.5f );
 	setHotspot( 2.0f );
 	setRange( 2.0f );
-	setIntensity( 4.0f );
+	setIntensity( 2.0f );
 	setLightType( Point );
 	setDiffuse( AGColor( 244, 235, 204 ) );
 	setAmbient( AGColor( 0.2f, 0.2f, 0.2f ) );

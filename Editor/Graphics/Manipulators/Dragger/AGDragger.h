@@ -21,6 +21,7 @@ class AGDragger : public AGManipulator
 
 		bool mouseClickEvent( AGMouseButton btn, AGSurface* surface );
 		bool mouseMoveEvent( AGSurface* surface );
+		void mouseReleaseEvent( AGMouseButton btn ) override;
 
 		void draw( AGSurface* surface );
 

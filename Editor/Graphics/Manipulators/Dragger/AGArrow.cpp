@@ -139,6 +139,7 @@ void AGArrow::draw( AGSurface* surface )
 	}
 
 	m_boundingBox->setLocalMatrix( getLocalMatrix() );
+	//m_boundingBox->draw( surface );
 }
 
 float AGArrow::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )

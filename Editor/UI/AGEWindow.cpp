@@ -76,9 +76,10 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_LBUTTONUP: 
 			AGInput().setButtonPressed( "LMB", false );
+			AGGraphics::getInstance().mouseReleaseEvent( AGMouseButton::LMB );
 		break;
 		case WM_LBUTTONDBLCLK:
-	
+			
 		break;
 		case WM_RBUTTONDOWN:
 			AGInput().setButtonPressed( "RMB", true );
@@ -86,6 +87,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_RBUTTONUP:
 			AGInput().setButtonPressed( "RMB", false );
+			AGGraphics::getInstance().mouseReleaseEvent( AGMouseButton::RMB );
 		break;
 		case WM_RBUTTONDBLCLK:
 
@@ -96,11 +98,12 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 		break;
 		case WM_MBUTTONUP:
 			AGInput().setButtonPressed( "MMB", false );
+			AGGraphics::getInstance().mouseReleaseEvent( AGMouseButton::MMB );
 		break;
 		case WM_MBUTTONDBLCLK:
 
 		break; 
-		case WM_INPUT:
+		/*case WM_INPUT:
 			GetRawInputData((HRAWINPUT)msg->lParam, RID_INPUT, 
 				lpb, &dwSize, sizeof(RAWINPUTHEADER));
 
@@ -115,7 +118,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 			} 
 
 			AGGraphics::getInstance().mouseMoveEvent();
-		break;
+		break;*/
 		case WM_MOUSEMOVE:
 			AGPoint2 mousePos;
 			POINT point; 
@@ -125,7 +128,7 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 			mousePos.y = point.y; 
 
 
-			/*if( AGEStateManager::getInstance().isRotating() )
+			if( AGEStateManager::getInstance().isRotating() )
 			{
 				AGInput().setMousePos( mousePos, true );
 				if( mousePos.x < 10 )
@@ -149,12 +152,12 @@ bool AGEWindow::nativeEvent(const QByteArray &eventType, void *message, long *re
 				ClientToScreen( (HWND)winId(), &point );
 				SetCursorPos( point.x, point.y );
 				AGInput().setMousePos( mousePos );
-			}*/
-			 
+			}
+			else 
 			{
 				AGInput().setMousePos( mousePos );
 			}
-			//AGGraphics::getInstance().mouseMoveEvent(); 
+			AGGraphics::getInstance().mouseMoveEvent(); 
 		break;
 	}
 	return false; 

@@ -145,7 +145,7 @@ int AGEditor::run( QApplication& app )
 		AGTimeManager::getInstance().setDeltaTime( dt );
 		AGInput().update();
 		AGEngine::getInstance().update(); 
-		if( !AGInput().isButtonPressed( "RMB" ) && !AGInput().isButtonPressed( "MMB" ) )
+		if( !AGInput().isButtonPressed( "RMB" ) && !AGInput().isButtonPressed( "MMB" ) && !AGInput().isButtonPressed( "LMB" ) )
 		{
 			AGEStateManager::getInstance().setRotating( false );
 		}

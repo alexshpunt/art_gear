@@ -78,8 +78,12 @@ AGIntersectPlane::~AGIntersectPlane()
 
 void AGIntersectPlane::draw( AGSurface* surface )
 {
+	assert( surface );
+
 	AGCamera* camera = surface->getCamera(); 
 	ID3D10Device* device = surface->getDevice(); 
+	assert( camera );
+	assert( device );
 
 	updatePos( camera );
 

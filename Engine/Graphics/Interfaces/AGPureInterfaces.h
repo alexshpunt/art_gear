@@ -31,8 +31,8 @@ class AGClickable : public AGDrawable
 {
 	public:
 		virtual bool mouseClickEvent( AGMouseButton button, AGSurface* surface ) = 0;
-		virtual bool mouseMoveEvent( AGSurface* surface ) = 0; 
-
+		virtual bool mouseMoveEvent( AGSurface* surface );
+		virtual void mouseReleaseEvent( AGMouseButton button ); 
 	protected: 
 		void calculateDeltaRays( AGSurface* surface );
 		void calculateRays( AGSurface* surface, const AGMatrix& matWorld );

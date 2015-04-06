@@ -42,6 +42,7 @@ float4 PS( PSIn psIn ) : SV_Target
 	float4 specLvl = txSpec.Sample( samLinear, psIn.tex );
 	float4 normal = txNormal.Sample( samLinear, psIn.tex );
 
+
 	Surface surface; 
 	surface.useSpecLevel = true; 
 	surface.useGloss = true; 

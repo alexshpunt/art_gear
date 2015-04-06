@@ -45,7 +45,7 @@ void AGShape::prepareDraw(AGSurface* surface)
 
 	assert( m_shader ); 
 	m_shader->apply( surface );
-	m_shader->setWorldMatrix( getResultMatrix() );
+	m_shader->setWorldMatrix( getLocalMatrix() );
 
 	assert( m_vertexBuffer );
 	m_vertexBuffer->apply( surface );

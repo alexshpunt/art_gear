@@ -18,7 +18,7 @@ void AGEStateManager::init()
 void AGEStateManager::setRotating(bool value)
 {
 	m_isRotating = value;
-	setShowingMouseArrow( !value );
+	//setShowingMouseArrow( !value );
 }
 
 bool AGEStateManager::isRotating() const

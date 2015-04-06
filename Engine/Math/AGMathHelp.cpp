@@ -114,7 +114,7 @@ namespace AGMath
 
 			res.v = AGVec3::dot( rayDir, qVec ) * invDet;
 
-			if( res.v < 0.0f || res.v > 1.0f ) 
+			if( res.v < 0.0f || ( res.u + res.v ) > 1.0f ) 
 			{
 				return res; 
 			}

@@ -43,6 +43,15 @@ void AGClickable::calculateDeltaRays( AGSurface* surface )
 		m_rayDelta = ( nearPoint + dir ) - m_rayDelta; 
 	}
 
+	/*{
+		AGVec3 curPoint = AGVec3::unproject( AGVec3( mousePos.x, mousePos.y, 0.0f ), AGRect( 0, 0, winSize ), matWorld, matView, matProj );
+		AGVec3 nextPoint  = AGVec3::unproject( AGVec3( nextMousePos.x, nextMousePos.y, 0.0f ), AGRect( 0, 0, winSize ), matWorld, matView, matProj );
+
+		AGVec3 delta = nextPoint - curPoint; 
+
+		m_rayDelta = ( nextPoint - curPoint );//.normilized(); 
+	}*/
+
 	
 }
 
@@ -66,6 +75,16 @@ void AGClickable::calculateRays( AGSurface* surface, const AGMatrix& matWorld )
 	m_rayDir = dir; 
 }
 
+bool AGClickable::mouseMoveEvent(AGSurface* surface)
+{
+	return false; 
+}
+
+void AGClickable::mouseReleaseEvent( AGMouseButton button )
+{
+
+}
+
 float AGDrawable::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 {
 	float retDist = -1.0f;
@@ -77,7 +96,7 @@ float AGDrawable::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 		AGVec3 v3 = m_vertices[ m_indices[ i + 2 ] ];
 
 		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
-
+		
 		if( res.hit )
 		{
 			if( retDist < 0 )

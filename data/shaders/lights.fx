@@ -82,18 +82,15 @@ float4 pointLight( Surface surface, Light light, float3 camPos )
 
 	litColor += ambient; 
 
-	float diffuseFactor = dot( lightVec, surface.normal ); 
+	float diffuseFactor = abs( dot( lightVec, surface.normal ) ); 
 
-	if( diffuseFactor >= 0.0f ) 
-	{
-		float specPower = max( surface.specPower, 1.0f ); 
-		float3 toEye = normalize( camPos - surface.pos ); 
-		float3 reflLightVec = reflect( lightVec, surface.normal );
-		float specFactor = pow( max( dot( reflLightVec, toEye ), 0.0f ), surface.specPower ); 
+	float specPower = max( surface.specPower, 1.0f ); 
+	float3 toEye = normalize( camPos - surface.pos ); 
+	float3 reflLightVec = reflect( lightVec, surface.normal );
+	float specFactor = pow( max( dot( reflLightVec, toEye ), 0.0f ), surface.specPower ); 
 
-		litColor += diffuseFactor * surface.diffuse * light.diffuse; 
-		litColor += specFactor * surface.specLevel * surface.gloss; 
-	}
+	litColor += diffuseFactor * surface.diffuse * light.diffuse; 
+	litColor += specFactor * surface.specLevel * surface.gloss; 
 	litColor *= light.intensity; 
 
 	litColor /= dot( light.att, float3( 1.0f, distance, distance * distance ) );

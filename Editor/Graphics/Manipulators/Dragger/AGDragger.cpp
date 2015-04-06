@@ -1,5 +1,7 @@
 #include "AGDragger.h"
 
+#include <QCursor>
+
 #include "AGArrow.h"
 #include "Engine/Graphics/Objects/AGCamera.h"
 #include "Engine/Objects/AGGameObject.h"
@@ -62,7 +64,7 @@ bool AGDragger::mouseClickEvent( AGMouseButton btn, AGSurface* surface )
 	{
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getResultMatrix() : gizmo->getLocalMatrix() );
 
 		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
@@ -114,10 +116,12 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 	};
 	
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
+		AGEStateManager::getInstance().setRotating( true );
+		calculateDeltaRays( surface );
+
 		AGVec3 axis = m_selectedObject->getAxis();
 
 		AGVec3 cameraEye = surface->getCamera()->getPos();
@@ -193,7 +197,7 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 	{
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getResultMatrix() : gizmo->getLocalMatrix() );
 
 		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
@@ -228,9 +232,17 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 			m_yArrow->setSelected( true );
 			m_zArrow->setSelected( true );
 		}
+		SetCursor( LoadCursor( NULL, IDC_SIZEALL ) );
 		return true;
 	}
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
 	return false; 
+}
+
+void AGDragger::mouseReleaseEvent(AGMouseButton btn)
+{
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
+	m_selectedObject = nullptr;
 }
 
 void AGDragger::draw( AGSurface* surface )

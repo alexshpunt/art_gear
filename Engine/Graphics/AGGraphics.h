@@ -84,6 +84,7 @@ class AGGraphics
 		vector< AGCamera* > getCameras() const; 
 
 		void mouseClickEvent( AGMouseButton btn ); 
+		void mouseReleaseEvent( AGMouseButton btn );
 		void mouseMoveEvent();
 		void keyDownEvent( int keyCode );
 		void keyUpEvent( int keyCode );

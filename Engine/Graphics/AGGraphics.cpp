@@ -445,6 +445,19 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	}
 }
 
+
+void AGGraphics::mouseReleaseEvent(AGMouseButton btn)
+{
+	for( AGClickable* clickable : m_clickableObjects )
+	{
+		clickable->mouseReleaseEvent( btn ); 
+	}
+	for( AGManipulator* manipulator : m_manipulators )
+	{
+		manipulator->mouseReleaseEvent( btn );
+	}
+}
+
 void AGGraphics::mouseMoveEvent()
 {
 	if( !m_focusSurface )
@@ -681,5 +694,6 @@ void AGGraphics::setFPS(int fps)
 {
 	m_fps = fps; 
 }
+
 
 
