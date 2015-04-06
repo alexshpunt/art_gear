@@ -215,4 +215,9 @@ void AGInputManager::setMouseDeltaPos(AGPoint2 deltaPos)
 	m_mouseStack.push_front( m_mouseDeltaPos );
 }
 
+AGPoint2 AGInputManager::getMouseDelta()
+{
+	return m_mouseDeltaPos; 
+}
+
 

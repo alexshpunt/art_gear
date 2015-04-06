@@ -119,12 +119,11 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		AGEStateManager::getInstance().setRotating( true );
 		calculateDeltaRays( surface );
 
 		AGVec3 axis = m_selectedObject->getAxis();
 
-		AGVec3 cameraEye = surface->getCamera()->getPos();
+		AGVec3 cameraPos = surface->getCamera()->getPos();
 		AGVec3 cameraDir = surface->getCamera()->getDir();
 
 		AGVec3 axisX( axis.x, 0.0f, 0.0f );
@@ -147,10 +146,13 @@ bool AGDragger::mouseMoveEvent( AGSurface* surface )
 		for( int i = 0; i < 6; i++ )
 		{
 			AGVec3 worldPos = gizmos[ i ]->getBeginPos(); 
-			AGVec3 lookDir = worldPos - cameraEye; 
+			AGVec3 lookDir = worldPos - cameraPos; 
 
-			float len = lookDir.getSqrLength(); 
-		
+			//Благодаря этому магическому числу всё работает как надо, хотелось бы знать, что это...
+			//Пусть будет что-то типа скорости перемещения, коэфициент пропорциональности
+			//между движением мыши и объекта. 
+			float len = lookDir.getLength() * (2000.0f); //MAGIC WTF 
+
 			gizmos[ i ]->translateBeginPos( AGVec3( axisX.x, axisX.y, axisX.z ) * cosX * len );
 			gizmos[ i ]->translateBeginPos( AGVec3( axisY.x, axisY.y, axisY.z ) * cosY * len );
 			gizmos[ i ]->translateBeginPos( AGVec3( axisZ.x, axisZ.y, axisZ.z ) * cosZ * len );

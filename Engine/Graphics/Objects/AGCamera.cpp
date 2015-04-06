@@ -268,7 +268,7 @@ void AGCamera::update()
 
 	if( mmb )
 	{
-		if( alt )
+		if( alt ) //TODO: Доделать 
 		{
 			p->angleY += AGRadians( dAngleY );
 			p->angleX += AGRadians( dAngleX );
@@ -296,11 +296,11 @@ void AGCamera::update()
 		{
 			AGVec3 right( 1.0, 0.0f, 0.0f );
 			AGVec3 up( 0.0f, 1.0, 0.0f );
-			AGMatrix rotMatRight = AGMatrix::RotationX( p->angleY );
+			AGMatrix rotMatRight = AGMatrix::RotationY( p->angleY );
 
 			right *= rotMatRight;
+			up *= AGMatrix::RotationX( p->angleX );
 			up *= rotMatRight; 
-			up *= AGMatrix::RotationY( p->angleX );
 
 			p->target -= right * dAngleY; 
 			p->target += up * dAngleX;

@@ -391,14 +391,6 @@ void AGGraphics::mouseClickEvent( AGMouseButton btn )
 	float minDist = -1.0f; 
 	AGRenderer* nearestObj = nullptr; 
 
-	D3D10_VIEWPORT viewport; 
-	viewport.Height = winSize.getHeight();
-	viewport.Width = winSize.getWidth();
-	viewport.MaxDepth = 1.0f; 
-	viewport.MinDepth = 0.0f;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0; 
-
 	AGVec3 nearPoint( mousePos.x, mousePos.y, 0.0f );
 	AGVec3 farPoint( mousePos.x, mousePos.y, 1.0f );
 
@@ -465,13 +457,59 @@ void AGGraphics::mouseMoveEvent()
 
 	for( AGClickable* clickable : m_clickableObjects )
 	{
-		clickable->mouseMoveEvent( m_focusSurface );
+		if( clickable->mouseMoveEvent( m_focusSurface ) )
+		{
+			return; 
+		}
 	}
 
 	for( AGManipulator* manipulator : m_manipulators )
 	{
-		manipulator->mouseMoveEvent( m_focusSurface );
+		if( manipulator->mouseMoveEvent( m_focusSurface ) )
+		{
+			return; 
+		}
 	}
+
+	AGPoint2 mousePos = AGInput().getMousePos(); 
+	AGSize winSize = m_focusSurface->getSize();  
+	AGCamera* camera = m_focusSurface->getCamera();
+	assert( camera );
+
+	const AGMatrix& matProj = camera->getProjMatrix(); 
+	const AGMatrix& matView = camera->getViewMatrix(); 
+
+	float minDist = -1.0f; 
+	AGRenderer* nearestObj = nullptr; 
+
+	AGVec3 nearPoint( mousePos.x, mousePos.y, 0.0f );
+	AGVec3 farPoint( mousePos.x, mousePos.y, 1.0f );
+
+	for( AGRenderer* renderer : m_renderers )
+	{
+		AGMesh* mesh = renderer->getMesh();
+		AGMatrix matWorld;
+		if( mesh )
+		{
+			matWorld = mesh->getResultMatrix(); //Локальные координаты модели
+		}
+		AGGameObject* obj = renderer->getObject(); 
+
+		AGVec3 np = AGVec3::unproject( nearPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+		AGVec3 fp = AGVec3::unproject( farPoint, AGRect( 0, 0, winSize.getWidth(), winSize.getHeight() ), matWorld, matView, matProj ); 
+
+		AGVec3 dir = (fp - np); 
+
+		float dist = renderer->intersect( np, dir );
+		if( dist > 0 )
+		{
+			SetCursor( LoadCursor( NULL, IDC_CROSS ) );
+			return; 
+		}
+	}
+	
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
+	
 }
 
 void AGGraphics::addRenderer(AGRenderer* renderer)

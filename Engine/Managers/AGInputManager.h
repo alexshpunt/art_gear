@@ -42,6 +42,7 @@ class AGInputManager
 		const AGPoint2& getMousePos() const;
 
 		AGPoint2 getMouseDeltaPos();
+		AGPoint2 getMouseDelta(); 
 
 		void setWheelDelta( float wheelDelta );
 		float getWheelDelta();
