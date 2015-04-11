@@ -113,10 +113,10 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 	};
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateDeltaRays( surface );
-
+	
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
+		calculateDeltaRays( surface );
 		AGVec3 axis = m_selectedObject->getAxis();
 
 		AGVec3 cameraEye = surface->getCamera()->getPos();
@@ -127,7 +127,7 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 
 		if( m_object )
 		{
-			float angle = absMax( absMax( m_rayDelta.x, m_rayDelta.y ), m_rayDelta.z ) * 1.6f;
+			float angle = absMax( absMax( m_rayDelta.x, m_rayDelta.y ), m_rayDelta.z ) * 2000.0f;
 			if( m_selectedObject == m_xCircle )
 			{
 				switch( system )
@@ -168,7 +168,7 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 			
 		}
 		AGEStateManager::getInstance().setRotating( true );
-
+		SetCursor( LoadCursor( NULL, IDC_SIZEALL ) );
 		return true;
 	}
 	AGEStateManager::getInstance().setRotating( false );
@@ -200,8 +200,10 @@ bool AGRotater::mouseMoveEvent(AGSurface* surface)
 	if( closestPrimitive )
 	{
 		closestPrimitive->setSelected( true );
+		SetCursor( LoadCursor( NULL, IDC_SIZEALL ) );
 		return true; 
 	}
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
 	return false; 
 }
 
@@ -240,6 +242,12 @@ void AGRotater::draw( AGSurface* surface )
 	}
 
 	//AGDebugDraw::getInstance().drawLine( surface, AGVec3( 0.0f, 0.0f, 0.0f ), m_tangent, D3DXVECTOR4( 1.0f, 1.0f, 0.0f, 1.0f ) );
+}
+
+void AGRotater::mouseReleaseEvent(AGMouseButton btn)
+{
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
+	m_selectedObject = nullptr;
 }
 
  

@@ -54,9 +54,18 @@ struct AGEffect
 	ID3D10EffectMatrixVariable* projMatrix;
 };
 
+struct AGShaderLoadingData 
+{
+	std::list< AGSurface* > surfaces; 
+	std::map< AGSurface*, AGEffect* > effects; 
+	std::map< AGSurface*, ID3D10InputLayout* > inputLayouts; 
+	int type;
+};
+
 class AGShader 
 {
 	public:
+		AGShader( AGShaderLoadingData* data );
 		AGShader( const std::wstring& shaderName ); 
 		virtual ~AGShader(); 
 

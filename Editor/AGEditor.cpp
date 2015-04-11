@@ -26,8 +26,13 @@
 #include "Engine/Graphics/Objects/AGLight.h"
 
 #include "Engine/Graphics/Managers/AGDebugManager.h"
-
+#include "Editor/Managers/AGEResMngrStrategy.h"
 #include "Engine/Graphics/Objects/AGBillboard.h"
+
+#include "UI/AGELoadingWidgets.h"
+
+#include <thread>
+#include <future>
 
 AGEditor::AGEditor()
 {
@@ -64,10 +69,27 @@ AGEditor::AGEditor()
 
 	ui.centralWidget->setLayout( m_mainVLayout );
 	m_run = false; 
+}
 
+AGEditor::~AGEditor()
+{
+
+}
+
+int AGEditor::run( QApplication& app )
+{
+	m_app = &app; 
+	showMaximized();
+	app.processEvents();
+	
 	AGGraphicsSettings::getInstance().setBackgroundColor( 0.22f, 0.22f, 0.22f );
 
+	AGResourceManager::getInstance().setStrategy( new AGEResMngrStrategy( app ) );
+	//AGResourceManager::getInstance().setStrategy( new AGResourceManagerStrategy() );
+
+	ui.statusBar->showMessage( "Loading shaders" );
 	AGResourceManager::getInstance().initShaders(); 
+	ui.statusBar->showMessage( "Shaders are loaded" );
 
 	m_leftBotView->getViewport()->setCameraMode( AGSurface::Left );
 	m_leftTopView->getViewport()->setCameraMode( AGSurface::Top );
@@ -87,6 +109,7 @@ AGEditor::AGEditor()
 	AGGraphics::getInstance().addManipulator( new AGScaler  );
 
 	AGGraphics::getInstance().createRasterizeStates(); 
+	AGGraphics::getInstance().update(); 
 	m_light = new AGLight; 
 
 	m_scene = nullptr;
@@ -94,30 +117,17 @@ AGEditor::AGEditor()
 
 	m_curFrame = 0;
 	m_curTime = 0;
-}
-
-AGEditor::~AGEditor()
-{
-
-}
-
-int AGEditor::run( QApplication& app )
-{
-	show();
-	app.processEvents();
 
 	m_run = true;
 	QElapsedTimer timer; 
 	
-	ui.statusBar->showMessage( "Loading shaders" );
-	ui.statusBar->showMessage( "Shaders are loaded" );
-
 	ui.statusBar->showMessage( "Loading mesh data" );
 	createObjAction();
+
 	m_object->getRenderer()->setMesh( AGResourceManager::getInstance().getMesh( "trash.agmsh" ) );
 	createLight();
 	ui.statusBar->showMessage( "Ready" );
-
+	m_rightBotView->getViewport()->setMaximizedMode( true );
 	AGDebugManager::getInstance().init(); 
 
 	while( m_run )
@@ -151,6 +161,8 @@ int AGEditor::run( QApplication& app )
 		}
 		m_sidePanel->setGameObject( m_scene->getSelectedObject() ); 
 	}
+	AGESceneLoadingWidget::getInstance().close();
+
 	return 0;
 }
 
@@ -227,6 +239,7 @@ void AGEditor::deleteLight()
 {
 
 }
+
 
 
 

@@ -314,7 +314,6 @@ float AGGameObject::getLocalZRot() const
 	return m_localRot.z; 
 }
 
-
 void AGGameObject::setLocalRot(const AGVec3& angles)
 {
 	m_localRot = angles; 
@@ -344,18 +343,30 @@ void AGGameObject::rotateLocalX(float angleX)
 {
 	m_localRot.x += angleX; 
 	m_renderer->rotateLocalX( AGRadians( angleX ) );
+	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
+	{
+		(*func)( Change::LocalRot ); 
+	}
 }
 
 void AGGameObject::rotateLocalY(float angleY)
 {
 	m_localRot.y += angleY; 
 	m_renderer->rotateLocalY( AGRadians( angleY ) );
+	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
+	{
+		(*func)( Change::LocalRot ); 
+	}
 }
 
 void AGGameObject::rotateLocalZ(float angleZ)
 {
 	m_localRot.z += angleZ; 
 	m_renderer->rotateLocalZ( AGRadians( angleZ ) );
+	for( AGGameObjectNotifyFunctor* func : m_notifyFunctors )
+	{
+		(*func)( Change::LocalRot ); 
+	}
 }
 
 void AGGameObject::rotateLocal(const AGVec3& angles)

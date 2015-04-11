@@ -404,9 +404,9 @@ AGCircle::AGCircle( CircleAxis axis)
 	int indexCount = sizeof( indices ) / sizeof( indices[ 0 ] );
 	m_nBoundIndices = sizeof( boundIndices ) / sizeof( indices[ 0 ] );
 
-	m_indices = vector< int >( indices, indices + indexCount ); 
+	m_indices = vector< int >( boundIndices, boundIndices + m_nBoundIndices ); 
 
-	m_indexBuffer = new AGBuffer< int >( m_indices, AGBufferType::Index ); 
+	m_indexBuffer = new AGBuffer< int >( vector< int >( indices, indices + indexCount ), AGBufferType::Index ); 
 }
 
 AGCircle::~AGCircle()
@@ -466,7 +466,6 @@ void AGCircle::draw( AGSurface* surface )
 	{
 		surface->drawIndexed( m_indices.size(), 0, 0 );
 	}
-
 }
 
 float AGCircle::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
@@ -507,13 +506,13 @@ float AGCircle::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 	{
 		AGVec3 midleVec = ( vertex1 + vertex2 + vertex3 ) / 3.0f;
 		AGVec3 closestVec = m_tangents[ 0 ] - midleVec; 
-		float closestDist = D3DXVec3LengthSq( &closestVec );
+		float closestDist = closestVec.getSqrLength();
 		m_tangent = m_tangents[ 0 ];
 
 		for( int i = 0; i < m_tangents.size(); i++ )
 		{
 			AGVec3 vec = m_tangents[ i ] - midleVec; 
-			float dist = D3DXVec3LengthSq( &vec );
+			float dist = vec.getSqrLength();
 
 			if( dist < closestDist )
 			{

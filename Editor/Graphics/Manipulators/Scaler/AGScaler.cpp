@@ -121,11 +121,11 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 	};
 
 	AGEStateManager::CoordSystem system = AGEStateManager::getInstance().getCoordSystem(); 
-	calculateDeltaRays( surface );
 
 	if( AGInput().isButtonPressed( "LMB" ) && m_selectedObject )
 	{
-		calculateRays( surface, system == AGEStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
+		calculateDeltaRays( surface );
+		//calculateRays( surface, system == AGEStateManager::World ? m_selectedObject->getLocalMatrix() : m_selectedObject->getResultMatrix() );
 
 		AGVec3 axis = m_selectedObject->getAxis();
 
@@ -148,7 +148,8 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 		float cosZ = AGVec3::dot( axisZ, m_rayDelta );
 
 		float maxVel = absMax( absMax( m_rayDelta.x, m_rayDelta.y ), m_rayDelta.z );
-		maxVel *= 1.2f; 
+		maxVel *= 2000.0f; 
+		AGDebug() << maxVel; 
 
 		AGEStateManager::getInstance().setRotating( true );
 
@@ -164,7 +165,8 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 		}
 		else
 		{
-			scale = AGVec3( cosX * axis.x * sign( axis.x ), cosY * axis.y * sign( axis.y ), cosZ * axis.z * sign( axis.z ) );
+			float factor = 2000.0f; 
+			scale = AGVec3( cosX * axis.x * sign( axis.x ) * factor, cosY * axis.y * sign( axis.y ) * factor, cosZ * axis.z * sign( axis.z ) * factor );
 		}
 
 		for( int i = 0; i < 7; i++ )
@@ -200,7 +202,7 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 				}
 			}
 		}
-
+		SetCursor( LoadCursor( NULL, IDC_SIZEALL ) );
 		return true;
 	}
 
@@ -212,7 +214,7 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 		AGGizmo* gizmo = gizmos[ i ];
 		gizmo->setWorldScale( AGVec3( 1.0f, 1.0f, 1.0f ) );
 
-		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getResultMatrix() : gizmo->getLocalMatrix() );
 
 		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );
@@ -253,8 +255,18 @@ bool AGScaler::mouseMoveEvent(AGSurface* surface)
 			m_yArrow->setSelected( true );
 			m_zArrow->setSelected( true );
 		}
+		SetCursor( LoadCursor( NULL, IDC_SIZEALL ) );
+
+		return true;
 	}
-	return m_selectedObject;
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
+	return false;
+}
+
+void AGScaler::mouseReleaseEvent(AGMouseButton btn)
+{
+	SetCursor( LoadCursor( NULL, IDC_ARROW ) );
+	m_selectedObject = nullptr;
 }
 
 void AGScaler::draw( AGSurface* surface )
@@ -295,4 +307,6 @@ void AGScaler::draw( AGSurface* surface )
 		gizmos[ i ]->draw( surface );
 	}
 }
+
+
 

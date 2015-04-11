@@ -26,6 +26,19 @@ AGMaterial::AGMaterial()
 	}*/
 }
 
+AGMaterial::AGMaterial(AGMaterialLoadingData* data)
+{
+	m_shader = data->shader;
+	for( int i = 0; i < 12; i++ )
+	{
+		m_resources[ i ] = AGResPtr( data->resources[ i ].getData() );
+		m_textures[ i ] = data->textures[ i ];
+	}
+	//delete[] data->resources;
+	m_surfaces = std::move( data->surfaces );
+	m_type = data->type; 
+}
+
 AGMaterial::~AGMaterial()
 {
 

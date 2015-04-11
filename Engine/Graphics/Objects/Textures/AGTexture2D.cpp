@@ -107,6 +107,12 @@ AGTexture2D::AGTexture2D(const std::wstring& fileName)
 	m_isValid = true; 
 }
 
+AGTexture2D::AGTexture2D(AGTexture2DLoadingData* data)
+{
+	m_views = std::move( data->views );
+	m_isValid = true; 
+}
+
 AGTexture2D::~AGTexture2D()
 {
 	for( ID3D10ShaderResourceView* view : m_views )

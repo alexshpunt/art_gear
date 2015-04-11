@@ -64,7 +64,7 @@ bool AGDragger::mouseClickEvent( AGMouseButton btn, AGSurface* surface )
 	{
 		AGGizmo* gizmo = gizmos[ i ];
 
-		calculateRays( surface, system == AGEStateManager::World ? gizmo->getResultMatrix() : gizmo->getLocalMatrix() );
+		calculateRays( surface, system == AGEStateManager::World ? gizmo->getLocalMatrix() : gizmo->getResultMatrix() );
 
 		float dist = gizmo->intersect( m_rayOrigin, m_rayDir );
 		gizmo->setSelected( false );

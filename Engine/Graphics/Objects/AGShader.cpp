@@ -127,6 +127,15 @@ AGShader::AGShader( const std::wstring& shaderName )
 	m_passes = -1; 
 }
 
+AGShader::AGShader(AGShaderLoadingData* data)
+{
+	m_surfaces = std::move( data->surfaces );
+	m_passes = -1;
+	m_curPass = 0;
+	m_type = data->type; 
+	m_effects = std::move( data->effects );
+}
+
 AGShader::~AGShader()
 {
 

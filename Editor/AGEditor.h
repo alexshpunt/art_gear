@@ -48,7 +48,8 @@ class AGEditor : public QMainWindow
 		void closeEvent(QCloseEvent *e);
 		void keyPressEvent(QKeyEvent *e);
 		bool nativeEvent( const QByteArray &eventType, void *message, long *result );
-	private:
+	private: 
+
 		bool m_run; 
 		Ui::AGEditorClass ui;
 		
@@ -80,6 +81,8 @@ class AGEditor : public QMainWindow
 		AGDragger* m_dragger; 
 
 		AGLight* m_light; 
+
+		QApplication* m_app; 
 };
 
 #endif // AGEDITOR_H

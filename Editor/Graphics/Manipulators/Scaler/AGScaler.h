@@ -20,6 +20,7 @@ class AGScaler : public AGManipulator
 
 		bool mouseClickEvent( AGMouseButton btn, AGSurface* surface );
 		bool mouseMoveEvent( AGSurface* surface );
+		void mouseReleaseEvent( AGMouseButton btn );
 
 		void draw( AGSurface* surface );
 

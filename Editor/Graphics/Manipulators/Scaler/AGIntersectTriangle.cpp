@@ -268,7 +268,7 @@ float AGIntersectTriangle::intersect( const AGVec3& rayOrigin, const AGVec3& ray
 		AGVec3 v2 = m_vertices[ 3*i + 1 ];
 		AGVec3 v3 = m_vertices[ 3*i + 2 ];
 
-		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ) ); 
+		AGMath::IntersectResult res = AGMath::intersectTriangle( rayOrigin, rayDir, AGMath::Triangle( v1, v2, v3 ), false ); 
 
 		if( res.hit )
 		{

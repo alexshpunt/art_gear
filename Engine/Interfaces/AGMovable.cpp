@@ -146,7 +146,7 @@ void AGMovable::setLocalAngle(AGDegrees x, AGDegrees y, AGDegrees z)
 
 void AGMovable::setLocalAngle(const AGEulerAngles& angles)
 {
-	p->localAngle = angles; 
+	setLocalAngle( angles.x, angles.y, angles.z );
 }
 
 void AGMovable::setWorldAngle(AGRadians x, AGRadians y, AGRadians z)

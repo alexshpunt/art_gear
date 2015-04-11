@@ -9,7 +9,97 @@
 
 #include <windows.h>
 
+#include <assert.h>
+
 void AGResourceManager::initShaders()
+{
+	assert( m_strategy );
+
+	m_strategy->initShaders(); 
+}
+
+AGShader* AGResourceManager::getShader(const std::wstring& shaderName)
+{
+	assert( m_strategy );
+	
+	return m_strategy->getShader( shaderName );	
+}
+
+AGMesh* AGResourceManager::getMesh( const std::string& fileName )
+{
+	assert( m_strategy );
+
+	return m_strategy->getMesh( fileName );
+}
+
+AGTexture2D* AGResourceManager::getTexture( const std::wstring& fileName )
+{
+	assert( m_strategy );
+
+	return m_strategy->getTexture( fileName );
+}
+
+void AGResourceManager::releaseResource(AGResource* res, const std::wstring& name, unsigned int type)
+{
+	assert( m_strategy );
+
+	if( type == AGResourceType::Texture )
+	{
+		auto iter =  m_strategy->m_textures.find( name ); 
+
+		if( iter == m_strategy->m_textures.end() )
+		{
+			return;
+		}
+
+		m_strategy->m_textures.erase( iter );
+		delete res; 
+	}
+	else if( type == AGResourceType::Shader )
+	{
+		
+	}
+}
+
+void AGResourceManager::releaseResource(AGResource* res, const std::string& name, unsigned int type)
+{
+	if( type == AGResourceType::Mesh )
+	{
+		auto iter = m_strategy->m_meshes.find( name ); 
+
+		if( iter == m_strategy->m_meshes.end() )
+		{
+			return;
+		}
+
+		m_strategy->m_meshes.erase( iter );
+		delete res; 
+	}
+}
+
+void AGResourceManager::init()
+{
+	m_strategy = nullptr; 
+}
+
+void AGResourceManager::setStrategy(AGResourceManagerStrategy* strategy)
+{
+	if( m_strategy )
+	{
+		delete m_strategy; 
+		m_strategy = nullptr; 
+	}
+
+	m_strategy = strategy; 
+}
+
+
+AGResourceManagerStrategy::~AGResourceManagerStrategy()
+{
+	
+}
+
+void AGResourceManagerStrategy::initShaders()
 {
 	HANDLE findHandle = INVALID_HANDLE_VALUE; 
 	WIN32_FIND_DATA findData; 
@@ -31,7 +121,7 @@ void AGResourceManager::initShaders()
 			std::wstring shaderName = findData.cFileName; 
 
 			AGShader* shader = new AGShader( shaderName );
-			
+
 			shaderName = shaderName.substr( 0, shaderName.find( L"." ) );
 			m_effects[ shaderName ] = shader;
 
@@ -42,18 +132,18 @@ void AGResourceManager::initShaders()
 	FindClose( findHandle );
 }
 
-AGShader* AGResourceManager::getShader(const std::wstring& shaderName)
+AGShader* AGResourceManagerStrategy::getShader(const std::wstring& shaderName)
 {
-	std::map< std::wstring, AGShader* >::iterator iter = m_effects.find( shaderName );
+	auto iter = m_effects.find( shaderName );
 
 	if( iter == m_effects.end() )
 		return nullptr; 
 	return iter->second;
 }
 
-AGMesh* AGResourceManager::getMesh( const std::string& fileName )
+AGMesh* AGResourceManagerStrategy::getMesh(const std::string& fileName)
 {
-	std::map< std::string, AGMesh* >::iterator iter = m_meshes.find( fileName ); 
+	auto iter = m_meshes.find( fileName ); 
 
 	AGMesh* mesh = nullptr; 
 
@@ -69,9 +159,9 @@ AGMesh* AGResourceManager::getMesh( const std::string& fileName )
 	return mesh; 
 }
 
-AGTexture2D* AGResourceManager::getTexture( const std::wstring& fileName )
+AGTexture2D* AGResourceManagerStrategy::getTexture(const std::wstring& fileName)
 {
-	std::map< std::wstring, AGTexture2D* >::iterator iter = m_textures.find( fileName ); 
+	auto iter = m_textures.find( fileName ); 
 
 	AGTexture2D* texture = nullptr; 
 
@@ -86,40 +176,3 @@ AGTexture2D* AGResourceManager::getTexture( const std::wstring& fileName )
 	}
 	return texture; 
 }
-
-void AGResourceManager::releaseResource(AGResource* res, const std::wstring& name, unsigned int type)
-{
-	if( type == AGResourceType::Texture )
-	{
-		std::map< std::wstring, AGTexture2D* >::iterator iter = m_textures.find( name ); 
-
-		if( iter == m_textures.end() )
-		{
-			return;
-		}
-
-		m_textures.erase( iter );
-		delete res; 
-	}
-	else if( type == AGResourceType::Shader )
-	{
-		
-	}
-}
-
-void AGResourceManager::releaseResource(AGResource* res, const std::string& name, unsigned int type)
-{
-	if( type == AGResourceType::Mesh )
-	{
-		std::map< std::string, AGMesh* >::iterator iter = m_meshes.find( name ); 
-
-		if( iter == m_meshes.end() )
-		{
-			return;
-		}
-
-		m_meshes.erase( iter );
-		delete res; 
-	}
-}
-

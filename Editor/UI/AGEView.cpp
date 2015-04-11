@@ -28,7 +28,7 @@ AGEView::AGEView()
 	m_layout.setSpacing( 0 );
 	setLayout( &m_layout );
 	m_layout.setMargin( 0 );
-	setStyleSheet( "color: rgb( 50, 50, 50 )" );
+	setStyleSheet( "background: rgb( 80, 80, 80 ); color: rgb( 50, 50, 50 )" );
 	setFrameStyle( QFrame::Box );
 	setLineWidth( 2 );
 

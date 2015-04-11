@@ -415,9 +415,9 @@ void AGETransformPanelNotifyer::operator()( AGGameObject::Change change )
 			break;
 			case AGGameObject::WorldRot:
 				vec = m_panel->m_gameObject->getWorldRot(); 
-				m_panel->m_ui.spinBoxRotX->setValue( vec.x ); 
-				m_panel->m_ui.spinBoxRotY->setValue( vec.y ); 
-				m_panel->m_ui.spinBoxRotZ->setValue( vec.z ); 
+				m_panel->m_ui.spinBoxRotX->setValue( AGMath::toDegrees( vec.x ) ); 
+				m_panel->m_ui.spinBoxRotY->setValue( AGMath::toDegrees( vec.y ) ); 
+				m_panel->m_ui.spinBoxRotZ->setValue( AGMath::toDegrees( vec.z ) ); 
 			break;
 			case AGGameObject::WorldScale:
 				vec = m_panel->m_gameObject->getWorldScale(); 
@@ -439,9 +439,9 @@ void AGETransformPanelNotifyer::operator()( AGGameObject::Change change )
 			break;
 			case AGGameObject::LocalRot:
 				vec = m_panel->m_gameObject->getLocalRot(); 
-				m_panel->m_ui.spinBoxRotX->setValue( vec.x ); 
-				m_panel->m_ui.spinBoxRotY->setValue( vec.y ); 
-				m_panel->m_ui.spinBoxRotZ->setValue( vec.z ); 
+				m_panel->m_ui.spinBoxRotX->setValue( AGMath::toDegrees( vec.x ) ); 
+				m_panel->m_ui.spinBoxRotY->setValue( AGMath::toDegrees( vec.y ) ); 
+				m_panel->m_ui.spinBoxRotZ->setValue( AGMath::toDegrees( vec.z ) ); 
 			break;
 			case AGGameObject::LocalScale:
 				vec = m_panel->m_gameObject->getLocalScale(); 

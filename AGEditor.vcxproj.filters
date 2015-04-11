@@ -290,10 +290,13 @@
     <ClCompile Include="Engine\Math\AGMathHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Objects\AGBoundingBox.cpp">
+    <ClCompile Include="Engine\Interfaces\AGMovable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Interfaces\AGMovable.cpp">
+    <ClCompile Include="Editor\UI\AGELoadingWidgets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\Managers\AGEResMngrStrategy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -330,6 +333,12 @@
     </CustomBuild>
     <CustomBuild Include="Editor\UI\AGEGridSplitter.h">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Editor\UI\AGSceneLoadingWidget.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Editor\UI\AGLoadingWidget.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -546,13 +555,22 @@
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGConeShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Objects\AGBoundingBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Interfaces\AGMovable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\AGGraphicsHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_AGSceneLoadingWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_AGLoadingWidget.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\AGELoadingWidgets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\Managers\AGEResMngrStrategy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

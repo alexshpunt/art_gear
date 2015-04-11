@@ -13,28 +13,18 @@
 
 #include "Engine/Managers/AGResourceManager.h"
 
-class AGSubMesh
-{
-	public:
-		AGSubMesh( AGMesh* mesh );
-		~AGSubMesh();
-
-		void loadFrom( ifstream& in );
-		void draw( AGSurface* surface ); 
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir );
-	private:
-		AGMesh* m_mesh;
-		vector< AGVertex > m_vertices; 
-		vector< int > m_indices; 
-		AGMaterial* m_material; 
-
-		AGBuffer< AGVertex >* m_vertexBufffer; 
-		AGBuffer< int >* m_indexBuffer; 
-};
-
 AGSubMesh::AGSubMesh( AGMesh* mesh ) : m_mesh( mesh )
 {
 
+}
+
+AGSubMesh::AGSubMesh(AGMesh* mesh, AGSubMeshLoadingData* data) : m_mesh( mesh )
+{
+	m_vertexBufffer = data->vertexBufffer; 
+	m_indexBuffer = data->indexBuffer; 
+	m_vertices = std::move( data->vertices ); 
+	m_indices = std::move( data->indices );
+	m_material = data->material; 
 }
 
 AGSubMesh::~AGSubMesh()
@@ -166,6 +156,10 @@ float AGSubMesh::intersect(const AGVec3& rayOrigin, const AGVec3& rayDir)
 	return retDist; 
 }
 
+AGMesh::AGMesh()
+{
+	m_isSelected = true; 
+}
 
 AGMesh::AGMesh(const std::string &fileName)
 {
@@ -267,4 +261,10 @@ float AGMesh::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir )
 unsigned int AGMesh::getType() const
 {
 	return AGResourceManager::Mesh; 
+}
+
+void AGMesh::initFrom(AGMeshLoadingData* data)
+{
+	m_subMeshes = std::move( data->subMeshes );
+	m_boundingBox = data->boundingBox;
 }

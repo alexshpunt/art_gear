@@ -28,10 +28,24 @@ struct AGShaderResources
 	vector< ID3D10ShaderResourceView* > resources; 
 };
 
+class AGMaterialLoadingData
+{
+	public:
+		wstring textures[12]; 
+
+		list< AGSurface* > surfaces; 
+
+		AGResPtr resources[ 12 ];
+
+		AGShader* shader; 
+
+		int type; 
+};
 
 class AGMaterial 
 {
 	public:
+		AGMaterial( AGMaterialLoadingData* data );
 		AGMaterial();
 		~AGMaterial();
 
