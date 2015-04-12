@@ -69,6 +69,10 @@ AGEditor::AGEditor()
 
 	ui.centralWidget->setLayout( m_mainVLayout );
 	m_run = false; 
+
+	m_resourcesView = new AGEResourcesView;
+	m_resourcesView->openFormMesh();
+	m_resourcesView->show();
 }
 
 AGEditor::~AGEditor()
@@ -138,6 +142,7 @@ int AGEditor::run( QApplication& app )
 
 		timer.restart(); 
 
+		m_resourcesView->update();
 		AGGraphics::getInstance().update(); 
 
 		double dt = timer.restart() / 1000.0; 

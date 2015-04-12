@@ -26,6 +26,7 @@ AGSurface::AGSurface()
 	m_surfaceCameraMode = AGSurfaceCameraMode::Perspective; 
 	m_surfaceMode = AGSurfaceMode::Shaded;
 	m_isMaximized = false; 
+	m_isMainSurface = false;
 	setCamera( AGGraphics::getInstance().createCamera() );
 }
 
@@ -219,9 +220,10 @@ float AGSurface::getHeight() const
 	return m_size.getHeight();
 }
 
-void AGSurface::setup(float width, float height, HWND hwnd)
+void AGSurface::setup(float width, float height, HWND hwnd, bool mainSurface)
 {
 	m_hwnd = hwnd; 
+	m_isMainSurface = mainSurface;
 
 	HRESULT hr = S_OK; 
 
@@ -339,7 +341,7 @@ void AGSurface::setup(float width, float height, HWND hwnd)
 	m_size = AGSize( width, height );
 
 	m_id = AGGraphics::getInstance().getCurrentSurfaceID(); 
-	AGGraphics::getInstance().addSurface( this );
+	AGGraphics::getInstance().addSurface( this );	
 }
 
 void AGSurface::createRenderTargets(int width, int height)
@@ -513,4 +515,9 @@ void AGSurface::drawIndexed(unsigned int indexCount, unsigned int startIndexLoca
 	assert( m_device );
 
 	m_device->DrawIndexed( indexCount, startIndexLocation, baseVertexLocation );
+}
+
+bool AGSurface::isMainSurface() const
+{
+	return m_isMainSurface;
 }

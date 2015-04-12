@@ -24,6 +24,8 @@
 #include <Engine/Graphics/Objects/AGLight.h>
 #include "Graphics/Manipulators/Dragger/AGArrow.h"
 
+#include "UI/ResourcesView/AGEResourcesView.h"
+
 class AGGameScene;
 class AGGameObject; 
 class AGCamera; 
@@ -83,6 +85,8 @@ class AGEditor : public QMainWindow
 		AGLight* m_light; 
 
 		QApplication* m_app; 
+
+		AGEResourcesView* m_resourcesView; 
 };
 
 #endif // AGEDITOR_H

@@ -33,7 +33,7 @@ void AGGraphics::update()
 
 	for( AGSurface* surface : m_surfaces )
 	{
-		if( m_focusSurface && m_focusSurface->isMaximizedMode() && surface != m_focusSurface )
+		if( m_focusSurface && m_focusSurface->isMaximizedMode() && surface != m_focusSurface || !surface->isMainSurface() )
 		{
 			continue;
 		}
@@ -605,7 +605,8 @@ AGInputLayout* AGGraphics::getInputLayout(ID3D10Device* device )
 
 void AGGraphics::setFocusSurface(AGSurface* surface)
 {
-	m_focusSurface = surface; 
+	if( surface->isMainSurface() )
+		m_focusSurface = surface; 
 }
 
 void AGGraphics::keyDownEvent(int keyCode)

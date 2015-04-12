@@ -299,6 +299,18 @@
     <ClCompile Include="Editor\Managers\AGEResMngrStrategy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\UI\ResourcesView\AGEResourcePreview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\UI\ResourcesView\AGEResourcesView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AGEResourcesView.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AGEResourcesView.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Editor\AGEditor.h">
@@ -339,6 +351,9 @@
     </CustomBuild>
     <CustomBuild Include="Editor\UI\AGLoadingWidget.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Editor\UI\ResourcesView\AGEResourcesView.h">
+      <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +586,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Managers\AGEResMngrStrategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\UI\ResourcesView\AGEResourcePreview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

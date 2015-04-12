@@ -46,11 +46,15 @@ class AGSurface
 
 		void draw( unsigned int nVertices, unsigned int offset );
 		void drawIndexed( unsigned int indexCount, unsigned int startIndexLocation, unsigned int baseVertexLocation ); 
+
+		bool isMainSurface() const;
 	protected:
-		void setup( float width, float height, HWND hwnd );
+		void setup( float width, float height, HWND hwnd, bool mainSurface = true );
 
 		void createRenderTargets( int width, int height );
 		void releaseRenderTargets(); 
+
+		bool m_isMainSurface; 
 
 		ID3D10Device* m_device; 
 		IDXGISwapChain* m_swapChain; 
