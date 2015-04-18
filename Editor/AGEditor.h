@@ -26,8 +26,8 @@
 
 #include "UI/ResourcesView/AGEResourcesView.h"
 
-class AGGameScene;
-class AGGameObject; 
+class AGEGameScene; 
+class AGEGameObject; 
 class AGCamera; 
 
 class AGEditor : public QMainWindow
@@ -77,8 +77,8 @@ class AGEditor : public QMainWindow
 		AGESidePanel* m_sidePanel;
 		AGESceneView* m_sceneView; 
 
-		AGGameObject* m_object; 
-		AGGameScene* m_scene;
+		AGEGameObject* m_object; 
+		AGEGameScene* m_scene;
 
 		AGDragger* m_dragger; 
 

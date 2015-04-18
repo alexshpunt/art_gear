@@ -2,18 +2,12 @@
 
 #include "Engine/Graphics/Objects/AGLight.h"
 
-AGESceneViewItem::AGESceneViewItem(AGGameObject* gameObject)
-{
-	this->setText( 0, &gameObject->getName()[0] ); 
-	m_data = gameObject; 
-	m_type = GameObject;
-}
+#include "Editor/Wrappers/Objects/AGEGameObject.h"
 
-AGESceneViewItem::AGESceneViewItem(AGELight* light)
+AGESceneViewItem::AGESceneViewItem( AGEGameObject* gameObject )
 {
-	this->setText( 0, &light->getLight()->getName()[0] ); 
-	m_data = light;
-	m_type = Light;
+	m_gameObject = gameObject;
+	this->setText( 0, gameObject->getName().c_str() );
 }
 
 AGESceneViewItem::~AGESceneViewItem()

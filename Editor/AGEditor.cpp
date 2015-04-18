@@ -15,6 +15,9 @@
 #include "Engine/Objects/AGGameScene.h"
 #include "Engine/Objects/AGGameObject.h"
 
+#include "Editor/Wrappers/Objects/AGEGameScene.h"
+#include "Editor/Wrappers/Objects/AGEGameObject.h"
+
 #include "Engine/AGEngine.h"
 
 #include "Editor/Graphics/Manipulators/Dragger/AGDragger.h"
@@ -70,9 +73,9 @@ AGEditor::AGEditor()
 	ui.centralWidget->setLayout( m_mainVLayout );
 	m_run = false; 
 
-	m_resourcesView = new AGEResourcesView;
+	/*m_resourcesView = new AGEResourcesView;
 	m_resourcesView->openFormMesh();
-	m_resourcesView->show();
+	m_resourcesView->show();*/
 }
 
 AGEditor::~AGEditor()
@@ -125,12 +128,12 @@ int AGEditor::run( QApplication& app )
 	m_run = true;
 	QElapsedTimer timer; 
 	
-	ui.statusBar->showMessage( "Loading mesh data" );
+	/*ui.statusBar->showMessage( "Loading mesh data" );
 	createObjAction();
 
 	m_object->getRenderer()->setMesh( AGResourceManager::getInstance().getMesh( "trash.agmsh" ) );
 	createLight();
-	ui.statusBar->showMessage( "Ready" );
+	ui.statusBar->showMessage( "Ready" );*/
 	m_rightBotView->getViewport()->setMaximizedMode( true );
 	AGDebugManager::getInstance().init(); 
 
@@ -142,7 +145,7 @@ int AGEditor::run( QApplication& app )
 
 		timer.restart(); 
 
-		m_resourcesView->update();
+		//m_resourcesView->update();
 		AGGraphics::getInstance().update(); 
 
 		double dt = timer.restart() / 1000.0; 
@@ -164,7 +167,7 @@ int AGEditor::run( QApplication& app )
 		{
 			AGEStateManager::getInstance().setRotating( false );
 		}
-		m_sidePanel->setGameObject( m_scene->getSelectedObject() ); 
+		//m_sidePanel->setGameObject( m_scene->getSelectedObject() ); 
 	}
 	AGESceneLoadingWidget::getInstance().close();
 
@@ -177,9 +180,8 @@ void AGEditor::newAction()
 	{
 		delete m_scene; 
 	}
-	m_scene = new AGGameScene( "Default" );
+	m_scene = new AGEGameScene( "Default" );
 
-	AGEngine::getInstance().setScene( m_scene );
 }
 
 void AGEditor::closeEvent(QCloseEvent *e)
@@ -222,9 +224,8 @@ void AGEditor::keyPressEvent(QKeyEvent *e)
 
 void AGEditor::createObjAction()
 {
-	m_object = m_scene->createObject( "Irish" );
-	AGESceneViewItem* item = new AGESceneViewItem( m_object );
-	m_sceneView->addItem( item );
+	/*m_object = m_scene->createObject( "Irish" );
+	m_sceneView->addItem( m_object->getItem() );*/
 }
 
 void AGEditor::deleteObjAction()
@@ -234,10 +235,10 @@ void AGEditor::deleteObjAction()
 
 void AGEditor::createLight()
 {
-	AGELight* light = new AGELight; 
+	/*AGELight* light = new AGELight; 
 	AGESceneViewItem* item = new AGESceneViewItem( light );
 	light->getLight()->setLightType( AGLight::Point );
-	m_sceneView->addItem( item ); 
+	m_sceneView->addItem( item ); */
 }
 
 void AGEditor::deleteLight()

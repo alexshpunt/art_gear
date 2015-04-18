@@ -11,19 +11,16 @@
 
 #include "Graphics/Objects/AGELight.h"
 
-#include "Objects/AGGameObject.h"
+class AGEGameObject; 
 
 class AGESceneViewItem : public QTreeWidgetItem
 {
-	enum AGEItemType{ GameObject, Light };
 	public:
-		AGESceneViewItem( AGGameObject* gameObject );
-		AGESceneViewItem( AGELight* light );
+		AGESceneViewItem( AGEGameObject* gameObject );
 		~AGESceneViewItem(); 
 
 	private:
-		AGEItemType m_type; 
-		void* m_data; 
+		AGEGameObject* m_gameObject; 
 }; 
 
 class AGESceneView : public QFrame

@@ -11,6 +11,8 @@
 
 #include "Objects/AGGameObject.h"
 
+#include "Editor/Wrappers/Components/AGERenderer.h"
+
 class AGESidePanel : public QTreeWidget
 {
 	Q_OBJECT
@@ -31,7 +33,7 @@ class AGESidePanel : public QTreeWidget
 
 		QTreeWidgetItem* m_item1; 
 		QTreeWidgetItem* m_widgetItem1; 
-		AGETransformPanel* m_transformPanel1; 
+		AGERendererWidget* m_widget; 
 };
 
 #endif 

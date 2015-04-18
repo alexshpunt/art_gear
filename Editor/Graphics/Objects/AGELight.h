@@ -3,6 +3,8 @@
 
 #include "Engine/Graphics/Interfaces/AGPureInterfaces.h"
 
+#include "Editor/Wrappers/Components/AGEComponent.h"
+
 class AGELightPrivate; 
 class AGLight; 
 
