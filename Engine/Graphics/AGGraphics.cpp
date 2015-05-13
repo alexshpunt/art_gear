@@ -216,7 +216,7 @@ void AGGraphics::addSurface(AGSurface* surface)
 
 	handleDXShaderError( D3DX10CreateEffectFromFile( 
 		L"data/shaders/dif.fx", NULL, NULL, "fx_4_0", D3D10_SHADER_ENABLE_STRICTNESS,
-		NULL, device, NULL, NULL, &dxEffect, NULL, NULL 
+		NULL, device, NULL, NULL, &dxEffect, &blob, NULL 
 		) );  
 
 	D3D10_PASS_DESC passDesc; 
@@ -605,7 +605,7 @@ AGInputLayout* AGGraphics::getInputLayout(ID3D10Device* device )
 
 void AGGraphics::setFocusSurface(AGSurface* surface)
 {
-	if( surface->isMainSurface() )
+	if( surface && surface->isMainSurface() )
 		m_focusSurface = surface; 
 }
 

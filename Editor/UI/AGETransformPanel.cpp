@@ -19,7 +19,7 @@ AGETransformPanel::AGETransformPanel()
 	m_mainLayout = new QVBoxLayout; 
 
 	m_visiableCheckBox = new QCheckBox; 
-	m_visiableLabel = new QLabel( "Visiable: " ); 
+	m_visiableLabel = new QLabel( "Visible: " ); 
 
 	m_layout->addWidget( m_nameLabel );
 	m_layout->addWidget( m_nameEdit );

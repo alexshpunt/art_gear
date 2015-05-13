@@ -22,14 +22,14 @@ AGESidePanel::AGESidePanel()
 	m_widgetItem->setFlags( 0 );
 	this->setItemWidget( m_widgetItem, 0, m_transformPanel );
 
-	m_item1 = new QTreeWidgetItem( this );
+	/*m_item1 = new QTreeWidgetItem( this );
 	m_item1->setText( 0, "Renderer" );
 	m_item1->setFlags( 0 );
 	m_item1->setTextAlignment( 0, Qt::AlignCenter );
 	m_item1->setBackgroundColor( 0, QColor( 62, 62, 62 ) );
 	m_widgetItem1 = new QTreeWidgetItem( m_item1 );
 	m_widgetItem1->setFlags( 0 );
-	this->setItemWidget( m_widgetItem1, 0, m_widget );
+	this->setItemWidget( m_widgetItem1, 0, m_widget );*/
 
 	this->setHeaderHidden( true );
 

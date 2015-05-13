@@ -1,55 +1,6 @@
 #include "AGERenderer.h"
 
-#include <QDir>
-#include <QPixmap>
-#include <QString>
-#include <QHBoxLayout>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QSpacerItem>
-
-class AGEMapWidget
-{
-	public:
-		AGEMapWidget( const QString& map )
-		{
-			m_layout = new QHBoxLayout;
-
-			m_label = new QLabel( map );
-			m_label->setMaximumWidth( 100 );
-			m_spinBox = new QSpinBox;
-			m_spinBox->setRange( 0, 100 );
-			m_spinBox->setMaximumWidth( 50 );
-			m_button = new QPushButton( "none" );
-
-			m_layout->addWidget( m_label );
-			m_layout->addWidget( m_spinBox );
-			m_layout->addWidget( m_button );
-
-			QSpacerItem* spacer = new QSpacerItem( 15, 0 );
-			m_layout->addSpacerItem( spacer );
-
-			QPixmap image( QDir::currentPath() + "/data/textures/344.jpg" );
-			image = image.scaled( 48, 48 );
-			m_preview = new QLabel;
-			m_preview->setMaximumWidth( 48 );
-			m_preview->setPixmap( image );
-			m_layout->addWidget( m_preview );
-			
-			QSpacerItem* endSpacer = new QSpacerItem( 15, 0 );
-			m_layout->addSpacerItem( endSpacer ); 
-		}
-		~AGEMapWidget()
-		{
-			
-		}
-
-		QHBoxLayout* m_layout; 
-		QLabel* m_label;
-		QLabel* m_preview;
-		QSpinBox* m_spinBox;
-		QPushButton* m_button; 
-};
+#include "UI/ResourcesView/AGEResourcesView.h"
 
 class AGEMeshWidget
 {
@@ -115,3 +66,45 @@ AGERendererWidget::~AGERendererWidget()
 
 }
 
+
+AGEMapWidget::AGEMapWidget(const QString& map)
+{
+	m_layout = new QHBoxLayout;
+
+	m_label = new QLabel( map );
+	m_label->setMaximumWidth( 100 );
+	m_spinBox = new QSpinBox;
+	m_spinBox->setRange( 0, 100 );
+	m_spinBox->setMaximumWidth( 50 );
+	m_button = new QPushButton( "none" );
+
+	m_layout->addWidget( m_label );
+	m_layout->addWidget( m_spinBox );
+	m_layout->addWidget( m_button );
+
+	QSpacerItem* spacer = new QSpacerItem( 15, 0 );
+	m_layout->addSpacerItem( spacer );
+
+	QPixmap image( QDir::currentPath() + "/data/textures/344.jpg" );
+	image = image.scaled( 48, 48 );
+	m_preview = new QLabel;
+	m_preview->setMaximumWidth( 48 );
+	m_preview->setPixmap( image );
+	m_layout->addWidget( m_preview );
+
+	QSpacerItem* endSpacer = new QSpacerItem( 15, 0 );
+	m_layout->addSpacerItem( endSpacer ); 
+
+	connect( m_button, SIGNAL( pressed() ), this, SLOT( mapButtonPressed() ) );
+	//connect( m_button, SIGNAL( pressed() ), this, SLOT( mapButtonPressed() ) );
+}
+
+AGEMapWidget::~AGEMapWidget()
+{
+
+}
+
+void AGEMapWidget::mapButtonPressed()
+{
+	AGEResourcesView::getInstance().openForTexture();
+}

@@ -31,6 +31,7 @@
 #include "Engine/Graphics/Managers/AGDebugManager.h"
 #include "Editor/Managers/AGEResMngrStrategy.h"
 #include "Engine/Graphics/Objects/AGBillboard.h"
+#include "Engine/Graphics/Objects/AGTer.h"
 
 #include "UI/AGELoadingWidgets.h"
 
@@ -136,6 +137,12 @@ int AGEditor::run( QApplication& app )
 	ui.statusBar->showMessage( "Ready" );*/
 	m_rightBotView->getViewport()->setMaximizedMode( true );
 	AGDebugManager::getInstance().init(); 
+
+	/*AGRenderer* r = new AGRenderer( nullptr );
+	r->setMesh( AGResourceManager::getInstance().getMesh( "terrain.agmsh" ) );*/
+
+	//AGGraphics::getInstance().addRenderer( r );
+	AGGraphics::getInstance().addDrawable( new AGTer() );
 
 	while( m_run )
 	{

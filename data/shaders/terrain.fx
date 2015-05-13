@@ -1,4 +1,6 @@
-Texture2D txDiff; 
+Texture2D txHeight; 
+Texture2D txDiff;
+Texture2D txRock;
 
 RasterizerState rs 
 {
@@ -9,8 +11,6 @@ RasterizerState rs
 SamplerState samLinear
 {
     Filter = ANISOTROPIC;
-    AddressU = WRAP;
-    AddressV = WRAP;
 };
 
 BlendState AlphaBlending
@@ -45,6 +45,7 @@ struct PS_INPUT
 	float3 binorm : BINORMAL0;
 	float3 tang : TANGENT0; 
 	float2 uv : UV0;	
+	float rockK : ROCKK; 
 };
 
 struct PSOutput 
@@ -65,18 +66,22 @@ PS_INPUT VS( VS_INPUT input )
 	PS_INPUT output;
 	input.pos.w = 1.0f; 
 
-	float3 hm = txDiff.SampleLevel( samLinear, input.uv, 0.0f ); 
-	float height = ( hm.x + hm.y + hm.z ) / 3;
+	float3 hm = txHeight.SampleLevel( samLinear, input.uv, 0 ); 
+	float height = (hm.x + hm.y + hm.z)/3;
 
 	output.pos = input.pos; 
 
-	if( height > 0.8 )
+	if( height > 0.001 )
 	{
-		height *= 2.0f; 
+		output.pos.y = height * 10; 
+		output.rockK = 0.0f;
+		float kheight = 0.7;
+		if( height > kheight )
+		{
+			output.rockK = (height - kheight)/( 1.0f - kheight );
+		}
+
 	}
-
-	output.pos.y += height*5;
-
 	output.pos = mul( output.pos, mtxWorld );
 	output.binorm = output.pos; 
 	output.pos = mul( output.pos, mtxView );
@@ -98,7 +103,19 @@ PSOutput PS( PS_INPUT input )
 {
 	PSOutput output = (PSOutput)0;
 
-	output.diffuse = txDiff.Sample( samLinear, input.uv );
+	/*float3 hm = txHeight.SampleLevel( samLinear, float2(input.uv.x/100.0f, input.uv.y/100.0f), 0.0f ); 
+	float d = (hm.x + hm.y + hm.z ) / 3;*/
+	float4 rockDif = txRock.Sample( samLinear, input.uv*40 );
+	float4 grassDif = txDiff.Sample( samLinear, input.uv*40 );
+	if( input.rockK > 0.0f )
+	{
+		input.rockK *= 2.0f;
+		output.diffuse = rockDif * input.rockK + grassDif* (1 - input.rockK );
+	}
+	else
+	{
+		output.diffuse = grassDif;
+	}
 	//output.normal = 2.0*txNorm.Sample( samLinear, input.uv ) - 1.0f;
 	output.normal = input.norm; 
 	output.depth = float4( input.binorm, 1.0f ); 

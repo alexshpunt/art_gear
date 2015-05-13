@@ -1,6 +1,6 @@
 #include "AGBoxShape.h"
 
-#include <assert.h>
+#include "Engine/Utils/AGErrorHandling.h"
 
 #include "Engine/Math/AGMath.h"
 
@@ -71,7 +71,7 @@ void AGBoxShape::draw(AGSurface* surface)
 
 void AGBoxShape::setSide(float side)
 {
-	assert( side > EPSILON_FOR_FLOAT );
+	softAssert( side > EPSILON_FOR_FLOAT ); 
 
 	p->length = side;
 	p->width  = side; 
@@ -80,7 +80,7 @@ void AGBoxShape::setSide(float side)
 
 void AGBoxShape::setWidth(float width)
 {
-	assert( width > EPSILON_FOR_FLOAT );
+	softAssert( width > EPSILON_FOR_FLOAT );
 
 	p->width = width; 
 }
@@ -92,7 +92,7 @@ float AGBoxShape::getWidth() const
 
 void AGBoxShape::setHeight(float height)
 {
-	assert( height > EPSILON_FOR_FLOAT );
+	softAssert( height > EPSILON_FOR_FLOAT );
 
 	p->height = height; 
 }
@@ -104,7 +104,7 @@ float AGBoxShape::getHeight() const
 
 void AGBoxShape::setLength(float length)
 {
-	assert( length > EPSILON_FOR_FLOAT );
+	softAssert( length > EPSILON_FOR_FLOAT );
 
 	p->length = length;
 }

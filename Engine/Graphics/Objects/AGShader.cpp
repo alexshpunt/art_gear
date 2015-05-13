@@ -93,6 +93,16 @@ AGShader::AGShader( const std::wstring& shaderName )
 	std::wstring fullPath = L"data/shaders/";
 	fullPath+= shaderName; 
 
+	m_lastSlot = 0; 
+
+	for( int i = 0; i < 12; i++ )
+	{
+		if( m_type & mapTypes[ i ] )
+		{
+			m_lastSlot = i; 
+		}
+	}
+
 	for( AGSurface* surface : m_surfaces )
 	{
 		ID3D10Effect* dxEffect; 
@@ -134,6 +144,7 @@ AGShader::AGShader(AGShaderLoadingData* data)
 	m_curPass = 0;
 	m_type = data->type; 
 	m_effects = std::move( data->effects );
+	m_lastSlot = 0; 
 }
 
 AGShader::~AGShader()
@@ -164,7 +175,6 @@ void AGShader::apply(AGSurface* surface)
 		AGVec3 camPos = camera->getPos(); 
 		effect->cameraPos->SetRawValue( &camPos, 0, sizeof( AGVec3 ) );
 	}
-
 	effect->viewMatrix->SetMatrix( camera->getViewMatrix() );
 	effect->projMatrix->SetMatrix( camera->getProjMatrix() );
 
@@ -212,5 +222,16 @@ void AGShader::setWorldMatrix(const AGMatrix& world)
 		AGEffect* effect = m_effects.at( surface );
 		effect->worldMatrix->SetMatrix( world );
 	}
+}
+
+int AGShader::addNewTextureVar(const std::string& varName)
+{
+	for( AGSurface* surface : m_surfaces )
+	{
+		AGEffect* effect = m_effects.at( surface );
+		effect->maps[ m_lastSlot ] = effect->dxEffect->GetVariableByName( varName.c_str() )->AsShaderResource();
+	}
+	m_lastSlot++;
+	return m_lastSlot-1; 
 }
 

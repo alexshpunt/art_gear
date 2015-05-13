@@ -19,7 +19,7 @@ class AGCameraPrivate
 			nearPlane = 0.001f; 
 			sensX = 1.1f; 
 			sensY = 1.1f; 
-			speed = 0.2f; 
+			speed = 0.9f; 
 			sprintSpeed = speed * 2.0f; 
 			up      = AGVec3::Up(); 
 			target  = AGVec3::Forward(); 

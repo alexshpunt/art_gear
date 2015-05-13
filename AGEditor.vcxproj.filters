@@ -621,6 +621,12 @@
     <ClInclude Include="Editor\Wrappers\Components\AGEComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Utils\AGErrorHandling.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Objects\AGTer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Editor\Resources\ToolBar\tbX.png">

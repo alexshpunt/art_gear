@@ -75,7 +75,7 @@ class AGShader
 		void setMap( int slot, AGTexture2D* texture, AGSurface* surface ); 
 
 		void setWorldMatrix( const AGMatrix& world );
-
+		int addNewTextureVar( const std::string& varName );
 	private:
 		std::list< AGSurface* > m_surfaces; 
 		std::map< AGSurface*, AGEffect* > m_effects; 
@@ -86,6 +86,7 @@ class AGShader
 		int m_curPass; 
 		int m_passes; 
 
+		int m_lastSlot;
 		int m_type;
 };
 
