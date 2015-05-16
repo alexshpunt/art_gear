@@ -10,8 +10,14 @@
 #include "Engine/Graphics/Objects/AGMaterial.h"
 
 #include "Engine/Managers/AGResourceManager.h"
+#include "Engine/Managers/AGLogger.h"
+#include "Engine/Managers/AGInputManager.h"
 
-class AGTer : public AGDrawable
+#include "Engine/Math/AGMath.h"
+
+#include "Engine/Graphics/Objects/Shapes/AGSphereShape.h"
+
+class AGTer : public AGClickable
 {
 	public:
 		AGTer()
@@ -40,6 +46,10 @@ class AGTer : public AGDrawable
 
 			int nVertices; 
 			READ( nVertices );
+			int sqrnVertices = sqrt( nVertices );
+			AGDebug() << nVertices << " " << sqrnVertices;
+			
+			std::vector< AGVertex > verticesForMap; 
 
 			for( int i = 0; i < nVertices; i++ )
 			{
@@ -63,7 +73,13 @@ class AGTer : public AGDrawable
 
 				READ( vertex.uv.x );
 				READ( vertex.uv.y );
+				verticesForMap.push_back( vertex );
 				m_vertices.push_back( vertex );
+				if( i != 0 && i % sqrnVertices == 0 )
+				{
+					m_vertexMap.push_back( verticesForMap );
+					verticesForMap.clear(); 
+				}
 			}
 
 			int nIndices; 
@@ -127,11 +143,63 @@ class AGTer : public AGDrawable
 			device->DrawIndexed( m_indices.size(), 0, 0 );	
 		}
 
+		bool mouseClickEvent( AGMouseButton button, AGSurface* surface ) override
+		{	
+			return false; 
+		}
+
+		bool mouseMoveEvent( AGSurface* surface ) override
+		{
+			calculateRays( surface, AGMatrix() );
+			return intersect( m_rayOrigin, m_rayDir ) > 0.0f; 
+		}
+
+		AGPoint2 findVertex( int fromX, int toX, int fromY, int toY, AGVec3 pos )
+		{
+			int centerX = (toX - fromX)/2;
+			int centerY = (toY - fromY)/2; 
+			AGVertex vertex = m_vertexMap.at( centerY ).at( centerX );
+
+			float len = (vertex.pos - pos).getLength();
+			if( len < 0.01 )
+			{
+				return AGPoint2( centerX, centerY );
+			}
+
+			if( vertex.pos.x < centerX )
+			{
+				toX = centerX; 
+			}
+			else if( vertex.pos.x > centerX )
+			{
+				fromX = centerX; 
+			}
+			if( vertex.pos.y < centerY )
+			{
+				toY = centerY; 
+			}
+			else if( vertex.pos.y > centerY )
+			{
+				fromY = centerY; 
+			}
+			
+
+			return findVertex( fromX, toX, fromY, toY, pos );
+		}
+
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ) override
+		{
+			//AGPoint2 vertexIndex = findVertex( 0, m_vertexMap.size(), 0, m_vertexMap.size(), rayOrigin );
+			return -1.f;
+		}
+
 	protected:
 		AGBuffer< int >* m_ibo;
 		AGBuffer< AGVertex >* m_vbo;
 
 		std::vector< AGVertex > m_vertices; 
+
+		std::vector< std::vector< AGVertex > > m_vertexMap; 
 
 		AGShader* m_shader; 
 		AGMaterial* m_material; 

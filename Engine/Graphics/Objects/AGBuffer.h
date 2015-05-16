@@ -33,7 +33,6 @@ class AGBuffer
 
 	private:
 		std::map< ID3D10Device*, ID3D10Buffer* > m_buffers; 
-		ID3D10Buffer* m_buffer; 
 		AGBufferType m_type; 
 };
 

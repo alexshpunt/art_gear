@@ -63,7 +63,10 @@ float AGRenderer::intersect( const AGVec3& rayOrigin, const AGVec3& rayDir)
 void AGRenderer::setSelected(bool value)
 {
 	m_isSelected = value;
-	m_object->setSelected( value );
+	if( m_object )
+	{
+		m_object->setSelected( value );
+	}
 }
 
 bool AGRenderer::isSelected() const

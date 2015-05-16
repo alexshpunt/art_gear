@@ -44,7 +44,8 @@ struct PS_INPUT
 	float4 norm : NORMAL0;
 	float3 binorm : BINORMAL0;
 	float3 tang : TANGENT0; 
-	float2 uv : UV0;	
+	float2 uv : UV0;
+	float len : LEN;	
 };
 
 struct PSOutput 
@@ -54,30 +55,16 @@ struct PSOutput
 	float4 depth : SV_Target2; 
 };
 
-float2 noise1(in float2 uv) {
-    float noiseX = (frac(sin(dot(uv, float2(12.9898,78.233) * 2.0)) * 43758.5453));
-    float noiseY = sqrt(1 - noiseX * noiseX);
-    return float2(noiseX, noiseY);
-}
-
 PS_INPUT VS( VS_INPUT input )
 {
 	PS_INPUT output;
 	input.pos.w = 1.0f; 
 
-	float3 hm = txDiff.SampleLevel( samLinear, input.uv, 0.0f ); 
-	float height = ( hm.x + hm.y + hm.z ) / 3;
+	float len = input.pos.y / 100.0f; 
+	output.len = len; 
 
-	output.pos = input.pos; 
+	output.pos = mul( input.pos, mtxWorld );
 
-	if( height > 0.8 )
-	{
-		height *= 2.0f; 
-	}
-
-	output.pos.y += height*5;
-
-	output.pos = mul( output.pos, mtxWorld );
 	output.binorm = output.pos; 
 	output.pos = mul( output.pos, mtxView );
 	output.pos = mul( output.pos, mtxProj );
@@ -98,11 +85,15 @@ PSOutput PS( PS_INPUT input )
 {
 	PSOutput output = (PSOutput)0;
 
-	output.diffuse = txDiff.Sample( samLinear, input.uv );
+	float3 firstColor = float3( 0.48f, 0.61f, 0.75f );
+	float3 secondColor = float3( 1.0f, 0.91f, 00.60f );
+	float3 resColor = firstColor * input.len + secondColor * ( 1 - input.len ); 
+
+	output.diffuse = float4( resColor, 1.0f );//txDiff.Sample( samLinear, input.uv );
 	//output.normal = 2.0*txNorm.Sample( samLinear, input.uv ) - 1.0f;
 	output.normal = input.norm; 
 	output.depth = float4( input.binorm, 1.0f ); 
-	output.depth.w = input.pos.z / input.pos.w; 
+	output.depth.w = 0.001f;//input.pos.z / input.pos.w; 
 
 	return output;
 }
@@ -111,7 +102,7 @@ PSOutput PS1( PS_INPUT input )
 {
 	PSOutput output = (PSOutput)0;
 
-	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f ); 
+	output.diffuse = float4( 1.0f, 1.0f, 1.0f, 0.001f ); 
 	output.normal = input.norm; 
 	output.depth = float4( input.binorm, 1.0f ); 
 	output.depth.w = input.pos.z / input.pos.w; 

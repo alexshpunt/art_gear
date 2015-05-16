@@ -53,12 +53,12 @@ float4 PS( PSIn psIn ) : SV_Target
 	surface.pos = float3( pos.x, pos.y, pos.z );
 	surface.normal = float3( normal.x, normal.y, normal.z ); 
 
-	/*if( diffuse.w < 0.001f ) //Objects should be lighted 
+	if( diffuse.w < 0.001f ) //Objects should be lighted 
 	{
 		return float4( diffuse.x, diffuse.y, diffuse.z, 1.0f );  
 	}
 
-	if( light.type == DirType ) //Parallel
+	/*if( light.type == DirType ) //Parallel
 	{
 		return parallelLight( surface, light, camPos ); 
 	}
@@ -71,19 +71,17 @@ float4 PS( PSIn psIn ) : SV_Target
 		return spotLight( surface, light, camPos );
 	}*/
 
-	return diffuse; 
-
-	/*Light l;
+	Light l;
 
 	l.pos = float3( 0.0f, 0.0f, 0.0f );
 	l.dir = float3( 0.0f, 1.0f, 0.0f );
 	l.ambient = float4( 0.4f, 0.4f, 0.4f, 1.0f );
-	l.diffuse = float4( 0.8f, 0.8f, 0.8f, 1.0f );
-	l.intensity = 1.0f; 
+	l.diffuse = float4( 0.8f, 0.9f, 0.8f, 1.0f );
+	l.intensity = 2.5f; 
 
-	return parallelLight( surface, l, camPos );*/
+	//return diffuse;
 
-	//return float4( 1.0f, 0.0f, 0.0f, 1.0f ); 
+	return parallelLight( surface, l, camPos );
 }
 
 technique10 Render

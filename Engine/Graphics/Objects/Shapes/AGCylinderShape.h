@@ -29,6 +29,7 @@ class AGCylinderShape : public AGShape
 
 	private:
 		AGCylinderShapePrivate* p; 
+		AGBuffer< int >* m_dd;
 };
 
 #endif 

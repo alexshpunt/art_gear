@@ -55,12 +55,6 @@ struct PSOutput
 	float4 depth : SV_Target2; 
 };
 
-float2 noise1(in float2 uv) {
-    float noiseX = (frac(sin(dot(uv, float2(12.9898,78.233) * 2.0)) * 43758.5453));
-    float noiseY = sqrt(1 - noiseX * noiseX);
-    return float2(noiseX, noiseY);
-}
-
 PS_INPUT VS( VS_INPUT input )
 {
 	PS_INPUT output;
@@ -74,6 +68,16 @@ PS_INPUT VS( VS_INPUT input )
 	if( height > 0.001 )
 	{
 		output.pos.y = height * 10; 
+
+		float4 wBinormal = mul( float4( input.binorm, 1.0f ), mtxWorld );
+		float4 wTang = mul( float4( input.tang, 1.0f ), mtxWorld );
+		float4 wPos = mul( output.pos, mtxWorld );
+
+		float3 binormal = wBinormal.xyz - abs( wPos.xyz ); 
+		binormal = normalize( binormal.xyz );
+		float3 normal = cross( wTang.xyz, binormal.xyz );
+		output.norm = float4( normal, 1.0f );
+
 		output.rockK = 0.0f;
 		float kheight = 0.7;
 		if( height > kheight )
@@ -86,7 +90,7 @@ PS_INPUT VS( VS_INPUT input )
 	output.binorm = output.pos; 
 	output.pos = mul( output.pos, mtxView );
 	output.pos = mul( output.pos, mtxProj );
-	output.norm = float4( input.norm, 0.0f );
+	//output.norm = float4( input.norm, 0.0f );
 
 	float x = input.uv.x; 
 	float y = 1 - input.uv.y;
@@ -118,6 +122,7 @@ PSOutput PS( PS_INPUT input )
 	}
 	//output.normal = 2.0*txNorm.Sample( samLinear, input.uv ) - 1.0f;
 	output.normal = input.norm; 
+	//output.diffuse = output.normal;
 	output.depth = float4( input.binorm, 1.0f ); 
 	output.depth.w = input.pos.z / input.pos.w; 
 

@@ -139,10 +139,11 @@ int AGEditor::run( QApplication& app )
 	AGDebugManager::getInstance().init(); 
 
 	/*AGRenderer* r = new AGRenderer( nullptr );
-	r->setMesh( AGResourceManager::getInstance().getMesh( "terrain.agmsh" ) );*/
+	r->setMesh( AGResourceManager::getInstance().getMesh( "skybox.agmsh" ) );
+	r->setWorldPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
 
-	//AGGraphics::getInstance().addRenderer( r );
-	AGGraphics::getInstance().addDrawable( new AGTer() );
+	AGGraphics::getInstance().addRenderer( r );*/
+	AGGraphics::getInstance().addClickableObject( new AGTer() );
 
 	while( m_run )
 	{

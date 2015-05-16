@@ -1,5 +1,7 @@
 #include "AGPureInterfaces.h"
 
+#include <assert.h>
+
 #include "Engine/Managers/AGInputManager.h"
 
 #include "Graphics/Objects/AGCamera.h"
