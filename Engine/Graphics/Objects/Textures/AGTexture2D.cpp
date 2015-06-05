@@ -9,6 +9,31 @@
 
 #include "Engine/Graphics/AGGraphics.h"
 
+#include "Engine/Utils/AGErrorHandling.h"
+
+AGTexture2D::AGTexture2D( D3D10_TEXTURE2D_DESC* desc, D3D10_SUBRESOURCE_DATA* data)
+{
+	D3D10_SHADER_RESOURCE_VIEW_DESC srDesc; 
+	srDesc.Format = desc->Format; 
+	srDesc.Texture2D.MipLevels = desc->MipLevels; 
+	srDesc.Texture2D.MostDetailedMip = 0; 
+	srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D; 
+
+	std::list< AGSurface* > surfaces = AGGraphics::getInstance().getSurfaces(); 
+
+	for( AGSurface* surface : surfaces )
+	{
+		ID3D10ShaderResourceView* srView; 
+		ID3D10Texture2D* texture = nullptr;
+		handleDXError( surface->getDevice()->CreateTexture2D( desc, data, &texture ) );
+		ID3D10Resource* res; 
+		handleDXError( texture->QueryInterface( __uuidof( ID3D10Resource ), (void**)&res ) );
+		handleDXError( surface->getDevice()->CreateShaderResourceView( res, &srDesc, &srView ) );
+		m_views.push_back( srView );
+		texture->Release();
+	}
+}
+
 AGTexture2D::AGTexture2D(const std::wstring& fileName)
 {
 	std::wstring fullPath = L"data/textures/";

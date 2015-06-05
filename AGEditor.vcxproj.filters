@@ -332,10 +332,10 @@
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGCircleShape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Objects\AGTer.cpp">
+    <ClCompile Include="Engine\Graphics\Objects\AGTerrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Objects\Textures\AGB.cpp">
+    <ClCompile Include="Engine\Graphics\Objects\Textures\AGTexture2DArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -633,13 +633,13 @@
     <ClInclude Include="Engine\Utils\AGErrorHandling.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Objects\AGTer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGCircleShape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Objects\Textures\AGB.h">
+    <ClInclude Include="Engine\Graphics\Objects\AGTerrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Objects\Textures\AGTexture2DArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

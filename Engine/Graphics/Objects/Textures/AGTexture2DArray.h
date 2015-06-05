@@ -1,5 +1,5 @@
-#ifndef AG_TEXTURE2D_H
-#define AG_TEXTURE2D_H
+#ifndef AG_TEXTURE2DARRAY_H
+#define AG_TEXTURE2DARRAY_H
 
 #include <string>
 #include <vector>
@@ -12,26 +12,24 @@
 class AGSurface; 
 class AGResourceManager; 
 
-class AGTexture2DLoadingData
-{
-	public:
-		std::vector< ID3D10ShaderResourceView* > views;
-};
 
-class AGTexture2D : public AGResource
+class AGTexture2DArray : public AGResource
 {
 	friend class AGResourceManager; 
 	public:	
-		AGTexture2D( D3D10_TEXTURE2D_DESC* desc, D3D10_SUBRESOURCE_DATA* data );
-		AGTexture2D( AGTexture2DLoadingData* data );
-		AGTexture2D( const std::wstring& fileName );
-		~AGTexture2D();
+		AGTexture2DArray();
+		~AGTexture2DArray();
+
+		void setTextures( std::vector< std::wstring >&& texture );
+		void append( std::wstring fileName );
+		void reloadArray(); 
 
 		void apply( ID3D10EffectShaderResourceVariable* var, AGSurface* surface );
 
 		unsigned int getType() const; 
 
 	private:
+		std::vector< std::wstring > m_textures; 
 		std::vector< ID3D10ShaderResourceView* > m_views; 
 };
 

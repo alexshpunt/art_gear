@@ -10,6 +10,7 @@
 
 #include "Engine/Graphics/Interfaces/AGSurface.h"
 #include "Engine/Graphics/Objects/Textures/AGTexture2D.h"
+#include "Engine/Graphics/Objects/Textures/AGTexture2DArray.h"
 
 enum AGShaderMap{ 
 	Amb = 0x001, 
@@ -73,6 +74,7 @@ class AGShader
 		bool applyNextPass(); 
 
 		void setMap( int slot, AGTexture2D* texture, AGSurface* surface ); 
+		void setArray( int slot, AGTexture2DArray* txArray, AGSurface* surface );
 
 		void setWorldMatrix( const AGMatrix& world );
 		int addNewTextureVar( const std::string& varName );

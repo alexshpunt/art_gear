@@ -114,8 +114,7 @@
     <ClCompile Include="Engine\Graphics\Objects\AGMaterial.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\AGShader.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\AGManipulator.cpp" />
-    <ClCompile Include="Engine\Graphics\Objects\Textures\AGB.cpp" />
-    <ClCompile Include="Engine\Graphics\Objects\AGTer.cpp" />
+    <ClCompile Include="Engine\Graphics\Objects\AGTerrain.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGBoxShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGCircleShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGConeShape.cpp" />
@@ -125,6 +124,7 @@
     <ClCompile Include="Engine\Graphics\Objects\Shapes\AGSphereShape.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\System\AGConsole.cpp" />
     <ClCompile Include="Engine\Graphics\Objects\Textures\AGTexture2D.cpp" />
+    <ClCompile Include="Engine\Graphics\Objects\Textures\AGTexture2DArray.cpp" />
     <ClCompile Include="Engine\Interfaces\AGMovable.cpp" />
     <ClCompile Include="Engine\Interfaces\AGObject.cpp" />
     <ClCompile Include="Engine\Interfaces\AGResource.cpp" />
@@ -262,9 +262,9 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtWidgets"</Command>
     </CustomBuild>
     <ClInclude Include="Editor\Wrappers\Objects\AGEGameScene.h" />
-    <ClInclude Include="Engine\Graphics\Objects\Textures\AGB.h" />
-    <ClInclude Include="Engine\Graphics\Objects\AGTer.h" />
+    <ClInclude Include="Engine\Graphics\Objects\AGTerrain.h" />
     <ClInclude Include="Engine\Graphics\Objects\Shapes\AGCircleShape.h" />
+    <ClInclude Include="Engine\Graphics\Objects\Textures\AGTexture2DArray.h" />
     <ClInclude Include="Engine\Utils\AGErrorHandling.h" />
     <ClInclude Include="GeneratedFiles\ui_AGLoadingWidget.h" />
     <ClInclude Include="GeneratedFiles\ui_AGSceneLoadingWidget.h" />

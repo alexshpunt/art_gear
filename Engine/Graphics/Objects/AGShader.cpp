@@ -235,3 +235,21 @@ int AGShader::addNewTextureVar(const std::string& varName)
 	return m_lastSlot-1; 
 }
 
+void AGShader::setArray(int slot, AGTexture2DArray* txArray, AGSurface* surface)
+{
+	if( m_effects.find( surface ) == m_effects.end() )
+	{
+		AGWarning() << "There is no effect for surface" << AGErrorSnippet;
+		return; 
+	}
+	AGEffect* effect = m_effects.at( surface );
+
+	if( effect->maps.find( slot ) == effect->maps.end() )
+	{
+		AGWarning() << "There is no map in slot: " << slot << AGErrorSnippet;
+		return; 
+	}
+
+	txArray->apply( effect->maps[ slot ], surface );
+}
+

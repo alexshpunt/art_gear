@@ -31,7 +31,7 @@
 #include "Engine/Graphics/Managers/AGDebugManager.h"
 #include "Editor/Managers/AGEResMngrStrategy.h"
 #include "Engine/Graphics/Objects/AGBillboard.h"
-#include "Engine/Graphics/Objects/AGTer.h"
+#include "Engine/Graphics/Objects/AGTerrain.h"
 
 #include "UI/AGELoadingWidgets.h"
 

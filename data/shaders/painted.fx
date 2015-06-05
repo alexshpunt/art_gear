@@ -1,7 +1,5 @@
-Texture2D txHeight; 
-Texture2D txDiff;
-Texture2D txRock;
-Texture2DArray txMaps; 
+/*Texture2D txIndex; 
+Texture2DArray txArray; 
 
 RasterizerState rs 
 {
@@ -11,14 +9,7 @@ RasterizerState rs
 
 SamplerState samLinear
 {
-	Filter = ANISOTROPIC ;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
-
-SamplerState otherSampler
-{
-
+    Filter = ANISOTROPIC;
 };
 
 BlendState AlphaBlending
@@ -54,11 +45,6 @@ struct PS_INPUT
 	float3 tang : TANGENT0; 
 	float2 uv : UV0;	
 	float rockK : ROCKK; 
-	float leftK : LEFTK;
-	int   leftT : LEFTT;
-	float upK : UPK; 
-	int   upT : UPT;
-	int   curT : CURT;
 };
 
 struct PSOutput 
@@ -70,15 +56,40 @@ struct PSOutput
 
 PS_INPUT VS( VS_INPUT input )
 {
-	PS_INPUT output = (PS_INPUT)0;
+	PS_INPUT output;
 	input.pos.w = 1.0f; 
 
+	float3 hm = txHeight.SampleLevel( samLinear, input.uv, 0 ); 
+	float height = (hm.x + hm.y + hm.z)/3;
+
 	output.pos = input.pos; 
+
+	if( height > 0.001 )
+	{
+		output.pos.y = height * 10; 
+
+		float4 wBinormal = mul( float4( input.binorm, 1.0f ), mtxWorld );
+		float4 wTang = mul( float4( input.tang, 1.0f ), mtxWorld );
+		float4 wPos = mul( output.pos, mtxWorld );
+
+		float3 binormal = wBinormal.xyz - abs( wPos.xyz ); 
+		binormal = normalize( binormal.xyz );
+		float3 normal = cross( wTang.xyz, binormal.xyz );
+		output.norm = float4( normal, 1.0f );
+
+		output.rockK = 0.0f;
+		float kheight = 0.6;
+		if( height > kheight )
+		{
+			output.rockK = (height - kheight)/( 1.0f - kheight );
+		}
+
+	}
 	output.pos = mul( output.pos, mtxWorld );
 	output.binorm = output.pos; 
 	output.pos = mul( output.pos, mtxView );
 	output.pos = mul( output.pos, mtxProj );
-	output.norm = float4( input.norm, 0.0f );
+	//output.norm = float4( input.norm, 0.0f );
 
 	float x = input.uv.x; 
 	float y = 1 - input.uv.y;
@@ -95,24 +106,21 @@ PSOutput PS( PS_INPUT input )
 {
 	PSOutput output = (PSOutput)0;
 
-	const float blendRadius = 0.004;
-
-	float4 curTemp = txHeight.Sample( samLinear, input.uv ); 
-	float4 curIndex = txRock.Sample( samLinear, input.uv ); 
-
-	int xIndex = curIndex.x * 255 / 10 - 2; 
-	int yIndex = curIndex.y * 255 / 10 - 2;
-
-	//int curT = curTemp.x * 255 / 10 - 2;
-
-	float k = 20;
-
-	output.diffuse += txMaps.Sample( samLinear, float3( input.uv * k, xIndex ) ) * curTemp.r;
-	output.diffuse += txMaps.Sample( samLinear, float3( input.uv * k, yIndex ) ) * curTemp.g;
-	//output.diffuse += txMaps.Sample( samLinear, float3( input.uv * k * 1.4, 2 ) ) * curTemp.b;
-	output.diffuse.a = 1.0f;
-
+	float4 rockDif = txRock.Sample( samLinear, input.uv*40 );
+	float4 grassDif = txDiff.Sample( samLinear, input.uv*40 );
+	if( input.rockK > 0.0f )
+	{
+		input.rockK *= 2.0f;
+		//output.diffuse = rockDif * input.rockK + grassDif* (1 - input.rockK );
+		output.diffuse = rockDif;
+	}
+	else
+	{
+		output.diffuse = grassDif;
+	}
+	//output.normal = 2.0*txNorm.Sample( samLinear, input.uv ) - 1.0f;
 	output.normal = input.norm; 
+	//output.diffuse = output.normal;
 	output.depth = float4( input.binorm, 1.0f ); 
 	output.depth.w = input.pos.z / input.pos.w; 
 
@@ -138,7 +146,6 @@ technique10 Render
 	SetVertexShader( CompileShader( vs_4_0, VS() ) );
 	SetGeometryShader( NULL );
 	SetPixelShader( CompileShader( ps_4_0, PS() ) );
-	SetBlendState( AlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
 	//SetRasterizerState( rs ); 
     }
      pass P1
@@ -148,4 +155,4 @@ technique10 Render
 	SetPixelShader( CompileShader( ps_4_0, PS1() ) );
 	//SetRasterizerState( rs ); 
     }
-}
+}*/
