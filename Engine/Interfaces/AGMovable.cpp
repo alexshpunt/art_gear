@@ -1,5 +1,8 @@
 #include "AGMovable.h"
 
+#include <d3d10.h>
+#include <d3dx10.h>
+
 class AGMovablePrivate
 {
 	public:
@@ -536,13 +539,25 @@ const AGMatrix& AGMovable::getResultMatrix()
 
 void AGMovable::setLookAt(const AGVec3& dir)
 {
+	
 	float cosA = AGVec3::dot( dir, p->up ); 
 	float angle = acos( cosA );
 
 	AGVec3 axis = AGVec3::cross( dir, p->up );
 
-	p->localRotMatrix.setIdentity(); 
-	p->localRotMatrix.setRotate( axis, AGRadians( angle ) );
+	D3DXMATRIX rotMat; 
+	D3DXMatrixIdentity( &rotMat );
+
+	D3DXVECTOR3 vaxis( axis );
+
+	D3DXMatrixRotationAxis( &rotMat, &vaxis, angle );
+
+
+	p->localRotMatrix = AGMatrix::RotationX( AGDegrees( 90.0f ) ) * AGMatrix::LookAtLH( p->worldPos, dir, p->up ).inversed();
+
+	/*p->localRotMatrix.setIdentity(); 
+	p->localRotMatrix.setRotate( axis, AGRadians( angle ) );*/
+
 }
 
 

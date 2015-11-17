@@ -79,8 +79,6 @@ float4 PS( PSIn psIn ) : SV_Target
 	l.diffuse = float4( 0.8f, 0.9f, 0.8f, 1.0f );
 	l.intensity = 2.5f; 
 
-	return diffuse;
-
 	return parallelLight( surface, l, camPos );
 }
 

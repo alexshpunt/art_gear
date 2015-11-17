@@ -145,14 +145,14 @@ AGVec3& AGVec3::operator-=(const AGVec3& var)
 	return *this; 
 }
 
-AGVec3 AGVec3::operator*(float var)
+/*AGVec3 AGVec3::operator*(float var)
 {
 	AGVec3 vec3( *this );
 	vec3.x *= var;
 	vec3.y *= var;
 	vec3.z *= var; 
 	return vec3; 
-}
+}*/
 
 AGVec3& AGVec3::operator*=(float var)
 {

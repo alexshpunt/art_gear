@@ -1,18 +1,47 @@
 #ifndef AGE_SIDEPANEL_H
 #define AGE_SIDEPANEL_H
 
+#include <QWidget>
 #include <QFrame>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <QSpacerItem>
 
-#include "AGETransformPanel.h"
+#include <string>
+#include <list>
 
 #include "Objects/AGGameObject.h"
 
 #include "Editor/Wrappers/Components/AGERenderer.h"
 
+/*!
+ * @class AGESidePanelWidget
+ * @brief Должен быть наследован всем виджетами, которые могут находится на боковй панели
+ */
+class AGESidePanelWidget : public QFrame
+{
+	Q_OBJECT
+	public:
+		virtual void setGameObject( AGGameObject* gameObject ) = 0; 
+		virtual char* getName() const = 0; 
+};
+
+/*!
+ * @struct AGESidePanelItem  
+ * @brief Структура для хранения виджетов в боковой панели
+ */ 
+struct AGESidePanelItem 
+{
+	QTreeWidgetItem* item;
+	QTreeWidgetItem* widgetItem;
+	AGESidePanelWidget* widget; 
+};
+
+/*!
+ * @class AGESidePanel 
+ * @brief Класс представляющий боковую панель редактора
+ */ 
 class AGESidePanel : public QTreeWidget
 {
 	Q_OBJECT
@@ -22,18 +51,15 @@ class AGESidePanel : public QTreeWidget
 		~AGESidePanel();
 	
 		void setGameObject( AGGameObject* gameObject );
+		void addWidget( AGESidePanelWidget* widget ); 
+		void removeWidget( AGESidePanelWidget* widget );
 
 	private:
 		QVBoxLayout* m_layout;
 		QSpacerItem* m_spacer; 
 
-		QTreeWidgetItem* m_item; 
-		QTreeWidgetItem* m_widgetItem; 
-		AGETransformPanel* m_transformPanel;  
+		std::list< AGESidePanelItem* > m_widgets; 
 
-		QTreeWidgetItem* m_item1; 
-		QTreeWidgetItem* m_widgetItem1; 
-		AGERendererWidget* m_widget; 
 };
 
 #endif 

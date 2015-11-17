@@ -253,3 +253,37 @@ void AGShader::setArray(int slot, AGTexture2DArray* txArray, AGSurface* surface)
 	txArray->apply( effect->maps[ slot ], surface );
 }
 
+int AGShader::addNewVar(const std::string& varName)
+{
+	int slot = 0; 
+	for( AGSurface* surface : m_surfaces )
+	{
+		AGEffect* effect = m_effects.at( surface );
+		ID3D10EffectVariable* var = effect->dxEffect->GetVariableByName( varName.c_str() );
+		if( var )
+		{
+			slot = effect->vars.size(); 
+			effect->vars.push_back( var );
+		}
+	}
+	return slot; 
+}
+
+void AGShader::setAsFloat(int var, float value)
+{
+	for( AGSurface* surface : m_surfaces )
+	{
+		AGEffect* effect = m_effects.at( surface );
+		handleDXError( effect->vars.at( var )->AsScalar()->SetFloat( value ) );
+	}
+}
+
+void AGShader::setVar(int var, AGVec3 value)
+{
+	for( AGSurface* surface : m_surfaces )
+	{
+		AGEffect* effect = m_effects.at( surface );
+		handleDXError( effect->vars.at( var )->AsVector()->SetFloatVector( value ) );
+	}
+}
+

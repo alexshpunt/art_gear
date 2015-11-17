@@ -389,6 +389,11 @@ void AGETransformPanel::spinBoxScaleZChanged(double value)
 	}
 }
 
+char* AGETransformPanel::getName() const
+{
+	return "Transform";
+}
+
 AGETransformPanelNotifyer::AGETransformPanelNotifyer( AGETransformPanel* panel )
 {
 	m_panel = panel; 

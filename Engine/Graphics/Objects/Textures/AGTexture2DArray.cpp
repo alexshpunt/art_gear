@@ -11,9 +11,9 @@
 
 #include "Engine/Utils/AGErrorHandling.h"
 
-AGTexture2DArray::AGTexture2DArray()
+AGTexture2DArray::AGTexture2DArray( Type type )
 {
-
+	m_type = type; 
 }
 
 AGTexture2DArray::~AGTexture2DArray()
@@ -40,12 +40,42 @@ unsigned int AGTexture2DArray::getType() const
 
 void AGTexture2DArray::append(std::wstring fileName)
 {
-	m_textures.push_back( fileName );
+	assert( m_type != Static );
+
+	m_texturesNames.push_back( fileName );
+}
+
+void AGTexture2DArray::append(const D3D10_TEXTURE2D_DESC& desc)
+{
+	assert( m_type != Dynamic );
+
+	D3D10_SHADER_RESOURCE_VIEW_DESC srDesc; 
+	srDesc.Format = desc.Format; 
+	srDesc.Texture2D.MipLevels = desc.MipLevels; 
+	srDesc.Texture2D.MostDetailedMip = 0; 
+	srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D; 
+
+	std::list< AGSurface* > surfaces = AGGraphics::getInstance().getSurfaces(); 
+
+	std::vector< ID3D10Texture2D* > textures; 
+
+	for( AGSurface* surface : surfaces )
+	{
+		ID3D10ShaderResourceView* srView; 
+		ID3D10Texture2D* texture = nullptr;
+		handleDXError( surface->getDevice()->CreateTexture2D( &desc, nullptr, &texture ) );
+		ID3D10Resource* res; 
+		handleDXError( texture->QueryInterface( __uuidof( ID3D10Resource ), (void**)&res ) );
+		handleDXError( surface->getDevice()->CreateShaderResourceView( res, &srDesc, &srView ) );
+		m_views.push_back( srView );
+		textures.push_back( texture );
+	}
+	m_textures.push_back( textures );
 }
 
 void AGTexture2DArray::setTextures(std::vector< std::wstring >&& texture)
 {
-	m_textures = std::move( texture );
+	m_texturesNames = std::move( texture );
 }
 
 void AGTexture2DArray::reloadArray()
@@ -54,7 +84,7 @@ void AGTexture2DArray::reloadArray()
 
 	std::list< AGSurface* > surfaces = AGGraphics::getInstance().getSurfaces(); 
 
-	for( std::wstring txName : m_textures )
+	for( std::wstring txName : m_texturesNames )
 	{
 		D3DX10_IMAGE_LOAD_INFO loadInfo; 
 

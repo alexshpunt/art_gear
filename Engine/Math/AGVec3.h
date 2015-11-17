@@ -48,7 +48,8 @@ class AGVec3
 		AGVec3& operator-=( const AGVec3& var );
 
 		AGVec3& operator*=( const AGMatrix& m ); 
-		AGVec3 operator*( float var );
+		friend AGVec3 operator*( const AGVec3& v1, float v2 );
+		//AGVec3 operator*( float var );
 		AGVec3& operator*=( float var );
 
 		AGVec3 operator/( float var );
@@ -58,5 +59,10 @@ class AGVec3
 
 		operator float*() const; 
 };
+
+inline AGVec3 operator*( const AGVec3& v1, float v2 )
+{
+	return AGVec3( v1.x * v2, v1.y * v2, v1.z * v2 );
+}
 
 #endif 

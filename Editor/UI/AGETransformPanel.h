@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
+#include "AGESidePanel.h"
+
 #include "Interfaces/AGObject.h"
 
 #include "Functors/AGGameObjectNotifyFunctor.h"
@@ -18,7 +20,7 @@
 
 class AGETransformPanelNotifyer;
 
-class AGETransformPanel : public QFrame, public AGObject
+class AGETransformPanel : public AGESidePanelWidget, public AGObject
 {
 	Q_OBJECT 
 	friend class AGETransformPanelNotifyer;
@@ -27,7 +29,8 @@ class AGETransformPanel : public QFrame, public AGObject
 		AGETransformPanel();
 		~AGETransformPanel();
 
-		void setGameObject( AGGameObject* gameObject ); 
+		void setGameObject( AGGameObject* gameObject ) override; 
+		char* getName() const override; 
 
 	private slots:	
 		void nameChanged( const QString& text );

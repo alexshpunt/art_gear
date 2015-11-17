@@ -119,7 +119,7 @@ void AGETransformPanel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
 }
 
 const QMetaObject AGETransformPanel::staticMetaObject = {
-    { &QFrame::staticMetaObject, qt_meta_stringdata_AGETransformPanel.data,
+    { &AGESidePanelWidget::staticMetaObject, qt_meta_stringdata_AGETransformPanel.data,
       qt_meta_data_AGETransformPanel,  qt_static_metacall, 0, 0}
 };
 
@@ -136,12 +136,12 @@ void *AGETransformPanel::qt_metacast(const char *_clname)
         return static_cast<void*>(const_cast< AGETransformPanel*>(this));
     if (!strcmp(_clname, "AGObject"))
         return static_cast< AGObject*>(const_cast< AGETransformPanel*>(this));
-    return QFrame::qt_metacast(_clname);
+    return AGESidePanelWidget::qt_metacast(_clname);
 }
 
 int AGETransformPanel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QFrame::qt_metacall(_c, _id, _a);
+    _id = AGESidePanelWidget::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

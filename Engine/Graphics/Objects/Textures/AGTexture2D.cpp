@@ -11,11 +11,11 @@
 
 #include "Engine/Utils/AGErrorHandling.h"
 
-AGTexture2D::AGTexture2D( D3D10_TEXTURE2D_DESC* desc, D3D10_SUBRESOURCE_DATA* data)
+AGTexture2D::AGTexture2D( const D3D10_TEXTURE2D_DESC& desc )
 {
 	D3D10_SHADER_RESOURCE_VIEW_DESC srDesc; 
-	srDesc.Format = desc->Format; 
-	srDesc.Texture2D.MipLevels = desc->MipLevels; 
+	srDesc.Format = desc.Format; 
+	srDesc.Texture2D.MipLevels = desc.MipLevels; 
 	srDesc.Texture2D.MostDetailedMip = 0; 
 	srDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D; 
 
@@ -25,12 +25,12 @@ AGTexture2D::AGTexture2D( D3D10_TEXTURE2D_DESC* desc, D3D10_SUBRESOURCE_DATA* da
 	{
 		ID3D10ShaderResourceView* srView; 
 		ID3D10Texture2D* texture = nullptr;
-		handleDXError( surface->getDevice()->CreateTexture2D( desc, data, &texture ) );
+		handleDXError( surface->getDevice()->CreateTexture2D( &desc, nullptr, &texture ) );
 		ID3D10Resource* res; 
 		handleDXError( texture->QueryInterface( __uuidof( ID3D10Resource ), (void**)&res ) );
 		handleDXError( surface->getDevice()->CreateShaderResourceView( res, &srDesc, &srView ) );
 		m_views.push_back( srView );
-		texture->Release();
+		m_textures.push_back( texture );
 	}
 }
 
@@ -158,5 +158,10 @@ void AGTexture2D::apply(ID3D10EffectShaderResourceVariable* var, AGSurface* surf
 unsigned int AGTexture2D::getType() const
 {
 	return AGResourceManager::Texture; 
+}
+
+const std::vector< ID3D10Texture2D* >& AGTexture2D::getTextures() const
+{
+	return m_textures; 
 }
 

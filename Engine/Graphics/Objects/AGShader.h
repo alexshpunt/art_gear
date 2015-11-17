@@ -47,7 +47,8 @@ struct AGEffect
 	ID3D10Effect* dxEffect; 
 
 	std::map< int, ID3D10EffectShaderResourceVariable* > maps; 
-	
+	std::vector< ID3D10EffectVariable* > vars; 
+
 	ID3D10EffectVectorVariable* cameraPos;
 
 	ID3D10EffectMatrixVariable* worldMatrix;
@@ -78,6 +79,9 @@ class AGShader
 
 		void setWorldMatrix( const AGMatrix& world );
 		int addNewTextureVar( const std::string& varName );
+		int addNewVar( const std::string& varName );
+		void setAsFloat( int var, float value );
+		void setVar( int var, AGVec3 value );
 	private:
 		std::list< AGSurface* > m_surfaces; 
 		std::map< AGSurface*, AGEffect* > m_effects; 

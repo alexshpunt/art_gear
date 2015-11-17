@@ -34,9 +34,7 @@
 #include "Engine/Graphics/Objects/AGTerrain.h"
 
 #include "UI/AGELoadingWidgets.h"
-
-#include <thread>
-#include <future>
+#include "UI/AGEPainter.h"
 
 AGEditor::AGEditor()
 {
@@ -143,7 +141,9 @@ int AGEditor::run( QApplication& app )
 	r->setWorldPos( AGVec3( 0.0f, 0.0f, 0.0f ) );
 
 	AGGraphics::getInstance().addRenderer( r );*/
-	AGGraphics::getInstance().addClickableObject( new AGTer() );
+	AGTerrain* terrain = new AGTerrain; 
+	AGGraphics::getInstance().addClickableObject( terrain );
+	m_sidePanel->addWidget( new AGEPainter( terrain ) );
 
 	while( m_run )
 	{

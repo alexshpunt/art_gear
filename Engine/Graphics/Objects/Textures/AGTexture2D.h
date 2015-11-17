@@ -22,7 +22,7 @@ class AGTexture2D : public AGResource
 {
 	friend class AGResourceManager; 
 	public:	
-		AGTexture2D( D3D10_TEXTURE2D_DESC* desc, D3D10_SUBRESOURCE_DATA* data );
+		AGTexture2D( const D3D10_TEXTURE2D_DESC& desc );
 		AGTexture2D( AGTexture2DLoadingData* data );
 		AGTexture2D( const std::wstring& fileName );
 		~AGTexture2D();
@@ -31,7 +31,10 @@ class AGTexture2D : public AGResource
 
 		unsigned int getType() const; 
 
+		const std::vector< ID3D10Texture2D* >& getTextures() const; 
+
 	private:
+		std::vector< ID3D10Texture2D* > m_textures; 
 		std::vector< ID3D10ShaderResourceView* > m_views; 
 };
 

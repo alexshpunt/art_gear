@@ -15,36 +15,49 @@
 
 #include "Engine/Math/AGMath.h"
 
-#include "Engine/Graphics/Objects/Shapes/AGSphereShape.h"
+#include "Engine/Graphics/Objects/Shapes/AGCircleShape.h"
+#include "Engine/Graphics/Objects/Shapes/AGLine.h"
 
-class AGTer : public AGClickable
+#include <QPixmap>
+
+struct AGTerrainVertex
+{
+	AGVec3 pos;
+	AGVec3 normal; 
+};
+
+class AGTerrain : public AGClickable
 {
 	public:
-		AGTer();
-		~AGTer();
+		AGTerrain();
+		~AGTerrain();
 
-		void draw( AGSurface* surface );
-
+		void draw( AGSurface* surface ) override; 
 		bool mouseClickEvent( AGMouseButton button, AGSurface* surface ) override;
+		bool mouseMoveEvent( AGSurface* surface ) override;
+		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ) override; 
 
-		bool mouseMoveEvent( AGSurface* surface ) override
-		{
-			calculateRays( surface, AGMatrix() );
-			return intersect( m_rayOrigin, m_rayDir ) > 0.0f; 
-		}
+		const AGVec3& getIntersectPos() const; 
 
-		float intersect( const AGVec3& rayOrigin, const AGVec3& rayDir ) override
-		{
-			return -1.f;
-		}
-
+		void setPaintingMode( bool value );
+		void setRadius( float radius );
+		void setHardness( float hardness );
+		void setTextureIndex( int index );
+		void addTexture( const std::wstring& fileName );
 	protected:
 		AGBuffer< int >* m_ibo;
-		AGBuffer< AGVertex >* m_vbo;
-
-		std::vector< AGVertex > m_vertices; 
+		AGBuffer< AGVertex >* m_vbo; 
 
 		std::vector< std::vector< AGVertex > > m_vertexMap; 
+		std::vector< AGVec3 > m_normals; 
+
+		AGCircleShape* m_circle; 
+		AGLine* m_line; 
+
+		AGVec3 m_border; 
+		AGVec3 m_border2; 
+
+		AGVec3 m_intersectPos; 
 
 		AGShader* m_shader; 
 		AGMaterial* m_material; 
@@ -52,10 +65,25 @@ class AGTer : public AGClickable
 		int m_difSlot; 
 		int m_rockSlot; 
 		int m_mapsSlot; 
+		int m_cursorPosSlot; 
+		int m_radiusSlot; 
 		AGTexture2D* m_height;
 		AGTexture2D* m_dif; 
 		AGTexture2D* m_rock;
 		AGTexture2DArray* m_txArray; 
+		AGTexture2DArray* m_blendArray; 
+
+		AGSize m_textureSize; 
+
+		bool m_paintingMode; 
+		float m_radius; 
+		float m_harndess; 
+		int m_textureIndex; 
+
+		QImage m_brushMap; 
+		QImage m_scaledMap;
+
+		bool m_init; 
 };
 
 #endif 

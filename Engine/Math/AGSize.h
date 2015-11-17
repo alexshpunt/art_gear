@@ -5,18 +5,18 @@ class AGSize
 {
 	public:
 		AGSize();
-		AGSize( float w, float h );
+		AGSize( int w, int h );
 		AGSize( const AGSize& copy );
 		~AGSize();
 
-		void setSize( float w, float h );
+		void setSize( int w, int h );
 		void setSize( const AGSize& size );
 
-		void setWidth( float w );
-		float getWidth() const;
+		void setWidth( int w );
+		int getWidth() const;
 
-		void setHeight( float h );
-		float getHeight() const; 
+		void setHeight( int h );
+		int getHeight() const; 
 
 		bool operator==( const AGSize& var );
 		AGSize& operator=( const AGSize& var );
@@ -27,14 +27,14 @@ class AGSize
 		AGSize operator-( const AGSize& var );
 		AGSize& operator-=( const AGSize& var );
 
-		AGSize operator*( float var );
-		AGSize operator*=( float var );
+		AGSize operator*( int var );
+		AGSize operator*=( int var );
 		
-		AGSize operator/( float var );
-		AGSize operator/=( float var );
+		AGSize operator/( int var );
+		AGSize operator/=( int var );
 
-		float m_width;
-		float m_height;
+		int m_width;
+		int m_height;
 	private:
 		
 };

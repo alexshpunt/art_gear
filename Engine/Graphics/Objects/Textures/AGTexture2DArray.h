@@ -12,16 +12,18 @@
 class AGSurface; 
 class AGResourceManager; 
 
-
 class AGTexture2DArray : public AGResource
 {
 	friend class AGResourceManager; 
 	public:	
-		AGTexture2DArray();
+		enum Type{ Dynamic, Static };
+
+		AGTexture2DArray( Type type );
 		~AGTexture2DArray();
 
 		void setTextures( std::vector< std::wstring >&& texture );
 		void append( std::wstring fileName );
+		void append( const D3D10_TEXTURE2D_DESC& desc );
 		void reloadArray(); 
 
 		void apply( ID3D10EffectShaderResourceVariable* var, AGSurface* surface );
@@ -29,7 +31,9 @@ class AGTexture2DArray : public AGResource
 		unsigned int getType() const; 
 
 	private:
-		std::vector< std::wstring > m_textures; 
+		Type m_type; 
+		std::vector< std::vector< ID3D10Texture2D* > > m_textures; 
+		std::vector< std::wstring > m_texturesNames; 
 		std::vector< ID3D10ShaderResourceView* > m_views; 
 };
 

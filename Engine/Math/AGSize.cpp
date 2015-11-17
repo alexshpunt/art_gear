@@ -2,11 +2,11 @@
 
 AGSize::AGSize()
 {
-	setWidth( 0.0f );
-	setHeight( 0.0f );
+	setWidth( 0 );
+	setHeight( 0 );
 }
 
-AGSize::AGSize(float w, float h)
+AGSize::AGSize(int w, int h)
 {
 	setWidth( w );
 	setHeight( h );
@@ -22,7 +22,7 @@ AGSize::~AGSize()
 
 }
 
-void AGSize::setSize(float w, float h)
+void AGSize::setSize(int w, int h)
 {
 	setWidth( w );
 	setHeight( h );
@@ -34,24 +34,24 @@ void AGSize::setSize(const AGSize& size)
 	setHeight( size.m_height );
 }
 
-void AGSize::setWidth(float w)
+void AGSize::setWidth(int w)
 {
 	if( w >= 0 )
 		m_width = w;
 }
 
-float AGSize::getWidth() const
+int AGSize::getWidth() const
 {
 	return m_width; 
 }
 
-void AGSize::setHeight(float h)
+void AGSize::setHeight(int h)
 {
 	if( h >= 0 )
 		m_height = h; 
 }
 
-float AGSize::getHeight() const
+int AGSize::getHeight() const
 {
 	return m_height; 
 }
@@ -97,7 +97,7 @@ AGSize& AGSize::operator-=(const AGSize& var)
 	return *this; 
 }
 
-AGSize AGSize::operator*(float var)
+AGSize AGSize::operator*(int var)
 {
 	AGSize size( *this );
 	size.setWidth( size.m_width * var );
@@ -105,14 +105,14 @@ AGSize AGSize::operator*(float var)
 	return size; 
 }
 
-AGSize AGSize::operator*=(float var)
+AGSize AGSize::operator*=(int var)
 {
 	setWidth( m_width * var );
 	setHeight( m_height * var );
 	return *this; 
 }
 
-AGSize AGSize::operator/(float var)
+AGSize AGSize::operator/(int var)
 {
 	AGSize size( *this );
 	size.setWidth( size.m_width / var );
@@ -120,7 +120,7 @@ AGSize AGSize::operator/(float var)
 	return size; 
 }
 
-AGSize AGSize::operator/=(float var)
+AGSize AGSize::operator/=(int var)
 {
 	setWidth( m_width / var );
 	setHeight( m_height / var );
